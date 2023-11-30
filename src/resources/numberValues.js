@@ -1,0 +1,1 @@
+export const SCREEN_TIMEOUT = 1800000;
