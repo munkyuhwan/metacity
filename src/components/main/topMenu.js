@@ -30,6 +30,10 @@ const TopMenu = () =>{
     const [currentVersion, setCurrentVersion ] = useState("version");
 
     useEffect(()=>{
+        if(selectedMainCategory) {
+            dispatch(getSubCategories())
+        }
+        /*
         const goodsCategories = menuCategories;
         if(goodsCategories?.length > 0){
             const selectedCategoryItem = goodsCategories.filter(el=>el.cate_code1==selectedMainCategory);
@@ -37,6 +41,7 @@ const TopMenu = () =>{
                 dispatch(setCategories({subCategories:selectedCategoryItem[0]?.level2}));
             }
         } 
+        */
     },[selectedMainCategory])
 
     useEffect(()=>{ 

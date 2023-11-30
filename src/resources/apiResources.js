@@ -15,8 +15,8 @@ export const POS_POST_ORDER_STATE = "{partner URL}/partner/v1/push"; //주문상
 export const POS_POST_ORDER_CANCEL = "/partner/v1/table/order/cancel"; // 반품요청
 
 // meta
-export const POS_BASE_URL = "http://192.168.35.224:8090/PosConnectionTest"; //test
-//export const META_POS_BASE_URL = "http://localhost:8090/PosConnection"; // real
+//export const POS_BASE_URL = "http://192.168.35.224:8090/PosConnectionTest"; //test
+export const POS_BASE_URL = "http://192.168.35.224:8090/PosConnection"; // real
 
 // version code
 export const POS_VERSION_CODE = "0010";

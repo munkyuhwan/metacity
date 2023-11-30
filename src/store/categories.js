@@ -1,13 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { MENU_DATA } from '../resources/menuData';
 import { stat } from 'react-native-fs';
-import { getPosMainCategory } from '../utils/api/metaApis';
+import { getPosMainCategory, getPosMidCategory } from '../utils/api/metaApis';
 import { getAdminMainCategory } from '../utils/api/adminApi';
 import { setMenuCategories } from './menuExtra';
 
 export const setCategories = createAsyncThunk("categories/setCategories", async(data) =>{
     return data;
 })
+// 어드민 카테고리 추가 정보 받아오기
 export const getAdminCategoryData = createAsyncThunk("categories/getAdminCategoryData", async(_,{dispatch}) =>{
     const adminResult = await getAdminMainCategory(dispatch);
     dispatch(setMenuCategories(adminResult));
@@ -16,8 +17,15 @@ export const getAdminCategoryData = createAsyncThunk("categories/getAdminCategor
 // 메인 카테고리 받기
 export const getMainCategories = createAsyncThunk("categories/getMainCategories", async(_,{dispatch}) =>{
     const result = await getPosMainCategory(dispatch);
-    const adminResult = await getAdminMainCategory(dispatch);
     return result;
+})
+// 서브 카테고리 받기
+export const getSubCategories = createAsyncThunk("categories/getSubCategories", async(data,{dispatch,getState}) =>{
+    const {selectedMainCategory} = getState().categories;
+    console.log("selectedMainCategory: ",selectedMainCategory);
+    const postMidCategories = await dispatch(getPosMidCategory(dispatch, {selectedMainCategory:selectedMainCategory}));
+
+    return data
 })
 export const setMainCategories = createAsyncThunk("categories/setMainCategories", async(_)=>{
     return _;
@@ -25,9 +33,6 @@ export const setMainCategories = createAsyncThunk("categories/setMainCategories"
 
 export const setSelectedMainCategory = createAsyncThunk("categories/setSelectedMainCategory", async(index,{getState,dispatch}) =>{
     return index;
-})
-export const getSubCategories = createAsyncThunk("categories/getSubCategories", async(data) =>{
-    return data
 })
 export const setSelectedSubCategory = createAsyncThunk("categories/setSelectedSubCategory", async(index) =>{
     return index
