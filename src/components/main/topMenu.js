@@ -25,7 +25,7 @@ const TopMenu = () =>{
     const {menuCategories} = useSelector(state=>state.menuExtra);
     const {selectedMainCategory,subCategories} = useSelector(state => state.categories);
 
-    //console.log("menuCategories: ",menuCategories);
+    //console.log("subCategories: ",subCategories);
     
     const [currentVersion, setCurrentVersion ] = useState("version");
 
@@ -56,8 +56,6 @@ const TopMenu = () =>{
         return(<></>)
     }
      */
-
-
     
     return(
         <>

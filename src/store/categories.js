@@ -16,16 +16,14 @@ export const getAdminCategoryData = createAsyncThunk("categories/getAdminCategor
 })
 // 메인 카테고리 받기
 export const getMainCategories = createAsyncThunk("categories/getMainCategories", async(_,{dispatch}) =>{
-    const result = await getPosMainCategory(dispatch);
+    const result = await getPosMainCategory(dispatch).catch(err=>{return []});
     return result;
 })
 // 서브 카테고리 받기
 export const getSubCategories = createAsyncThunk("categories/getSubCategories", async(data,{dispatch,getState}) =>{
     const {selectedMainCategory} = getState().categories;
-    console.log("selectedMainCategory: ",selectedMainCategory);
-    const postMidCategories = await dispatch(getPosMidCategory(dispatch, {selectedMainCategory:selectedMainCategory}));
-
-    return data
+    const postMidCategories = await getPosMidCategory(dispatch, {selectedMainCategory:selectedMainCategory}).catch(err=>{return []});
+    return postMidCategories
 })
 export const setMainCategories = createAsyncThunk("categories/setMainCategories", async(_)=>{
     return _;

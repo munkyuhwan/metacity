@@ -20,25 +20,22 @@ const TopMenuList = (props) => {
     const {language} =  useSelector(state=>state.languages);
     
     const ItemTitle = (cateCode) => {
-        const subCategories = menuCategories?.filter(el=>el.cate_code1 == selectedMainCategory);
-        const subCatList = subCategories[0]?.level2
-        const subCatData = subCatList?.filter(el=>el.cate_code2 == cateCode);
-        let selTitleLanguage = "";
-        if(subCatData){
-            if(language=="korean") {
-                selTitleLanguage = subCatData[0]?.cate_name2
-            }
-            else if(language=="japanese") {
-                selTitleLanguage = subCatData[0]?.cate_name2_jp||subCatData[0]?.cate_name2
-            }
-            else if(language=="chinese") {
-                selTitleLanguage = subCatData[0]?.cate_name2_cn||subCatData[0]?.cate_name2
-            }
-            else if(language=="english") {
-                selTitleLanguage = subCatData[0]?.cate_name2_en||subCatData[0]?.cate_name2
-            }
+        const selectedData = data.filter(el=>el.PROD_L2_CD == cateCode);
+        const adminSelectedSubCatData = menuCategories.filter(el=>el.cate_code1==selectedMainCategory);
+        const adminSubCat = adminSelectedSubCatData[0]?.level2;
+        const selectedAdminSub = adminSubCat.filter(el=>el.cate_code2 == cateCode);
+        if(language=="korean") {
+            return selectedData[0].PROD_L2_NM;
+        }else if(language=="japanese") {
+            return selectedAdminSub[0]?.cate_name2_jp||selectedData[0].PROD_L2_NM
         }
-        return selTitleLanguage;
+        else if(language=="chinese") {
+            return selectedAdminSub[0]?.cate_name2_cn||selectedData[0].PROD_L2_NM
+        }
+        else if(language=="english") {
+            return selectedAdminSub[0]?.cate_name2_en||selectedData[0].PROD_L2_NM
+        }
+        return "";
     }
     const ItemWhole = () =>{
         let selTitleLanguage = "";
@@ -62,10 +59,11 @@ const TopMenuList = (props) => {
         }
     },[selectedCode])
 
-    const onPressAction = (index) =>{
-        setSelectedCode(index);
+    const onPressAction = (itemCD) =>{
+        setSelectedCode(itemCD);
+        //setSelectedCode(index);
     }
-
+    //console.log("render top menu")
     return (
         <>
         {selectedSubCategory == DEFAULT_CATEGORY_ALL_CODE &&
@@ -87,18 +85,18 @@ const TopMenuList = (props) => {
             return(
                 <>            
                         {
-                        (el?.cate_code2==selectedSubCategory) &&
-                            <TouchableWithoutFeedback key={"subcat_"+el?.cate_code2} onPress={()=>{ onPressAction(el?.cate_code2); }}>
+                        (el?.PROD_L2_CD==selectedSubCategory) &&
+                            <TouchableWithoutFeedback key={"subcat_"+el?.PROD_L2_CD} onPress={()=>{ onPressAction(el?.PROD_L2_CD); }}>
                                 <CategorySelected>
-                                    <TopMenuText key={"subcatText_"+el?.cate_code2} >{ItemTitle(el?.cate_code2)}</TopMenuText>
+                                    <TopMenuText key={"subcatText_"+el?.PROD_L2_CD} >{ItemTitle(el?.PROD_L2_CD)}</TopMenuText>
                                 </CategorySelected>
                             </TouchableWithoutFeedback>
                         }
                         {
-                        (el?.cate_code2!=selectedSubCategory) &&
-                            <TouchableWithoutFeedback key={"subcat_"+el?.cate_code2} onPress={()=>{ onPressAction(el?.cate_code2); }}>
+                        (el?.PROD_L2_CD!=selectedSubCategory) &&
+                            <TouchableWithoutFeedback key={"subcat_"+el?.PROD_L2_CD} onPress={()=>{ onPressAction(el?.PROD_L2_CD); }}>
                                 <CategoryDefault>
-                                    <TopMenuText key={"subcatText_"+el?.cate_code2} >{ItemTitle(el?.cate_code2)}</TopMenuText>
+                                    <TopMenuText key={"subcatText_"+el?.PROD_L2_CD} >{ItemTitle(el?.PROD_L2_CD)}</TopMenuText>
                                 </CategoryDefault>
                             </TouchableWithoutFeedback>
                         }
