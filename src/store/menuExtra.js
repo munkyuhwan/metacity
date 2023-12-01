@@ -19,6 +19,14 @@ export const setMenuCategories = createAsyncThunk("menu/setMenuCategories", asyn
 export const setOptionExtra = createAsyncThunk("menu/setOptionExtra", async(data) =>{
     return data;
 })
+export const getAdminMenuItems = createAsyncThunk("menu/getAdminMenuItems", async(data,{dispatch}) =>{
+    const adminItems = await adminMenuEdit(dispatch);
+    if(adminItems?.result) {
+        return adminItems.order;
+    }else {
+        return [];
+    }
+})
 
 // Slice
 export const menuExtraSlice = createSlice({
@@ -46,6 +54,10 @@ export const menuExtraSlice = createSlice({
         // 메뉴 카테고리 세팅
         builder.addCase(setMenuCategories.fulfilled,(state, action)=>{
             state.menuCategories = action.payload;
+        })
+        // 메뉴 아이템 세팅
+        builder.addCase(getAdminMenuItems.fulfilled,(state, action)=>{
+            state.menuExtra = action.payload;
         })
 
 

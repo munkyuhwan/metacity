@@ -67,7 +67,7 @@ const MenuListView = () => {
 
     useEffect(()=>{
         if(isDetailShow)setDetailShow(false);
-        //dispatch(getDisplayMenu())
+        dispatch(getDisplayMenu())
     },[selectedMainCategory,selectedSubCategory])
 
     useEffect(()=>{

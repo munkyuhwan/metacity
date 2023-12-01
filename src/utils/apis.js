@@ -423,14 +423,10 @@ export const getOrderByTable = async(dispatch, data) => {
 // 관리자 메뉴 받기
 export const adminMenuEdit = async(dispatch) => {
     //let data = '{"STORE_ID":12312001}'
-    const {STORE_ID, SERVICE_ID} = await getStoreID()
-    .catch(err=>{
-        posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'STORE_ID, SERVICE_ID를 입력 해 주세요.',MSG2:""})
-    });
     return await new Promise(function(resolve, reject){
         axios.post(
             `${ADMIN_BASE_URL}${ADMIN_GOODS}`,
-            {"STORE_ID":STORE_ID},
+            {},
             adminOrderHeader,
         ) 
         .then((response => {

@@ -17,6 +17,7 @@ const MenuItem = ({item,index,setDetailShow}) => {
     const dispatch = useDispatch();
     const {menuExtra} = useSelector(state=>state.menuExtra);
     const {language} =  useSelector(state=>state.languages);
+    //console.log("item: ",item); 
     if(isEmpty(item)) {
         return <></>
     }
@@ -24,14 +25,14 @@ const MenuItem = ({item,index,setDetailShow}) => {
         return <></>
     }
     // 이미지 찾기
-    const itemExtra = menuExtra?.filter(el=>el.pos_code == item.ITEM_ID);
-    const itemID = item.ITEM_ID;
+    const itemExtra = menuExtra?.filter(el=>el.pos_code == item.PROD_CD);
+    const itemID = item.PROD_CD;
     const imgUrl = "https:"+itemExtra[0]?.gimg_chg;
     //const itemTitle=>{} item.ITEM_NAME;
     const itemTitle = () => {
         let selTitleLanguage = "";
         if(itemExtra) {
-        const selExtra = itemExtra?.filter(el=>el.pos_code==item.ITEM_ID);
+        const selExtra = itemExtra?.filter(el=>el.pos_code==item.PROD_CD);
             if(language=="korean") {
                 selTitleLanguage = item.ITEM_NAME;
             }
@@ -49,7 +50,7 @@ const MenuItem = ({item,index,setDetailShow}) => {
         }
         return selTitleLanguage;
     }
-    const itemPrice= item.ITEM_AMT;
+    const itemPrice= item.SAL_AMT;
 
 
     return(
@@ -58,13 +59,13 @@ const MenuItem = ({item,index,setDetailShow}) => {
                 <MenuItemTopWrapper>
                     {imgUrl &&
                         <>
-                            <TouchableWithoutFeedback onPress={()=>{setDetailShow(true); dispatch(setMenuDetail(itemID)); }} >
+                            <TouchableWithoutFeedback onPress={()=>{setDetailShow(true); dispatch(setMenuDetail({itemID,item})); }} >
                                 <FastImage style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:imgUrl}}/>
                             </TouchableWithoutFeedback>
                         </>
                     }
                     {!imgUrl &&
-                        <TouchableWithoutFeedback onPress={()=>{setDetailShow(true); dispatch(setMenuDetail(itemID)); }} >
+                        <TouchableWithoutFeedback onPress={()=>{setDetailShow(true); dispatch(setMenuDetail({itemID,item})); }} >
                             <MenuImageDefaultWrapper>
                                 <MenuImageDefault source={require("../../assets/icons/logo.png")}/>
                             </MenuImageDefaultWrapper>
@@ -81,7 +82,7 @@ const MenuItem = ({item,index,setDetailShow}) => {
                         }
                         </MenuItemHotnessWrapper>
                         <MenuItemButtonWrapper>
-                            <TouchableWithoutFeedback onPress={()=>{setDetailShow(true);  dispatch(setMenuDetail(itemID)); }} >
+                            <TouchableWithoutFeedback onPress={()=>{setDetailShow(true);  dispatch(setMenuDetail({itemID,item})); }} >
                                 <MenuItemButtonInnerWrapperRight>
                                     <MenuItemButton source={require('../../assets/icons/more.png')}/>
                                 </MenuItemButtonInnerWrapperRight>
@@ -102,7 +103,7 @@ const MenuItem = ({item,index,setDetailShow}) => {
 
                 </MenuItemTopWrapper>
                 <MenuItemBottomWRapper>
-                    <MenuItemName>{itemTitle()||item.ITEM_NAME}</MenuItemName>
+                    <MenuItemName>{itemTitle()||item.PROD_NM}</MenuItemName>
                     <MenuItemPrice>{itemPrice}원</MenuItemPrice>
                 </MenuItemBottomWRapper>
             </MenuItemWrapper>

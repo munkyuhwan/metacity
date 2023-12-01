@@ -28,6 +28,7 @@ const ItemDetail = (props) => {
     // 메뉴 추가정보 찾기
     const {menuExtra} = useSelector(state=>state.menuExtra);
     const itemExtra = menuExtra?.filter(el=>el.pos_code == menuDetailID);
+    console.log("menuDetail: ",menuDetail);
 
     // 옵션스테이트
     const [additiveGroupList, setAdditiveGroupList] = useState([]);
@@ -131,18 +132,21 @@ const ItemDetail = (props) => {
         if(isDetailShow) {
             setDetailZIndex(999)
             onSelectHandleAnimation(1);
+            dispatch(getItemSetGroup());
+            /* 
             var tmpAdditiveList = [];
             if(menuDetail?.ADDITIVE_GROUP_LIST) {
                 tmpAdditiveList = menuDetail?.ADDITIVE_GROUP_LIST.filter(el=>el.ADDITIVE_GROUP_USE_FLAG=="N");
             }
             setAdditiveGroupList(tmpAdditiveList);
+             */
         }
     },[isDetailShow, menuDetail])
 //console.log("menu: ",menu[0].ITEM_LIST);
     const ItemTitle = () =>{
         let selTitleLanguage = "";
         if(itemExtra) {
-            const selExtra = itemExtra?.filter(el=>el.pos_code==menuDetail?.ITEM_ID);
+            const selExtra = itemExtra?.filter(el=>el.pos_code==menuDetailID);
             if(language=="korean") {
                 selTitleLanguage = menuDetail?.ITEM_NAME;
             }
@@ -163,7 +167,7 @@ const ItemDetail = (props) => {
     const ItemInfo = () =>{
         let selInfoLanguage = "";
         if(itemExtra) {
-            const selExtra = itemExtra.filter(el=>el.pos_code==menuDetail?.ITEM_ID);
+            const selExtra = itemExtra.filter(el=>el.pos_code==menuDetailID);
             if(language=="korean") {
                 selInfoLanguage = selExtra[0]?.gmemo;
             }
@@ -184,7 +188,7 @@ const ItemDetail = (props) => {
     const ItemWonsanji = () => {
         let selWonsanjiLanguage = "";
         if(itemExtra){
-            const selExtra = itemExtra.filter(el=>el.pos_code==menuDetail?.ITEM_ID);
+            const selExtra = itemExtra.filter(el=>el.pos_code==menuDetailID);
             if(language=="korean") {
                 selWonsanjiLanguage = selExtra[0]?.wonsanji;
             }
@@ -227,7 +231,7 @@ const ItemDetail = (props) => {
                                     </DetailItemInfoImageWrapper>
                                     <DetailItemInfoWrapper>
                                         <DetailItemInfoTitleWrapper>
-                                            <DetailItemInfoTitle>{ItemTitle()||menuDetail?.ITEM_NAME}</DetailItemInfoTitle>
+                                            <DetailItemInfoTitle>{ItemTitle()||menuDetail?.PROD_NM}</DetailItemInfoTitle>
                                             {itemExtra&&
                                         itemExtra[0]?.is_new=='Y'&&
                                                  <DetailItemInfoTitleEtc source={require("../../assets/icons/new.png")}/>
@@ -240,7 +244,7 @@ const ItemDetail = (props) => {
                                         <DetailItemInfoSource>{ItemWonsanji()}</DetailItemInfoSource>
                                         <DetailPriceMoreWrapper>
                                             <DetailItemInfoPriceWrapper>
-                                                <DetailItemInfoPrice isBold={true} >{ menuDetail?.ITEM_AMT?numberWithCommas(menuDetail?.ITEM_AMT):""}</DetailItemInfoPrice><DetailItemInfoPrice isBold={false}> 원</DetailItemInfoPrice>
+                                                <DetailItemInfoPrice isBold={true} >{ menuDetail?.SAL_AMT?numberWithCommas(menuDetail?.SAL_AMT):""}</DetailItemInfoPrice><DetailItemInfoPrice isBold={false}> 원</DetailItemInfoPrice>
                                             </DetailItemInfoPriceWrapper>
                                             <DetailItemInfoMore>{ItemInfo()}</DetailItemInfoMore>
                                         </DetailPriceMoreWrapper>

@@ -1,11 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux';
+import { getPosItemsWithCategory, getPosSetGroup } from '../utils/api/metaApis';
 
 export const initMenuDetail = createAsyncThunk("menuDetail/initMenuDetail", async() =>{
     return {menuDetailID: null,menuDetail:{},menuOptionGroupCode:"",menuOptionList:[],menuOptionSelected:[],};
 })
 
-export const setMenuDetail = createAsyncThunk("menuDetail/setMenuDetail", async(index) =>{
+export const setMenuDetail = createAsyncThunk("menuDetail/setMenuDetail", async(_) =>{
+    const index = _.itemID;
     return index;
 })
 export const getSingleMenu = createAsyncThunk("menuDetail/getSingleMenu", async(itemID,{getState}) =>{
@@ -13,11 +15,30 @@ export const getSingleMenu = createAsyncThunk("menuDetail/getSingleMenu", async(
     const selectedMenuDetail = displayMenu.filter(el=>el.ITEM_ID == itemID);
     return selectedMenuDetail[0];
 });
-export const getSingleMenuFromAllItems = createAsyncThunk("menuDetail/getSingleMenuFromAllItems", async(itemID,{getState}) =>{
-    const {allItems} = getState().menu;
-    const selectedMenuDetail = allItems.filter(el=>el.ITEM_ID == itemID);
-    return selectedMenuDetail[0];
+export const getSingleMenuFromAllItems = createAsyncThunk("menuDetail/getSingleMenuFromAllItems", async(itemID,{dispatch, getState}) =>{
+    const {selectedMainCategory,selectedSubCategory} = getState().categories
+    const {menuDetailID} = getState().menuDetail;
+    if(selectedMainCategory == "0" || selectedMainCategory == undefined ) {
+        return
+    }
+    if(selectedSubCategory == "0" || selectedSubCategory == undefined ) {
+        return
+    } 
+    const singleItemResult = await getPosItemsWithCategory(dispatch, {selectedMainCategory,selectedSubCategory,menuDetailID});
+    return singleItemResult[0];
+    //const {allItems} = getState().menu;
+    //const selectedMenuDetail = allItems.filter(el=>el.ITEM_ID == itemID);
+    //return selectedMenuDetail[0];
 });
+// 세트 그룹 받기
+export const getItemSetGroup = createAsyncThunk("menuDetail/getItemSetGroup", async(data,{dispatch}) =>{
+    const {menuDetailID} = getState().menuDetail;
+    const setGroup = await getPosSetGroup(dispatch,{menuDetailID} );
+    console.log("setGroup: ",setGroup);
+    return data;
+});
+
+
 export const setMenuOptionSelect = createAsyncThunk("menuDetail/setMenuOptionSelect", async(data) =>{
     return data;
 });
@@ -67,7 +88,6 @@ export const menuDetailSlice = createSlice({
         builder.addCase(getSingleMenuFromAllItems.fulfilled,(state, action)=>{
             state.menuDetail = action.payload;
         })
-        getSingleMenuFromAllItems
         // 메뉴 옵션 셋
         builder.addCase(setMenuOptionSelect.fulfilled,(state, action)=>{
             state.menuOptionList = action.payload;
@@ -84,6 +104,11 @@ export const menuDetailSlice = createSlice({
         // 메뉴 옵션 그룹
         builder.addCase(setMenuOptionGroupCode.fulfilled,(state, action)=>{
             state.menuOptionGroupCode = action.payload;
+        })
+
+        // 메뉴 세트 그룹 
+        builder.addCase(getItemSetGroup.fulfilled,(state, action)=>{
+            state.menuOptionList = action.payload;
         })
     }
 });

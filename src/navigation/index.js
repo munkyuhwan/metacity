@@ -23,6 +23,7 @@ import {isEmpty} from 'lodash';
 import StatusScreen from '../screens/StatusScreen'
 import { initOrderList } from '../store/order'
 import { DEFAULT_TABLE_STATUS_UPDATE_TIME } from '../resources/defaults'
+import { getAdminMenuItems } from '../store/menuExtra'
 
 const Stack = createStackNavigator()
 
@@ -101,6 +102,8 @@ export default function Navigation() {
         dispatch(getMainCategories());
         // 관리자 카테고리 추가 정보
         dispatch(getAdminCategoryData());
+        // 관리자 메뉴 정보 받아오기;
+        dispatch(getAdminMenuItems());
         /*
         dispatch(getMenuEdit());
         dispatch(initTableInfo());

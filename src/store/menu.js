@@ -10,13 +10,24 @@ import { setMenuCategories, setMenuExtra, setOptionExtra } from './menuExtra';
 import { CALL_SERVICE_GROUP_CODE } from '../resources/apiResources';
 import { setCallServerList } from './callServer';
 import { DEFAULT_CATEGORY_ALL_CODE } from '../resources/defaults';
+import { getPosItemsWithCategory } from '../utils/api/metaApis';
 
 export const initMenu = createAsyncThunk("menu/initMenu", async(category) =>{
     return [];
 })
 
-export const getDisplayMenu = createAsyncThunk("menu/getDisplayMenu", async(_, {getState}) =>{
+export const getDisplayMenu = createAsyncThunk("menu/getDisplayMenu", async(_, {dispatch, getState}) =>{
     const {selectedMainCategory,selectedSubCategory} = getState().categories
+    if(selectedMainCategory == "0" || selectedMainCategory == undefined ) {
+        return
+    }
+    if(selectedSubCategory == "0" || selectedSubCategory == undefined ) {
+        return
+    } 
+    const itemResult = await getPosItemsWithCategory(dispatch, {selectedMainCategory,selectedSubCategory});
+    return itemResult;
+
+   /*  const {selectedMainCategory,selectedSubCategory} = getState().categories
     const {menu, allItems} = getState().menu;
     const {menuExtra} = getState().menuExtra;
 
@@ -47,7 +58,7 @@ export const getDisplayMenu = createAsyncThunk("menu/getDisplayMenu", async(_, {
         const finalItemList = displayMenu.filter(item => item.ITEM_USE_FLAG == "N");
         return finalItemList;
     
-    }
+    } */
    
 
     
