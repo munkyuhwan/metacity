@@ -31,7 +31,7 @@ const CartView = () =>{
     const {isOn} = useSelector((state)=>state.cartView);
     const {orderList, grandTotal, totalItemCnt} = useSelector((state)=>state.order);
     const { tableInfo, tableStatus } = useSelector(state=>state.tableInfo);
-    console.log("orderList: ",orderList);
+    //console.log("orderList: ",orderList);
 
     const [slideAnimation, setSlideAnimation] = useState(new Animated.Value(0));
 

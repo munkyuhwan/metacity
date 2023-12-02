@@ -3,9 +3,11 @@ import { Animated, TouchableWithoutFeedback, View } from 'react-native';
 import { colorRed, tabBaseColor } from '../../assets/colors/color';
 import { SideMenuItemOff, SideMenuItemOn, SideMenuItemWrapper, SideMenuText } from '../../styles/main/sideMenuStyle';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSubCategories, setSelectedMainCategory } from '../../store/categories';
+import { getSubCategories, setSelectedMainCategory, setSelectedSubCategory } from '../../store/categories';
 import { useFocusEffect } from '@react-navigation/native';
 import { SideMenuItemTouchableOff } from './sideMenuItem';
+import {isEmpty} from 'lodash';
+import { DEFAULT_CATEGORY_ALL_CODE } from '../../resources/defaults';
 
 const LeftMenuList = (props) => {
     const dispatch = useDispatch();
@@ -13,8 +15,6 @@ const LeftMenuList = (props) => {
     const initSelect = props?.initSelect;
     const [selectIndex, setSelectedIndex] = useState(0);
     const {selectedMainCategory,mainCategories} = useSelector((state)=>state.categories);
-
-
     const {menuCategories} = useSelector(state=>state.menuExtra);
     const {language} =  useSelector(state=>state.languages);
     //console.log("menuCategories: ",menuCategories);
@@ -42,9 +42,22 @@ const LeftMenuList = (props) => {
             selTitleLanguage = selExtra[0]?.cate_name1_en|| data[index]?.PROD_L1_NM;
         }
 
-        return selTitleLanguage;
-         
+        return selTitleLanguage;    
     }
+
+    useEffect(()=>{
+        if(!isEmpty(mainCategories)){
+            if(mainCategories.length>0){
+                if(!isEmpty(menuCategories)){
+                    if(menuCategories.length>0){
+                        dispatch(setSelectedMainCategory(mainCategories[0].PROD_L1_CD)); 
+                        dispatch(setSelectedSubCategory(DEFAULT_CATEGORY_ALL_CODE));
+                    }
+                }
+            }
+        }
+    },[mainCategories, menuCategories])
+
     return(
         <>
             {data?.map((item, index)=>{     

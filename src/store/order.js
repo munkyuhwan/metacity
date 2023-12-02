@@ -116,7 +116,9 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
     
     // 메뉴 데이터 주문데이터에 맞게 변경
     const orderData = setOrderData(item, orderList);    
-
+    // 중복 체크 후 수량 변경
+    newOrderList = orderListDuplicateCheck(newOrderList, orderData);
+    
     newOrderList.push(orderData);
     newOrderList.reverse();
 
@@ -125,8 +127,7 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
     }else {
         dispatch(setCartView(true));
     }
-    // 중복 체크 후 수량 변경
-    newOrderList = orderListDuplicateCheck(newOrderList);
+   
 
 
     //console.log("newOrderList: ",newOrderList);

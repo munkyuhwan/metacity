@@ -16,8 +16,8 @@ export const POS_POST_ORDER_CANCEL = "/partner/v1/table/order/cancel"; // 반품
 
 // meta
 //export const POS_BASE_URL = "http://192.168.35.224:8090/PosConnectionTest"; //test
-//export const POS_BASE_URL = "http://192.168.35.224:8090/PosConnection"; // real
-export const POS_BASE_URL = "http://192.168.35.198:8090/PosConnection"; // real
+export const POS_BASE_URL = "http://192.168.35.223:8090/PosConnection"; // real
+//export const POS_BASE_URL = "http://192.168.35.198:8090/PosConnection"; // real
 
 // version code
 export const POS_VERSION_CODE = "0010";

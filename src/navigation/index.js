@@ -22,7 +22,7 @@ import { EventRegister } from 'react-native-event-listeners'
 import {isEmpty} from 'lodash';
 import StatusScreen from '../screens/StatusScreen'
 import { initOrderList } from '../store/order'
-import { DEFAULT_TABLE_STATUS_UPDATE_TIME } from '../resources/defaults'
+import { DEFAULT_CATEGORY_ALL_CODE, DEFAULT_TABLE_STATUS_UPDATE_TIME } from '../resources/defaults'
 import { getAdminMenuItems } from '../store/menuExtra'
 
 const Stack = createStackNavigator()
@@ -88,10 +88,10 @@ export default function Navigation() {
     useEffect(()=>{
         //if(!isEmpty(tableInfo)) { 
             // 주석 나중에 빼자
-            statusInterval = setInterval(() => {
+            //statusInterval = setInterval(() => {
                 //console.log("status interval")
-                dispatch(getTableStatus());
-            }, DEFAULT_TABLE_STATUS_UPDATE_TIME);
+            //    dispatch(getTableStatus());
+            //}, DEFAULT_TABLE_STATUS_UPDATE_TIME);
         //}
     },[])
 
@@ -104,6 +104,7 @@ export default function Navigation() {
         dispatch(getAdminCategoryData());
         // 관리자 메뉴 정보 받아오기;
         dispatch(getAdminMenuItems());
+        
         /*
         dispatch(getMenuEdit());
         dispatch(initTableInfo());

@@ -123,9 +123,16 @@ export function setOrderData (data, orderList) {
 }
 
 // 주문 리스트 중복 체크
-export function orderListDuplicateCheck (orderList) {
+export function orderListDuplicateCheck (orderList, orderData) {
     console.log("orderListDuplicateCheck========================================================");
-    console.log(orderList);
+    //console.log(orderList);
+    if(orderList.length>0) {
+        // 중복 체크
+        orderList.map(el=>{
+            console.log("el: ", el)
+        })
+
+    }
     
     return orderList;
 }
