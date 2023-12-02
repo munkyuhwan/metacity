@@ -50,7 +50,7 @@ const MenuItem = ({item,index,setDetailShow}) => {
         }
         return selTitleLanguage;
     }
-    const itemPrice= item.SAL_AMT;
+    const itemPrice= item.SAL_TOT_AMT;
 
 
     return(

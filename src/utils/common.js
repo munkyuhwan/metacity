@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setFullPopupContent, setFullPopupVisibility, setPopupContent, setPopupVisibility, setTransPopupContent, setTransPopupVisibility } from '../store/popup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {isEqual} from 'lodash';
 
 export function openPopup (dispatch, {innerView, isPopupVisible, param}) {
     if(isPopupVisible) {
@@ -123,18 +124,35 @@ export function setOrderData (data, orderList) {
 }
 
 // 주문 리스트 중복 체크
-export function orderListDuplicateCheck (orderList, orderData) {
+export function orderListDuplicateCheck (currentOrderList, orderData) {
     console.log("orderListDuplicateCheck========================================================");
-    //console.log(orderList);
-    if(orderList.length>0) {
+    //console.log("new order: ",orderData);
+    var tmpOrderList = Object.assign([], currentOrderList);
+    if(currentOrderList.length>0) {
         // 중복 체크
-        orderList.map(el=>{
-            console.log("el: ", el)
-        })
-
+        //tmpOrderList.push(orderData);
+        const duplicateCheck = tmpOrderList.filter(el=>el.ITEM_CD == orderData?.ITEM_CD&& isEqual(el.SETITEM_INFO,orderData?.SETITEM_INFO));
+        if(duplicateCheck.length > 0) {
+            //console.log("duplicateCheck: ",duplicateCheck);
+            let duplicatedIndex = -1;
+            tmpOrderList.map((el,index)=>{
+                if(el.ITEM_CD == orderData?.ITEM_CD&& isEqual(el.SETITEM_INFO,orderData?.SETITEM_INFO)) {
+                    duplicatedIndex = index;
+                }
+            })
+            let addedQty = tmpOrderList[duplicatedIndex].ITEM_QTY+1;
+            let addedPrice = orderData?.ITEM_AMT*addedQty;
+            tmpOrderList[duplicatedIndex] = Object.assign({},{...tmpOrderList[duplicatedIndex],...{ITEM_QTY:addedQty,ITEM_AMT:addedPrice}})
+     
+        }else {
+            tmpOrderList.push(orderData);
+        }
+        return tmpOrderList;
+    }else {
+        
+        return [orderData];
     }
     
-    return orderList;
 }
 
 

@@ -47,7 +47,8 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
 
     let tmpOrderList = Object.assign([],orderList);
     const selectedMenu = tmpOrderList[index];
-    let itemCnt = selectedMenu?.ITEM_CNT;
+    let itemCnt = selectedMenu?.ITEM_QTY;
+    let singleItemAmt = selectedMenu?.ITEM_AMT/itemCnt;
     if(operand=="plus") {
         itemCnt +=1;
     }else if(operand=="minus")  {
@@ -55,8 +56,8 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
     }else {
         itemCnt = 0;
     }
-    
-    
+    console.log("index: ",index, " itemCnt: ",itemCnt)
+     
     if(itemCnt<=0) {
         tmpOrderList.splice(index,1);
         if(tmpOrderList.length <= 0) {
@@ -64,74 +65,35 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
         }
         const totalResult = grandTotalCalculate(tmpOrderList)
         //console.log("tmpOrderList:",tmpOrderList);
-        var orderPayData = {
-            "STORE_ID": STORE_ID,
-            "SERVICE_ID": SERVICE_ID,
-            "MCHT_ORDERNO": "130",
-            "MEMB_TEL": "01012349876",
-            "ORDER_MEMO": "태스트 ",
-            "OEG_ORDER_PAY_AMT": `${totalResult.grandTotal}`,
-            "ORDER_PAY_AMT": `${totalResult.grandTotal}`,
-            "DISC_AMT": "0",
-            "PREPAY_FLAG": "N",
-            "OS_GBN": "AND",
-            "FLR_CODE": tableInfo.FLR_CODE,
-            "TBL_CODE": tableInfo.TBL_CODE,
-            "REPT_PRT_FLAG": "Y",
-            "ORDER_PRT_FLAG": "Y",
-            "ORD_PAY_LIST":[],
-            "ITEM_LIST":tmpOrderList,
-        } 
-        return {orderList:tmpOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:orderPayData };
+       
+        return {orderList:tmpOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
         //return {orderList:tmpOrderList}
     }
-    tmpOrderList[index] = Object.assign({},selectedMenu,{ITEM_CNT:itemCnt});
+    tmpOrderList[index] = Object.assign({},selectedMenu,{ITEM_AMT:singleItemAmt*itemCnt, ITEM_QTY:itemCnt});
     const totalResult = grandTotalCalculate(tmpOrderList)
-    var orderPayData = {
-        "STORE_ID": STORE_ID,
-        "SERVICE_ID": SERVICE_ID,
-        "MCHT_ORDERNO": "130",
-        "MEMB_TEL": "01012349876",
-        "ORDER_MEMO": "태스트 ",
-        "OEG_ORDER_PAY_AMT": `${totalResult.grandTotal}`,
-        "ORDER_PAY_AMT": `${totalResult.grandTotal}`,
-        "DISC_AMT": "0",
-        "PREPAY_FLAG": "N",
-        "OS_GBN": "AND",
-        "FLR_CODE": tableInfo.FLR_CODE,
-        "TBL_CODE": tableInfo.TBL_CODE,
-        "REPT_PRT_FLAG": "Y",
-        "ORDER_PRT_FLAG": "Y",
-        "ORD_PAY_LIST":[],
-        "ITEM_LIST":tmpOrderList,
-    } 
-    return {orderList:tmpOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:orderPayData };
+   
+    return {orderList:tmpOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
+     
 })
 
 export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,{dispatch, getState,extra}) =>{
 
     const {item,menuOptionSelected} = _;
     const {orderList} = getState().order;
-    let newOrderList = Object.assign([],orderList);
+    let currentOrderList = Object.assign([],orderList);
     
     // 메뉴 데이터 주문데이터에 맞게 변경
     const orderData = setOrderData(item, orderList);    
     // 중복 체크 후 수량 변경
-    newOrderList = orderListDuplicateCheck(newOrderList, orderData);
+    let newOrderList = orderListDuplicateCheck(currentOrderList, orderData);
     
-    newOrderList.push(orderData);
-    newOrderList.reverse();
+    //newOrderList.reverse();
 
     if(newOrderList.length <= 0) {
         dispatch(setCartView(false));
     }else {
         dispatch(setCartView(true));
     }
-   
-
-
-    //console.log("newOrderList: ",newOrderList);
-
     // 금액계산
     const totalResult = grandTotalCalculate(newOrderList)
 
