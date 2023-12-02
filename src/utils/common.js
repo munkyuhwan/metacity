@@ -51,8 +51,8 @@ export function grandTotalCalculate(data) {
     let itemCnt = 0;
     if(data) {
         data?.map(el=>{
-            amt += el.SALE_PRICE*el.ITEM_CNT;
-            itemCnt += el.ITEM_CNT;
+            amt += el.ITEM_AMT*el.ITEM_QTY;
+            itemCnt += el.ITEM_QTY;
         })
     }
     return {grandTotal:amt, itemCnt:itemCnt};
@@ -83,8 +83,53 @@ export async function getStoreID() {
         })
         
     })
-
 }
+
+export function setOrderData (data, orderList) {
+    if(data?.length<0) return;
+    
+    let setMenuData = 
+        {
+            "ITEM_SEQ" : 0,
+            "ITEM_CD" : "",
+            "ITEM_NM" : "",
+            "ITEM_QTY" : 0,
+            "ITEM_AMT" : 0,
+            "ITEM_VAT" : 0,
+            "ITEM_DC" : 0,
+            "ITEM_CANCEL_YN" : "N",
+            "ITEM_GB" : "N",
+            "ITEM_MSG" : "",
+            "SETITEM_CNT" : 0,
+            "SETITEM_INFO" : 
+            [
+            ] 
+          }
+    
+          setMenuData.ITEM_SEQ=orderList.length+1;
+          setMenuData.ITEM_CD = data?.PROD_CD;
+          setMenuData.ITEM_NM= data?.PROD_NM;
+          setMenuData.ITEM_QTY=  1;
+          setMenuData.ITEM_AMT=  data?.SAL_TOT_AMT;
+          setMenuData.ITEM_VAT=  data?.SAL_VAT;
+          setMenuData.ITEM_DC = 0;
+          setMenuData.ITEM_CANCEL_YN= "N";
+          setMenuData.ITEM_GB =  "N"; //포장 여부 포장"T"
+          setMenuData.ITEM_MSG = "";
+          setMenuData.SETITEM_CNT = 0;
+          setMenuData.SETITEM_INFO=[];
+      
+    return setMenuData;
+}
+
+// 주문 리스트 중복 체크
+export function orderListDuplicateCheck (orderList) {
+    console.log("orderListDuplicateCheck========================================================");
+    console.log(orderList);
+    
+    return orderList;
+}
+
 
 /* 
  */

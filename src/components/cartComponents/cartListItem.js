@@ -19,27 +19,27 @@ const CartListItem = (props) => {
     const {orderList} = useSelector(state=>state.order);
     // 메뉴 옵션 추가 정보
     const {optionExtra} = useSelector(state=>state.menuExtra);
-   
+
     const index = props?.index;
     const order = props?.item;
-
-    const additiveItemList = order.ADDITIVE_ITEM_LIST;
+    //console.log("order: ",order)
+    const additiveItemList = order?.ADDITIVE_ITEM_LIST;
     // 이미지 찾기
-    const itemExtra = menuExtra.filter(el=>el.pos_code == order.ITEM_ID);
+    const itemExtra = menuExtra.filter(el=>el.pos_code == order?.ITEM_CD);
     const ItemTitle = () => {
         let selTitleLanguage = "";
-        const selExtra = itemExtra.filter(el=>el.pos_code==order.ITEM_ID);
+        const selExtra = itemExtra.filter(el=>el.pos_code==order?.ITEM_CD);
         if(language=="korean") {
-            selTitleLanguage = order.ITEM_NAME;
+            selTitleLanguage = order.ITEM_NM;
         }
         else if(language=="japanese") {
-            selTitleLanguage = selExtra[0]?.gname_jp;
+            selTitleLanguage = selExtra[0]?.gname_jp||order.ITEM_NM;
         }
         else if(language=="chinese") {
-            selTitleLanguage = selExtra[0]?.gname_cn;
+            selTitleLanguage = selExtra[0]?.gname_cn||order.ITEM_NM;
         }
         else if(language=="english") {
-            selTitleLanguage = selExtra[0]?.gname_en;
+            selTitleLanguage = selExtra[0]?.gname_en||order.ITEM_NM;
         }
 
         return selTitleLanguage;
@@ -102,18 +102,16 @@ const CartListItem = (props) => {
                 </CartItemImageTogoWrapper>
                 
                 <CartItemTitlePriceWrapper>
-                    <CartItemTitle>{ItemTitle()||order.ITEM_NAME}</CartItemTitle>
+                    <CartItemTitle>{ItemTitle()||order.ITEM_NM}</CartItemTitle>
                     <CartItemOpts>
-                        {additiveItemList.length>0 &&
+                        {/*additiveItemList.length>0 &&
                             additiveItemList.map((el,index)=>{
                                 return `${ItemOptionTitle(el.menuOptionSelected.ADDITIVE_ID,index)||el.menuOptionSelected.ADDITIVE_NAME}`+`${index<(additiveItemList.length-1)?", ":""}`;
-
-                                //return el.menuOptionSelected.ADDITIVE_NAME+`${index<(additiveItemList.length-1)?", ":""}`;
                             
                             })
-                         }
+                        */}
                     </CartItemOpts>
-                    <CartItemPrice>{numberWithCommas(order?.SALE_PRICE||0)}원</CartItemPrice>
+                    <CartItemPrice>{numberWithCommas(order?.ITEM_AMT||0)}원</CartItemPrice>
                     <CartItemAmtWrapper>
                         <TouchableWithoutFeedback  onPress={()=>{calculateAmt("minus",1)}} >
                             <CartItemAmtController>
@@ -121,7 +119,7 @@ const CartListItem = (props) => {
                                <OperandorText>-</OperandorText>
                             </CartItemAmtController>
                         </TouchableWithoutFeedback>
-                        <CartItemAmtText>{order?.ITEM_CNT}</CartItemAmtText>
+                        <CartItemAmtText>{order?.ITEM_QTY}</CartItemAmtText>
                         <TouchableWithoutFeedback  onPress={()=>{calculateAmt("plus",1)}} >
                             <CartItemAmtController>
                                 <OperandorText>+</OperandorText>

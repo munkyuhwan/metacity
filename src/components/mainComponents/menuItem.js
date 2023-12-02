@@ -87,7 +87,7 @@ const MenuItem = ({item,index,setDetailShow}) => {
                                     <MenuItemButton source={require('../../assets/icons/more.png')}/>
                                 </MenuItemButtonInnerWrapperRight>
                             </TouchableWithoutFeedback>
-                            <TouchableWithoutFeedback onPress={()=>{ dispatch(addToOrderList({itemID}));/* dispatch(addToOrderList({menuDetail,menuDetailIndex})) */  }} >
+                            <TouchableWithoutFeedback onPress={()=>{ dispatch(addToOrderList({item}));/* dispatch(addToOrderList({menuDetail,menuDetailIndex})) */  }} >
                                 <MenuItemButtonInnerWrapperLeft>
                                     <MenuItemButton source={require('../../assets/icons/add.png')}/>
                                 </MenuItemButtonInnerWrapperLeft>

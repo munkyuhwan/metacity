@@ -103,7 +103,7 @@ const ItemDetail = (props) => {
     const addToCart = () => {
         //dispatch(addToOrderList({menuDetail, menuDetailID, selectedOptions,selectedRecommend}))
         const itemID = menuDetailID
-        dispatch(addToOrderList({itemID,menuOptionSelected}));
+        dispatch(addToOrderList({item:menuDetail,menuOptionSelected:menuOptionSelected}));
         closeDetail();
     }
 
@@ -132,7 +132,7 @@ const ItemDetail = (props) => {
         if(isDetailShow) {
             setDetailZIndex(999)
             onSelectHandleAnimation(1);
-            dispatch(getItemSetGroup());
+            //dispatch(getItemSetGroup());
             /* 
             var tmpAdditiveList = [];
             if(menuDetail?.ADDITIVE_GROUP_LIST) {

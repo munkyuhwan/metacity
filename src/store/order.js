@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { MENU_DATA } from '../resources/menuData';
 //import { SERVICE_ID, STORE_ID } from '../resources/apiResources';
 import { addOrderToPos, getOrderByTable, postOrderToPos } from '../utils/apis';
-import { getStoreID, grandTotalCalculate, openPopup } from '../utils/common';
+import { getStoreID, grandTotalCalculate, openPopup, orderListDuplicateCheck, setOrderData } from '../utils/common';
 import { isEqual, isEmpty } from 'lodash'
 import { posErrorHandler } from '../utils/errorHandler/ErrorHandler';
 import { setCartView } from './cart';
@@ -36,6 +36,7 @@ export const deleteItem = createAsyncThunk("order/deleteItem", async(_,{dispatch
 
 
 export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", async(_,{dispatch, getState,extra}) =>{
+    
     const {grandTotal, orderList} = getState().order;
     const {amt, index, operand} = _;
     const {tableInfo} = getState().tableInfo;
@@ -108,6 +109,34 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
 })
 
 export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,{dispatch, getState,extra}) =>{
+
+    const {item,menuOptionSelected} = _;
+    const {orderList} = getState().order;
+    let newOrderList = Object.assign([],orderList);
+    
+    // 메뉴 데이터 주문데이터에 맞게 변경
+    const orderData = setOrderData(item, orderList);    
+
+    newOrderList.push(orderData);
+    newOrderList.reverse();
+
+    if(newOrderList.length <= 0) {
+        dispatch(setCartView(false));
+    }else {
+        dispatch(setCartView(true));
+    }
+    // 중복 체크 후 수량 변경
+    newOrderList = orderListDuplicateCheck(newOrderList);
+
+
+    //console.log("newOrderList: ",newOrderList);
+
+    // 금액계산
+    const totalResult = grandTotalCalculate(newOrderList)
+
+    return {orderList:newOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
+
+    /* 
     const {STORE_ID, SERVICE_ID} = await getStoreID()
     .catch(err=>{
         posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'STORE_ID, SERVICE_ID를 입력 해 주세요.',MSG2:""})
@@ -131,11 +160,7 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
     if(menuOptionSelected) {
         if(menuOptionSelected.length>0) additiveList=menuOptionSelected;
     }
-    //console.log("menuOptionSelected: ",menuOptionSelected)
     var selectedMenuDetail = Object.assign({},menuDetail[0],{"ADDITIVE_ITEM_LIST":additiveList});
-    //console.log("selectedMenuDetail:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ")
-    //console.log("selectedMenuDetail: ",selectedMenuDetail)
-    //console.log("selectedMenuDetail: ",selectedMenuDetail.ADDITIVE_ITEM_LIST)
     var newOrderList = []; // 새 오더 정렬;
    // 중복메뉴
     let duplicatedItem = orderList.filter(el=> (
@@ -210,14 +235,28 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
     }
     openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
     newOrderList.reverse();
-    //orderPayData.reverse();
     return {orderList:newOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:orderPayData };
+ */
 })
 // 새로 메뉴 등록
 export const postToPos =  createAsyncThunk("order/postToPos", async(_,{dispatch, getState,extra}) =>{
     const {orderPayData} = getState().order;
     const {paymentResult, isPrepay} = _;
-
+    let payData = {
+        "ITEM_SEQ" : 0,
+        "ITEM_CD" : "",
+        "ITEM_NM" : "",
+        "ITEM_QTY" : 0,
+        "ITEM_AMT" : 0,
+        "ITEM_VAT" : 0,
+        "ITEM_DC" : 0,
+        "ITEM_CANCEL_YN" : "N",
+        "ITEM_GB" : "N",
+        "ITEM_MSG" : "",
+        "SETITEM_CNT" : 0,
+        "SETITEM_INFO" : 
+        []
+    }
     let orderPayList = [];
 
     /* paymentResult = {
