@@ -125,7 +125,6 @@ export function setOrderData (data, orderList) {
 
 // 주문 리스트 중복 체크
 export function orderListDuplicateCheck (currentOrderList, orderData) {
-    console.log("orderListDuplicateCheck========================================================");
     //console.log("new order: ",orderData);
     var tmpOrderList = Object.assign([], currentOrderList);
     if(currentOrderList.length>0) {
