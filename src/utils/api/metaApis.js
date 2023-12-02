@@ -72,7 +72,6 @@ export const getPosItemsWithCategory = async(dispatch, data) =>{
     }) 
 }
 
-
 // 세트 그룹 받기
 export const getPosSetGroup = async(dispatch, data) =>{
     const {menuDetailID} = data;
@@ -95,4 +94,26 @@ export const getPosSetGroup = async(dispatch, data) =>{
         });
     }) 
 }
+
+// 주문하기 
+export const postMetaPosOrder = async(dispatch, data) =>{
+
+    return await new Promise(function(resolve, reject){
+        axios.post(
+            `${POS_BASE_URL}`,
+            data,
+            posOrderHeader,
+        ) 
+        .then((response => {
+            if(metaErrorHandler(dispatch, response?.data)) {
+                resolve()
+            }    
+        })) 
+        .catch(error=>{
+            displayErrorPopup(dispatch,"XXXX",`포스에 연동할 수 없습니다.`);
+            reject(error.response.data)
+        });
+    }) 
+}
+
 

@@ -2,11 +2,13 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { MENU_DATA } from '../resources/menuData';
 //import { SERVICE_ID, STORE_ID } from '../resources/apiResources';
 import { addOrderToPos, getOrderByTable, postOrderToPos } from '../utils/apis';
-import { getStoreID, grandTotalCalculate, openPopup, orderListDuplicateCheck, setOrderData } from '../utils/common';
+import { getStoreID, grandTotalCalculate, numberPad, openPopup, orderListDuplicateCheck, setOrderData } from '../utils/common';
 import { isEqual, isEmpty } from 'lodash'
 import { posErrorHandler } from '../utils/errorHandler/ErrorHandler';
 import { setCartView } from './cart';
 import LogWriter from '../utils/logWriter';
+import { POS_WORK_CD_POSTPAY_ORDER } from '../resources/apiResources';
+import { postMetaPosOrder } from '../utils/api/metaApis';
 
 export const initOrderList = createAsyncThunk("order/initOrderList", async() =>{
     return  {
@@ -201,6 +203,28 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
     return {orderList:newOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:orderPayData };
  */
 })
+// metacity 주문
+export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispatch, getState,extra}) =>{
+    const {orderList} = getState().order;
+    const date = new Date();
+    const orderNo = `${date.getFullYear()}${numberPad(date.getMonth()+1,2)}${numberPad(date.getDate(),2)}${date.getMilliseconds()}`;
+    let orderData = {
+        "VERSION" : "0011",
+        "WORK_CD" : POS_WORK_CD_POSTPAY_ORDER,
+        "ORDER_NO" : orderNo,
+        "TBL_NO" : "001", 
+        "PRINT_YN" : "Y",
+        "USER_PRINT_YN" : "Y",
+        "PRINT_ORDER_NO" : "101", 
+        "TOT_INWON" : 4,
+        "ITEM_CNT" : orderList.length,
+        "ITEM_INFO" :orderList
+    }    
+    return await postMetaPosOrder(dispatch, orderData)
+
+
+})
+
 // 새로 메뉴 등록
 export const postToPos =  createAsyncThunk("order/postToPos", async(_,{dispatch, getState,extra}) =>{
     const {orderPayData} = getState().order;
