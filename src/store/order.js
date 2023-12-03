@@ -98,7 +98,7 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
     }
     // 금액계산
     const totalResult = grandTotalCalculate(newOrderList)
-
+    openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
     return {orderList:newOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
 
     /* 

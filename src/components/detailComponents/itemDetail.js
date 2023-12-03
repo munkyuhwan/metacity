@@ -8,7 +8,7 @@ import OptItem from './optItem';
 import CommonIndicator from '../common/waitIndicator';
 import WaitIndicator from '../common/waitIndicator';
 import RecommendItem from './recommendItem';
-import { setMenuDetail, getSingleMenu, setMenuOptionSelect, setMenuOptionGroupCode, initMenuDetail, getSingleMenuFromAllItems, getItemSetGroup } from '../../store/menuDetail';
+import { setMenuDetail, getSingleMenu, setMenuOptionSelect, setMenuOptionGroupCode, initMenuDetail, getSingleMenuFromAllItems, getItemSetGroup, getSingleMenuForRecommend } from '../../store/menuDetail';
 import { numberWithCommas, openPopup } from '../../utils/common';
 import { MENU_DATA } from '../../resources/menuData';
 import { addToOrderList } from '../../store/order';
@@ -83,7 +83,6 @@ const ItemDetail = (props) => {
     }
     
     const onOptionSelect = (groupCode) =>{
-        console.log("set group option code: ",groupCode);
         dispatch(setMenuOptionGroupCode(groupCode));
         openPopup(dispatch,{innerView:"Option", isPopupVisible:true});
         /* 
@@ -126,9 +125,15 @@ const ItemDetail = (props) => {
         if(menuDetailID!= null) {
             dispatch(getSingleMenuFromAllItems(menuDetailID))
             dispatch(getItemSetGroup());
+            if(itemExtra[0]?.related) {
+                if(itemExtra[0]?.related.length>0) {
+                    dispatch(getSingleMenuForRecommend({related:itemExtra[0]?.related}));
+                }
+            } 
         }else {
             onSelectHandleAnimation(0);
         }
+        
     },[menuDetailID])
 
     useEffect(()=>{
@@ -291,7 +296,6 @@ const ItemDetail = (props) => {
                                             itemExtra[0]?.related &&
                                                 itemExtra[0]?.related.length > 0 &&
                                                 itemExtra[0]?.related.map((el,index)=>{
-                                                    
                                                     if(isEmpty(el)) {
                                                         return (<></>)
                                                     }else {

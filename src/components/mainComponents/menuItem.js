@@ -51,7 +51,6 @@ const MenuItem = ({item,index,setDetailShow}) => {
         return selTitleLanguage;
     }
     const itemPrice= item.SAL_TOT_AMT;
-    console.log("item: ",item);
 
     return(
         <>

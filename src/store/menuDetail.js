@@ -27,10 +27,27 @@ export const getSingleMenuFromAllItems = createAsyncThunk("menuDetail/getSingleM
     } 
     const singleItemResult = await getPosItemsWithCategory(dispatch, {selectedMainCategory,selectedSubCategory,menuDetailID});
     return singleItemResult[0];
+});
+// 추천 메뉴를 위한 단일 메뉴 받기
+
+export const getSingleMenuForRecommend = createAsyncThunk("menuDetail/getSingleMenuForRecommend", async(_,{dispatch, getState}) =>{
+    const {selectedMainCategory,selectedSubCategory} = getState().categories
+    const {menuDetailID} = getState().menuDetail;
+    const {related} = _;
+    console.log("related: ",related)
+    if(selectedMainCategory == "0" || selectedMainCategory == undefined ) {
+        return
+    }
+    if(selectedSubCategory == "0" || selectedSubCategory == undefined ) {
+        return
+    } 
+    //const singleItemResult = await getPosItemsWithCategory(dispatch, {selectedMainCategory,selectedSubCategory,menuDetailID});
+    //return singleItemResult[0];
     //const {allItems} = getState().menu;
     //const selectedMenuDetail = allItems.filter(el=>el.ITEM_ID == itemID);
     //return selectedMenuDetail[0];
 });
+
 // 세트 그룹 받기
 export const getItemSetGroup = createAsyncThunk("menuDetail/getItemSetGroup", async(data,{dispatch,getState}) =>{
     const {menuDetailID} = getState().menuDetail;
@@ -39,7 +56,6 @@ export const getItemSetGroup = createAsyncThunk("menuDetail/getItemSetGroup", as
 });
 // 세트 그룹 아이템 받기
 export const getSetItems = createAsyncThunk("menuDetail/getSetItems", async(data,{dispatch,getState}) =>{
-    console.log("getSetItems========================================")
     const {menuOptionGroupCode} = getState().menuDetail;
     const setGroupItem = await getPosSetGroupItem(dispatch,{menuOptionGroupCode}).catch(err=>{ posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"통신",MSG2:"아이템을 받아올 수 없습니다."}); return;});
     //const setGroup = await getPosSetGroup(dispatch,{menuDetailID} );
@@ -73,6 +89,7 @@ export const menuDetailSlice = createSlice({
         menuOptionList:[],
         menuOptionSelected:[],
         setGroupItem:[],
+        menuRecommendItems:[],
     },
     extraReducers:(builder)=>{
         initMenuDetail
@@ -121,6 +138,10 @@ export const menuDetailSlice = createSlice({
         // 메뉴 세트 그룹 아이템 
         builder.addCase(getSetItems.fulfilled,(state, action)=>{
             state.setGroupItem = action.payload;
+        })
+        // 추천 메뉴
+        builder.addCase(getSingleMenuForRecommend.fulfilled,(state, action)=>{
+            state.menuRecommendItems = action.payload;
         })
         
     }

@@ -6,16 +6,19 @@ import { MENU_DATA } from '../../resources/menuData';
 import {isEmpty} from "lodash";
 import { getSingleMenu, getSingleMenuFromAllItems, setMenuDetail } from '../../store/menuDetail';
 import { addToOrderList } from '../../store/order';
+import { getPosItemsWithCategory } from '../../utils/api/metaApis';
 
 const RecommendItem = (props) => {
     const recommentItemID = props?.recommendData
     const {allItems} = useSelector(state=>state.menu);
     const {menuExtra} = useSelector(state=>state.menuExtra);
     const {language} =  useSelector(state=>state.languages);
+    const {selectedMainCategory,selectedSubCategory} = useSelector(state=>state.categories)
+    const [itemDetail, setItemDetail] = useState();
     const dispatch = useDispatch();
 
     //console.log("menu:",allItems);
-    const recItem = allItems.filter(item => item.ITEM_ID == recommentItemID);
+    //const recItem = allItems.filter(item => item.ITEM_ID == recommentItemID);
     //const recommendData = props?.recommendData;
     //const menuData = props?.menuData;
     // 메뉴 추가정보 찾기
@@ -23,13 +26,20 @@ const RecommendItem = (props) => {
     const itemExtra = menuExtra.filter(el=>el.pos_code == recommentItemID);
     //console.log("itemExtra: ",itemExtra);
     
-    if(isEmpty(recItem)) return(<></>)
-
+    useEffect(()=>{
+        getPosItemsWithCategory(dispatch, {selectedMainCategory,selectedSubCategory,menuDetailID:recommentItemID})
+        .then(result=>{
+            console.log("itemResult:",result);
+            setItemDetail(result);
+        })
+    },[])
+    
+    if(isEmpty(itemDetail)) return(<></>)
     const ItemTitle = () =>{
         let selTitleLanguage = "";
         const selExtra = menuExtra.filter(el=>el.pos_code==recommentItemID);
         if(language=="korean") {
-            selTitleLanguage = recItem[0]?.ITEM_NAME;
+            selTitleLanguage = itemDetail[0]?.PROD_NM;
         }
         else if(language=="japanese") {
             selTitleLanguage = selExtra[0]?.gname_jp;
@@ -45,7 +55,7 @@ const RecommendItem = (props) => {
     
     return(
         <>
-            <TouchableWithoutFeedback onPress={()=>{dispatch(addToOrderList({itemID:recommentItemID})); /* dispatch(setMenuDetail(recommentItemID)); */ }}>
+            <TouchableWithoutFeedback onPress={()=>{dispatch(addToOrderList({item:itemDetail[0]})); /* dispatch(setMenuDetail(recommentItemID)); */ }}>
                 <RecommendItemWrapper>
                     <RecommendItemImageWrapper>
                         <RecommendItemImage  source={{uri:`${"https:"+itemExtra[0]?.gimg_chg}`}}/>
@@ -56,8 +66,8 @@ const RecommendItem = (props) => {
                         }
                     </RecommendItemImageWrapper>
                     <RecommendItemInfoWrapper>
-                        <RecommendItemInfoTitle>{ItemTitle()||recItem[0]?.ITEM_NAME}</RecommendItemInfoTitle>
-                        <RecommendItemInfoPrice>{recItem[0]?.ITEM_AMT==null?"":Number(recItem[0]?.ITEM_AMT ).toLocaleString(undefined,{maximumFractionDigits:0}) } 원</RecommendItemInfoPrice>
+                        <RecommendItemInfoTitle>{ItemTitle()||itemDetail[0]?.PROD_NM}</RecommendItemInfoTitle>
+                        <RecommendItemInfoPrice>{itemDetail[0]?.SAL_TOT_AMT==null?"":Number(itemDetail[0]?.SAL_TOT_AMT ).toLocaleString(undefined,{maximumFractionDigits:0}) } 원</RecommendItemInfoPrice>
                     </RecommendItemInfoWrapper>
                 </RecommendItemWrapper>
             </TouchableWithoutFeedback>
