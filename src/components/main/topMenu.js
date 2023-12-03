@@ -13,7 +13,7 @@ import { CategoryScrollView, CategoryWrapper, IconWrapper, TableName, TableNameB
 import { useDispatch, useSelector } from 'react-redux'
 import ItemDetail from '../detailComponents/itemDetail'
 import { getSubCategories, setCategories, setSelectedSubCategory } from '../../store/categories'
-import { openFullSizePopup, openPopup, openTransperentPopup } from '../../utils/common'
+import { getTableInfo, openFullSizePopup, openPopup, openTransperentPopup } from '../../utils/common'
 import { colorWhite } from '../../assets/colors/color'
 import TopMenuList from '../menuComponents/topMenuList'
 import VersionCheck from 'react-native-version-check';
@@ -21,10 +21,8 @@ import { uploadFile } from '../../store/etcFunctions'
 
 const TopMenu = () =>{
     const dispatch = useDispatch();
-    const {tableInfo} = useSelector(state => state.tableInfo);
-    const {menuCategories} = useSelector(state=>state.menuExtra);
     const {selectedMainCategory,subCategories} = useSelector(state => state.categories);
-
+    const [tableNoText, setTableNoText] = useState("");
     //console.log("subCategories: ",subCategories);
     
     const [currentVersion, setCurrentVersion ] = useState("version");
@@ -46,6 +44,10 @@ const TopMenu = () =>{
 
     useEffect(()=>{ 
         setCurrentVersion(VersionCheck.getCurrentVersion());
+        getTableInfo()
+        .then(result=>{
+            setTableNoText(result.TABLE_INFO);
+        })
     },[])
 
     const onPressItem = (index) => {
@@ -75,7 +77,7 @@ const TopMenu = () =>{
                 </SafeAreaView>
                 <TableName>
                     {/* <TableNameSmall>{tableInfo?.TBL_CODE}</TableNameSmall> */}
-                    <TableNameBig>{tableInfo?.TBL_NAME}</TableNameBig>
+                    <TableNameBig>{tableNoText}</TableNameBig>
                 </TableName>
                 <TouchableWithoutFeedback onPress={()=>{openFullSizePopup(dispatch,{innerFullView:"Setting", isFullPopupVisible:true}); }} >
                     <Text style={{color:colorWhite}} >설정 {currentVersion}</Text>
