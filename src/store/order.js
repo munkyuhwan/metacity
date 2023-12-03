@@ -354,15 +354,8 @@ export const postAddToPos =  createAsyncThunk("order/postAddToPos", async(_,{dis
 })
 // 테이블 주문 히스토리
 export const getOrderStatus = createAsyncThunk("order/getOrderStatus", async(_,{dispatch, getState,extra}) =>{
-    
     const result = await getTableOrderList();
     return result;
-    /* const {tableInfo} = getState().tableInfo;
-    const {orderData} = _;
-    return await getOrderByTable(dispatch, {tableInfo ,orderData})
-    .catch(err=>{
-        console.log("error: ",err)
-    }); */
 })
 /* 
 export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,{getState,extra}) =>{

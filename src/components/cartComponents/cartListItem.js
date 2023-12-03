@@ -68,6 +68,18 @@ const CartListItem = (props) => {
         dispatch(resetAmtOrderList({operand,amt,index}))
     }
     function onTogoTouch() {
+        if(order?.ITEM_GB == "T") {
+            let tmpOrdList = Object.assign([],orderList);
+            let ordToChange = Object.assign({},tmpOrdList[index]);
+            ordToChange.ITEM_GB = "N";
+            ordToChange.ITEM_MSG = "";
+            tmpOrdList[index] = ordToChange;
+            dispatch(setOrderList(tmpOrdList))
+        }else {
+            openPopup(dispatch,{innerView:"TogoPopup", isPopupVisible:true,param:{index:index}}); 
+        }
+        //dispatch(setTogo({index}));
+        /* 
         //ADDITIVE_ITEM_LIST
         let additiveList = additiveItemList;
         let togoCheck = additiveList.filter(el=>el.menuOptionSelected.ADDITIVE_ID=="1002");
@@ -84,7 +96,7 @@ const CartListItem = (props) => {
             openPopup(dispatch,{innerView:"TogoPopup", isPopupVisible:true,param:{index:index}}); 
         }
  
-
+ */
         
     }
 
@@ -93,12 +105,12 @@ const CartListItem = (props) => {
             <CartItemWrapper>
                 <CartItemImageTogoWrapper>
                     <CartItemImage source={{uri:"https:"+itemExtra[0]?.gimg_chg}} />
-                   {/*  <TouchableWithoutFeedback onPress={()=>{ onTogoTouch(); }} >
+                    <TouchableWithoutFeedback onPress={()=>{ onTogoTouch(); }} >
                         <CartItemTogoWrapper>
-                            <CartItemTogoText>{additiveItemList?.filter(el=>el.menuOptionSelected.ADDITIVE_ID=="1002").length>0?LANGUAGE[language]?.cartView.togoCancel:LANGUAGE[language]?.cartView.togo}</CartItemTogoText>
+                            <CartItemTogoText>{order?.ITEM_GB == "T"?LANGUAGE[language]?.cartView.togoCancel:LANGUAGE[language]?.cartView.togo}</CartItemTogoText>
                             <CartItemTogoIcon source={require("../../assets/icons/togo.png")}  />
                         </CartItemTogoWrapper>
-                    </TouchableWithoutFeedback> */}
+                    </TouchableWithoutFeedback> 
                 </CartItemImageTogoWrapper>
                 
                 <CartItemTitlePriceWrapper>

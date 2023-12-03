@@ -56,7 +56,7 @@ export const CartItemImageTogoWrapper = styled.View`
 `
 export const CartItemImage = styled.Image`
     width:120px;
-    height:76px;
+    height:106px;
     backgroundColor:brown;
     borderRadius:${RADIUS};
 `

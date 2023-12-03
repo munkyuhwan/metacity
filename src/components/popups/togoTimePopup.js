@@ -19,27 +19,17 @@ const TogoPopup = (props) =>{
     // 1009, 1002
     function onComplete () {
         const index = param?.index;
-        let tmpOrdList = [...orderList];
-        /* 
-        let itemAdditiveGroupList = tmpOrdList[0].ADDITIVE_GROUP_LIST;
-        let togoAdditiveGroup = itemAdditiveGroupList.filter(el=>el.ADDITIVE_GROUP_CODE == "1009");
-        console.log("togoAdditive: ",togoAdditiveGroup[0]);
-        let togoAdditiveList = togoAdditiveGroup[0].ADDITIVE_ITEM_LIST;
-        */
-       const additiveData = {"menuOptionGroupCode": "1009", "menuOptionSelected": {
-            "ADDITIVE_ID": '1002',
-            "ADDITIVE_NAME": '포장',
-            "RULE_ID": '1009',
-            "ADDITIVE_PRICE": "0",
-            "ADDITIVE_CNT": "1"
-        }}
-        var additiveList = Object.assign([], tmpOrdList[index].ADDITIVE_ITEM_LIST);
-        additiveList.push(additiveData);
-         
-        tmpOrdList[index] = {...tmpOrdList[index],  ADDITIVE_ITEM_LIST:additiveList};
+        let tmpOrdList = Object.assign([],orderList);
+        let ordToChange = Object.assign({},tmpOrdList[index]);
+        ordToChange.ITEM_GB = "T";
+        ordToChange.ITEM_MSG = `포장 ${numberPad(timeSelected.getHours(),2)+":"+numberPad(timeSelected.getMinutes(),2)}`;
+        tmpOrdList[index] = ordToChange;
         dispatch(setOrderList(tmpOrdList))
         openPopup(dispatch,{innerView:"", isPopupVisible:false}); 
     }
+    useEffect(()=>{
+        setTimeSelected(new Date())
+    },[])
 
     return(
         <>
@@ -48,7 +38,9 @@ const TogoPopup = (props) =>{
                     <PopupTitleText>{LANGUAGE[language]?.togoView.title}</PopupTitleText>
                 </PopupTitleWrapper>
                 <TogoTimePickerWrapper>
-                    <DatePicker mode={"time"} date={new Date()} androidVariant='nativeAndroid' is24hourSource="locale" onDateChange={(time)=>{ setTimeSelected(numberPad(time.getHours(),2)+":"+numberPad(time.getMinutes(),2));  }} />
+                    {timeSelected &&
+                        <DatePicker mode={"time"} date={timeSelected} androidVariant='nativeAndroid' is24hourSource="locale" onDateChange={(time)=>{ setTimeSelected(time) /* setTimeSelected(numberPad(time.getHours(),2)+":"+numberPad(time.getMinutes(),2)); */  }} />
+                    }
                 </TogoTimePickerWrapper>
                 <View style={{marginTop:45}} />
                 <PopupBottomButtonWrapper>
