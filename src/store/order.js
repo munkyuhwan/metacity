@@ -226,7 +226,11 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
         "ITEM_CNT" : orderList.length,
         "ITEM_INFO" :orderList
     }    
-    return await postMetaPosOrder(dispatch, orderData)
+    const result = await postMetaPosOrder(dispatch, orderData).catch(err=>{posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"주문오류",MSG2:"주문을 진행할 수 없습니다."}); return; });
+    dispatch(setCartView(false));
+    dispatch(initOrderList());
+
+    return result;
 
 
 })
