@@ -78,25 +78,6 @@ const CartListItem = (props) => {
         }else {
             openPopup(dispatch,{innerView:"TogoPopup", isPopupVisible:true,param:{index:index}}); 
         }
-        //dispatch(setTogo({index}));
-        /* 
-        //ADDITIVE_ITEM_LIST
-        let additiveList = additiveItemList;
-        let togoCheck = additiveList.filter(el=>el.menuOptionSelected.ADDITIVE_ID=="1002");
-
-        if(togoCheck.length > 0) {
-            // additive listd에서 포장을 빼야함
-            let tmpOrdList = [...orderList];
-            
-            // additive list에서 포장을 제외한 배열 만들기
-            let additiveListWithoutTogo = additiveList.filter(el=>el.menuOptionSelected.ADDITIVE_ID!="1002");
-            tmpOrdList[index] = {...tmpOrdList[index],  ADDITIVE_ITEM_LIST:additiveListWithoutTogo};
-            dispatch(setOrderList(tmpOrdList)) 
-        }else {
-            openPopup(dispatch,{innerView:"TogoPopup", isPopupVisible:true,param:{index:index}}); 
-        }
- 
- */
         
     }
 
