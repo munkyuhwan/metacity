@@ -72,7 +72,7 @@ const MenuListView = () => {
 
     useEffect(()=>{
         if(mainCategories[0]) {
-            dispatch(setSelectedMainCategory(mainCategories[0].ITEM_GROUP_CODE));
+            dispatch(setSelectedMainCategory(mainCategories[0].PROD_L1_CD));
         }
     },[mainCategories])
 

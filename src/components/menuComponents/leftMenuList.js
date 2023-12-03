@@ -57,8 +57,8 @@ const LeftMenuList = (props) => {
             }
         }
     },[mainCategories, menuCategories])
-
-    return(
+    //console.log("selectedMainCategory: ",selectedMainCategory);
+     return(
         <>
             {data?.map((item, index)=>{     
                 return(
