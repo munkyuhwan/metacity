@@ -8,22 +8,22 @@ const OrderListItem = (props) => {
     const {menuExtra} = useSelector(state=>state.menuExtra);
   
     // 이미지 찾기
-    const itemExtra = menuExtra.filter(el=>el.pos_code == item.ITEM_ID);
+    const itemExtra = menuExtra.filter(el=>el.pos_code == item.ITEM_CD);
     const imgUrl = "https:"+itemExtra[0]?.gimg_chg;
     const ItemTitle = () => {
         let selTitleLanguage = "";
-        const selExtra = itemExtra.filter(el=>el.pos_code==item.ITEM_ID);
+        const selExtra = itemExtra.filter(el=>el.pos_code==item.ITEM_CD);
         if(language=="korean") {
-            selTitleLanguage = item.ITEM_NAME;
+            selTitleLanguage = item.ITEM_NM;
         }
         else if(language=="japanese") {
-            selTitleLanguage = selExtra[0]?.gname_jp;
+            selTitleLanguage = selExtra[0]?.gname_jp||item.ITEM_NM;
         }
         else if(language=="chinese") {
-            selTitleLanguage = selExtra[0]?.gname_cn;
+            selTitleLanguage = selExtra[0]?.gname_cn||item.ITEM_NM;
         }
         else if(language=="english") {
-            selTitleLanguage = selExtra[0]?.gname_en;
+            selTitleLanguage = selExtra[0]?.gname_en||item.ITEM_NM;
         }
 
         return selTitleLanguage;
@@ -33,13 +33,13 @@ const OrderListItem = (props) => {
             <OrderListTableItemWrapper>
                 <OrderListTableItemImageNameWrapper flex={0.85}>
                     <OrderListTableItemImage source={{uri:imgUrl}} />
-                    <OrderListTableItemName>{ItemTitle()||item.ITEM_NAME}</OrderListTableItemName>
+                    <OrderListTableItemName>{ItemTitle()||item.ITEM_NM}</OrderListTableItemName>
                 </OrderListTableItemImageNameWrapper>
-                <OrderListTableItemAmt flex={0.1}>{item?.ITEM_CNT}ea</OrderListTableItemAmt>
+                <OrderListTableItemAmt flex={0.1}>{item?.ITEM_QTY}ea</OrderListTableItemAmt>
                 <OrderListTableItemOperander flex={0.01} >X</OrderListTableItemOperander>
-                <OrderListTableItemPrice flex={0.15} >{item?.SALE_PRICE}원</OrderListTableItemPrice>
+                <OrderListTableItemPrice flex={0.15} >{item?.ITEM_AMT}원</OrderListTableItemPrice>
                 <OrderListTableItemOperander flex={0.01} >=</OrderListTableItemOperander>
-                <OrderListTableItemTotal flex={0.25} >{item?.ITEM_CNT*item?.SALE_PRICE}원</OrderListTableItemTotal>
+                <OrderListTableItemTotal flex={0.25} >{item?.ITEM_QTY*item?.ITEM_AMT}원</OrderListTableItemTotal>
             </OrderListTableItemWrapper>
         </>
     )

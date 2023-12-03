@@ -8,7 +8,7 @@ import { posErrorHandler } from '../utils/errorHandler/ErrorHandler';
 import { setCartView } from './cart';
 import LogWriter from '../utils/logWriter';
 import { POS_VERSION_CODE, POS_WORK_CD_POSTPAY_ORDER, POS_WORK_CD_VERSION } from '../resources/apiResources';
-import { postMetaPosOrder } from '../utils/api/metaApis';
+import { getTableOrderList, postMetaPosOrder } from '../utils/api/metaApis';
 
 export const initOrderList = createAsyncThunk("order/initOrderList", async() =>{
     return  {
@@ -231,8 +231,6 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
     dispatch(initOrderList());
 
     return result;
-
-
 })
 
 // 새로 메뉴 등록
@@ -356,12 +354,15 @@ export const postAddToPos =  createAsyncThunk("order/postAddToPos", async(_,{dis
 })
 // 테이블 주문 히스토리
 export const getOrderStatus = createAsyncThunk("order/getOrderStatus", async(_,{dispatch, getState,extra}) =>{
-    const {tableInfo} = getState().tableInfo;
+    
+    const result = await getTableOrderList();
+    return result;
+    /* const {tableInfo} = getState().tableInfo;
     const {orderData} = _;
     return await getOrderByTable(dispatch, {tableInfo ,orderData})
     .catch(err=>{
         console.log("error: ",err)
-    });
+    }); */
 })
 /* 
 export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,{getState,extra}) =>{

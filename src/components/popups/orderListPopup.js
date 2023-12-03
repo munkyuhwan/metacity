@@ -30,7 +30,7 @@ const OrderListPopup = () =>{
         })
         .catch(error=>{
 
-        })  */
+        })  *//* 
         checkTableOrder(dispatch,{tableInfo})
         .then(orderStatus=>{
             const orderNo = orderStatus.orderNo;
@@ -39,18 +39,19 @@ const OrderListPopup = () =>{
             const orderResult = {"ORG_ORDERNO":orgOrderNo,"MCHT_ORDERNO":mchatOrderNo,"ORDERNO":orderNo}
             dispatch(getOrderStatus({orderData:orderResult}));
         })
-        .catch(err=>{}) 
-        
+        .catch(err=>{})  */
+
+        dispatch(getOrderStatus());
     },[])
  
     useEffect(()=>{
         if(isEmpty(orderStatus)) {
             setOrderTotalAmt(0);
         }
-        if(orderStatus[0]?.ITEM_LIST){
+        if(orderStatus){
             let tmpPrice = 0;
-            orderStatus[0].ITEM_LIST.map(el=>{
-                tmpPrice += Number(el.SALE_PRICE);
+            orderStatus.map(el=>{
+                tmpPrice += Number(el.ITEM_AMT);
             })
             setOrderTotalAmt(tmpPrice);
         }
@@ -74,9 +75,9 @@ const OrderListPopup = () =>{
                             <OrderListTableColumnName flex={0.2} >{LANGUAGE[language]?.orderListPopup.tableColPrice}</OrderListTableColumnName>
                             <OrderListTableColumnName flex={0.3} >{LANGUAGE[language]?.orderListPopup.tableColTotal}</OrderListTableColumnName>
                         </OrderListTableColumnNameWrapper>
-                       {orderStatus[0]?.ITEM_LIST &&
+                       {orderStatus &&
                             <OrderListTableList
-                                data={orderStatus[0].ITEM_LIST}
+                                data={orderStatus}
                                 renderItem={(item)=>{return <OrderListItem order={item} />}}
                             />
                         }

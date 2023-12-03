@@ -13,7 +13,7 @@ import { setCartView, setIconClick } from '../../store/cart';
 import { IconWrapper } from '../../styles/main/topMenuStyle';
 import TopButton from '../menuComponents/topButton';
 import { openPopup, openTransperentPopup } from '../../utils/common';
-import { getOrderStatus, postAddToPos, postToMetaPos, postToPos } from '../../store/order';
+import { postToMetaPos, postToPos } from '../../store/order';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
 import { servicePayment } from '../../utils/smartro';
@@ -65,66 +65,6 @@ const CartView = () =>{
         //dispatch(getMenuState());
         dispatch(postToMetaPos());
 
-        /* 
-        const resultData = await posMenuState(dispatch);
-        if(!resultData) {
-            //return
-        }else {
-            const isUpdated = resultData?.OBJ.UPDATE_YN;
-            const updateDateTime = resultData?.OBJ.UPDATE_DTIME.slice(0,14);
-            if(isUpdated=="Y") {
-                AsyncStorage.setItem("lastUpdate",updateDateTime);
-                posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"메뉴가 업데이트 되었습니다.",MSG2:"업데이트 후 다시 진행 해 주세요."});
-                return;
-            }
-        }
- 
-        if(isEmpty(tableInfo)) {
-            posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"테이블 선택이 안되었습니다.",MSG2:"직원호출을 해 주세요."});
-            return;
-        }
-
-        const orderStatus = await checkTableOrder(dispatch,{tableInfo}).catch(err=>{return});
-
-        const isAdd = orderStatus.isAdd;
-        const orderNo = orderStatus.orderNo;
-        const mchatOrderNo = orderStatus.mchatOrderNo;
-        const orgOrderNo = orderStatus.orgOrderNo
-        const orderResult = {"ORG_ORDERNO":orgOrderNo,"MCHT_ORDERNO":mchatOrderNo,"ORDERNO":orderNo}
-
-
-        if(isPrepay) {
-            //openTransperentPopup(dispatch, {innerView:"OrderList", isPopupVisible:true});
-
-            const paymentData = {"deal":"approval","total-amount":grandTotal};
-            const result = await servicePayment(dispatch, paymentData)
-            .catch((error)=>{
-                console.log("error: ",error)
-                return;
-            }); 
-            const jsonResult=JSON.parse(result);
-            //const jsonResult = {"acquire-info": "0300신한카드사", "additional-device-name": "SIFM", "additional-device-serial": "S522121235", "approval-date": "231026", "approval-no": "37466524", "approval-time": "004108", "business-address": "서울 영등포구 선유로3길 10 하우스디 비즈 706호", "business-name": "주식회사 우리포스", "business-no": "2118806806", "business-owner-name": "김정엽", "business-phone-no": "02  15664551", "card-no": "94119400********", "cat-id": "7109912041", "deal": "approval", "device-auth-info": "####SMT-R231", "device-auth-ver": "1001", "device-name": "SMT-R231", "device-serial": "S522121235", "display-msg": "정상승인거래", "external-name": "SIFM", "external-serial": "S522121235", "issuer-info": "0300마이홈플러스신한", "merchant-no": "0105512446", "persional-id": "01040618432", "receipt-msg": "정상승인거래", "response-code": "00", "service": "payment", "service-result": "0000", "total-amount": 20, "type": "credit", "unique-no": "710610231843", "van-tran-seq": "231026004105"}
-            if(jsonResult['service-result'] == "0000") {
-                // 결제가 완료된 후
-                // 1. 주문번호가 저장된게 있으면 
-                
-                console.log("신규 주문");
-                const paymentResult = jsonResult
-                dispatch(postToPos({paymentResult,isPrepay}));
-            }
-            
-        }else {
-                const paymentResult = {}
-                if(isAdd) {
-                    console.log("후불 추가 주문");
-                //    console.log("orderResult: ",orderResult);
-                    dispatch(postAddToPos({orderResult}));
-                }else {
-                    console.log("후불 신규 주문");
-                    dispatch(postToPos({paymentResult,isPrepay}));
-                }
-        }
-         */
     }
     useEffect(()=>{
         drawerController(isOn); 
