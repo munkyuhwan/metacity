@@ -51,7 +51,7 @@ const MenuItem = ({item,index,setDetailShow}) => {
         return selTitleLanguage;
     }
     const itemPrice= item.SAL_TOT_AMT;
-
+    console.log("item: ",item);
 
     return(
         <>
@@ -94,7 +94,7 @@ const MenuItem = ({item,index,setDetailShow}) => {
                             </TouchableWithoutFeedback>
                         </MenuItemButtonWrapper>
                     </MenuItemImageWrapper>
-                    {itemExtra[0]?.soldout=='Y'&&
+                    {item?.SVC_GB=='1'&&
                         <SoldOutLayer>
                             <SoldOutText>SOLD OUT</SoldOutText>    
                             <SoldOutDimLayer/>
