@@ -4,7 +4,7 @@ import OptItem from "../detailComponents/optItem";
 import RadioGroup from 'react-native-radio-buttons-group';
 import { useEffect, useMemo, useState } from "react";
 import _ from 'lodash';
-import { setMenuOptionSelected } from "../../store/menuDetail";
+import { getSetItems, setMenuOptionSelected } from "../../store/menuDetail";
 import FastImage from "react-native-fast-image";
 import { Text, TouchableWithoutFeedback, View } from "react-native";
 import { openPopup } from "../../utils/common";
@@ -12,7 +12,7 @@ import { openPopup } from "../../utils/common";
 const OptionSelectPopup = () =>{
     const {language} = useSelector(state=>state.languages);
     const dispatch = useDispatch();
-    const {menuOptionList, menuOptionGroupCode} = useSelector((state)=>state.menuDetail);
+    const {menuOptionList, menuOptionGroupCode, setGroupItem} = useSelector((state)=>state.menuDetail);
     const [optionData, setOptionData] = useState([])
     const radioButtons = useMemo(()=>optionData)
     const [selectedId, setSelectedId] = useState();
@@ -64,21 +64,39 @@ const OptionSelectPopup = () =>{
 
         }
     },[selectedId])
+    
+    useEffect(()=>{
+        dispatch(getSetItems());
+
+    },[menuOptionGroupCode])
+
     return( 
         <>
             <View style={{ width:'100%', textAlign:'center', alignItems:"center", padding:20}} >
                 <View style={{width:'100%', height:100, padding:0, flexDirection:'row', alignItems:'center', textAlign:'center'  }} >
-                    {optionData.map((el,index)=>{ 
+                    {setGroupItem?.map((el,index)=>{ 
+                        console.log("el: ",el);
+                        if(el.USE_YN == "Y") {
+                            <TouchableWithoutFeedback onPress={()=>{setSelectedId(el.PROD_I_CD)}} >
+                                <View style={{padding:10}} >
+                                        <FastImage style={{width:100, height:100, resizeMode:'contain',  }} source={{uri:`https:${optionRight[0]?.gimg_chg}`}} />
+                                        <Text style={{width:'100%', color:'black', fontWeight:'bold', fontSize:17, textAlign:'center'}}  >{ItemTitle(menuOptionList[index]?.ADDITIVE_ID, index)||menuOptionList[index]?.ADDITIVE_NAME}</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+                        }else {
+                            return(<></>);
+                        }
+                        /* 
                         const optionRight = optionExtra.filter(optionEl => optionEl.pos_code == el.id);
                         return(
                             <TouchableWithoutFeedback onPress={()=>{setSelectedId(el.id)}} >
                                 <View style={{padding:10}} >
                                         <FastImage style={{width:100, height:100, resizeMode:'contain',  }} source={{uri:`https:${optionRight[0]?.gimg_chg}`}} />
-                                        <Text style={{width:'100%', color:'black', fontWeight:'bold', fontSize:17, textAlign:'center'}}  >{ItemTitle(menuOptionList[index]?.ADDITIVE_ID, index)||menuOptionList[index]?.ADDITIVE_NAME /* menuOptionList[index]?.ADDITIVE_NAME */}</Text>
+                                        <Text style={{width:'100%', color:'black', fontWeight:'bold', fontSize:17, textAlign:'center'}}  >{ItemTitle(menuOptionList[index]?.ADDITIVE_ID, index)||menuOptionList[index]?.ADDITIVE_NAME}</Text>
                                 </View>
                             </TouchableWithoutFeedback>
-
                         )
+                         */
                     })}
                 </View>
             </View>

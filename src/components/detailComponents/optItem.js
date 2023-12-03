@@ -15,22 +15,22 @@ const OptItem = (props)=>{
 
     // 메뉴 옵션 추가 정보
     const {optionCategoryExtra} = useSelector(state=>state.menuExtra);
-    const optionItemCategoryExtra = optionCategoryExtra.filter(el=>el.cate_code==optionData?.ADDITIVE_GROUP_CODE);
+    const optionItemCategoryExtra = optionCategoryExtra.filter(el=>el.cate_code==optionData?.GROUP_NO);
     
     const ItemTitle = () =>{
         let selTitleLanguage = "";
-        const selExtra = optionItemCategoryExtra.filter(el=>el.cate_code==optionData.ADDITIVE_GROUP_CODE);
+        const selExtra = optionItemCategoryExtra.filter(el=>el.cate_code==optionData.GROUP_NO);
         if(language=="korean") {
-            selTitleLanguage = optionData?.ADDITIVE_GROUP_NAME;
+            selTitleLanguage = optionData?.GROUP_NM;
         }
         else if(language=="japanese") {
-            selTitleLanguage = selExtra[0]?.cate_name_jp||optionData?.ADDITIVE_GROUP_NAME;
+            selTitleLanguage = selExtra[0]?.cate_name_jp||optionData?.GROUP_NM;
         }
         else if(language=="chinese") {
-            selTitleLanguage = selExtra[0]?.cate_name_cn||optionData?.ADDITIVE_GROUP_NAME;
+            selTitleLanguage = selExtra[0]?.cate_name_cn||optionData?.GROUP_NM;
         }
         else if(language=="english") {
-            selTitleLanguage = selExtra[0]?.cate_name_en||optionData?.ADDITIVE_GROUP_NAME;
+            selTitleLanguage = selExtra[0]?.cate_name_en||optionData?.GROUP_NM;
         }
         return selTitleLanguage;
     }
@@ -38,7 +38,7 @@ const OptItem = (props)=>{
     useEffect(()=>{
         // 옵션 선택한 메뉴 확인
         if(menuOptionSelected.length>0) {
-            const checkMenu = menuOptionSelected.filter(el=>el.menuOptionGroupCode==optionData.ADDITIVE_GROUP_CODE);
+            const checkMenu = menuOptionSelected.filter(el=>el.menuOptionGroupCode==optionData.GROUP_NO);
             setSelected(checkMenu.length>0);
             // 선택한 메뉴리스트
             if(checkMenu.length>0){

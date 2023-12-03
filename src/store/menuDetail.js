@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux';
-import { getPosItemsWithCategory, getPosSetGroup } from '../utils/api/metaApis';
+import { getPosItemsWithCategory, getPosSetGroup, getPosSetGroupItem } from '../utils/api/metaApis';
+import { posErrorHandler } from '../utils/errorHandler/ErrorHandler';
 
 export const initMenuDetail = createAsyncThunk("menuDetail/initMenuDetail", async() =>{
     return {menuDetailID: null,menuDetail:{},menuOptionGroupCode:"",menuOptionList:[],menuOptionSelected:[],};
@@ -31,13 +32,19 @@ export const getSingleMenuFromAllItems = createAsyncThunk("menuDetail/getSingleM
     //return selectedMenuDetail[0];
 });
 // 세트 그룹 받기
-export const getItemSetGroup = createAsyncThunk("menuDetail/getItemSetGroup", async(data,{dispatch}) =>{
+export const getItemSetGroup = createAsyncThunk("menuDetail/getItemSetGroup", async(data,{dispatch,getState}) =>{
     const {menuDetailID} = getState().menuDetail;
     const setGroup = await getPosSetGroup(dispatch,{menuDetailID} );
-    console.log("setGroup: ",setGroup);
-    return data;
+    return setGroup;
 });
-
+// 세트 그룹 아이템 받기
+export const getSetItems = createAsyncThunk("menuDetail/getSetItems", async(data,{dispatch,getState}) =>{
+    console.log("getSetItems========================================")
+    const {menuOptionGroupCode} = getState().menuDetail;
+    const setGroupItem = await getPosSetGroupItem(dispatch,{menuOptionGroupCode}).catch(err=>{ posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"통신",MSG2:"아이템을 받아올 수 없습니다."}); return;});
+    //const setGroup = await getPosSetGroup(dispatch,{menuDetailID} );
+    return setGroupItem;
+});
 
 export const setMenuOptionSelect = createAsyncThunk("menuDetail/setMenuOptionSelect", async(data) =>{
     return data;
@@ -65,6 +72,7 @@ export const menuDetailSlice = createSlice({
         menuOptionGroupCode:"",
         menuOptionList:[],
         menuOptionSelected:[],
+        setGroupItem:[],
     },
     extraReducers:(builder)=>{
         initMenuDetail
@@ -110,6 +118,11 @@ export const menuDetailSlice = createSlice({
         builder.addCase(getItemSetGroup.fulfilled,(state, action)=>{
             state.menuOptionList = action.payload;
         })
+        // 메뉴 세트 그룹 아이템 
+        builder.addCase(getSetItems.fulfilled,(state, action)=>{
+            state.setGroupItem = action.payload;
+        })
+        
     }
 });
 

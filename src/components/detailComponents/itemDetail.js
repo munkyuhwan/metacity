@@ -8,7 +8,7 @@ import OptItem from './optItem';
 import CommonIndicator from '../common/waitIndicator';
 import WaitIndicator from '../common/waitIndicator';
 import RecommendItem from './recommendItem';
-import { setMenuDetail, getSingleMenu, setMenuOptionSelect, setMenuOptionGroupCode, initMenuDetail, getSingleMenuFromAllItems } from '../../store/menuDetail';
+import { setMenuDetail, getSingleMenu, setMenuOptionSelect, setMenuOptionGroupCode, initMenuDetail, getSingleMenuFromAllItems, getItemSetGroup } from '../../store/menuDetail';
 import { numberWithCommas, openPopup } from '../../utils/common';
 import { MENU_DATA } from '../../resources/menuData';
 import { addToOrderList } from '../../store/order';
@@ -23,13 +23,11 @@ const ItemDetail = (props) => {
     const isDetailShow = props.isDetailShow;
     const dispatch = useDispatch();
     const {menu} = useSelector((state)=>state.menu);
-    const {menuDetailID, menuDetail, menuOptionSelected} = useSelector((state)=>state.menuDetail);
+    const {menuDetailID, menuDetail, menuOptionSelected, menuOptionList} = useSelector((state)=>state.menuDetail);
     const [detailZIndex, setDetailZIndex] = useState(0);
     // 메뉴 추가정보 찾기
     const {menuExtra} = useSelector(state=>state.menuExtra);
     const itemExtra = menuExtra?.filter(el=>el.pos_code == menuDetailID);
-    console.log("menuDetail: ",menuDetail);
-
     // 옵션스테이트
     const [additiveGroupList, setAdditiveGroupList] = useState([]);
     const [additiveItemList, setAdditiveItemList] = useState([]);
@@ -85,10 +83,14 @@ const ItemDetail = (props) => {
     }
     
     const onOptionSelect = (groupCode) =>{
-        const selectedGroup = additiveGroupList.filter(el=>el.ADDITIVE_GROUP_CODE == groupCode);
-        dispatch(setMenuOptionGroupCode(selectedGroup[0].ADDITIVE_GROUP_CODE));
-        dispatch(setMenuOptionSelect(selectedGroup[0].ADDITIVE_ITEM_LIST));
+        console.log("set group option code: ",groupCode);
+        dispatch(setMenuOptionGroupCode(groupCode));
         openPopup(dispatch,{innerView:"Option", isPopupVisible:true});
+        /* 
+            dispatch(setMenuOptionGroupCode(selectedGroup[0].ADDITIVE_GROUP_CODE));
+            dispatch(setMenuOptionSelect(selectedGroup[0].ADDITIVE_ITEM_LIST));
+            openPopup(dispatch,{innerView:"Option", isPopupVisible:true});
+        */
     }
     const onRecommendSelect = (index) =>{
         var tmpArr = selectedRecommend;
@@ -123,6 +125,7 @@ const ItemDetail = (props) => {
     useEffect(()=>{
         if(menuDetailID!= null) {
             dispatch(getSingleMenuFromAllItems(menuDetailID))
+            dispatch(getItemSetGroup());
         }else {
             onSelectHandleAnimation(0);
         }
@@ -256,15 +259,16 @@ const ItemDetail = (props) => {
                                     <OptListWrapper>
                                         <OptTitleText>{LANGUAGE[language]?.detailView.selectOpt}</OptTitleText>
                                         <OptList horizontal showsHorizontalScrollIndicator={false} >
-                                            {additiveGroupList!=null &&
-                                                additiveGroupList.map((el,index)=>{
-                                                    if(el.ADDITIVE_GROUP_USE_FLAG == "N") {
+                                            {menuOptionList!=null &&
+                                                menuOptionList.map((el,index)=>{
+                                                    if(el.USE_YN == "Y") {
                                                         return(
-                                                            <OptItem key={"optItem_"+index} isSelected={additiveGroupList.indexOf(index)>=0} optionData={el} menuData={menuDetail} onPress={()=>{onOptionSelect(el.ADDITIVE_GROUP_CODE);} } />    
+                                                            <OptItem key={"optItem_"+index} isSelected={additiveGroupList.indexOf(index)>=0} optionData={el} menuData={menuDetail} onPress={()=>{onOptionSelect(el.GROUP_NO);} } />    
                                                         );
                                                     }else {
                                                         return(<></>);
                                                     }
+                                                    
                                                 })
                                             }
                                             {selectedOptions==null &&
