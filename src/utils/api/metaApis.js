@@ -121,14 +121,12 @@ export const getPosSetGroup = async(dispatch, data) =>{
 
 // 세트 그룹 아이템 받기
 export const getPosSetGroupItem = async(dispatch, data) =>{
-    console.log("getPosSetGroupItem: ");
     const {POS_IP} = await getIP()
     if(isEmpty(POS_IP)) {
         EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""})
         posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'포스 IP를 입력 해 주세요.',MSG2:""})
     }
     const {menuOptionGroupCode} = data;
-    console.log("post data: ",            {VERSION:POS_VERSION_CODE, WORK_CD:POS_WORK_CD_SET_GROUP_ITEM_INFO, GROUP_NO:menuOptionGroupCode?menuOptionGroupCode:""} );
     return await new Promise(function(resolve, reject){
         axios.post(
             `${POS_BASE_URL(POS_IP)}`,
