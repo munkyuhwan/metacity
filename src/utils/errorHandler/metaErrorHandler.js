@@ -10,7 +10,7 @@ export const metaErrorHandler = (dispatch, response) => {
     if(ERROR_CD == POS_SUCCESS_CD) {
         return true;
     }else {
-        displayErrorPopup(data.ERRCODE,data.MSG+`\n${data.MSG2}`);
+        displayErrorPopup(data.ERROR_CD,data.ERROR_MSG);
         return false;
     }
 }

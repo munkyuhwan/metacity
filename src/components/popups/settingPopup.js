@@ -39,8 +39,8 @@ const SettingPopup = () =>{
     const paymentApprovalDate = useSharedValue("");
     const [lastPayData, setLastPayData] = useState("");
     // store id, service id
-    const [storeIDText, setStoreIDText] = useState("");
-    const [serviceIDText, setServiceIDText] = useState("");
+    const [ipText, setIpText] = useState("");
+    const [tableNo, setTableNo] = useState("");
 
 
     const getIndicateAvailableDeviceInfo = () =>{
@@ -345,25 +345,25 @@ const SettingPopup = () =>{
     }
 
     useEffect(()=>{
-        AsyncStorage.getItem("STORE_ID")
+        AsyncStorage.getItem("POS_IP")
         .then((value)=>{
-            setStoreIDText(value)
+            setIpText(value)
         })
-        AsyncStorage.getItem("SERVICE_ID")
+        AsyncStorage.getItem("TABLE_INFO")
         .then((value)=>{
-            setServiceIDText(value)
+            setTableNo(value)
         })
-        dispatch(getTableList());
-
     },[])
 
     const setStoreInfo = () =>{
-        AsyncStorage.setItem("STORE_ID", storeIDText);
-        AsyncStorage.setItem("SERVICE_ID",serviceIDText);
+        AsyncStorage.setItem("POS_IP", ipText);   
         displayOnAlert("설정되었습니다.",{});
-
     }
 
+    const setTableInfo = () =>{
+        AsyncStorage.setItem("TABLE_INFO", tableNo);   
+        displayOnAlert("테이블이 설정되었습니다.",{});
+    }
     return (
         <>
             <KeyboardAvoidingView behavior="padding" enabled style={{width:'100%', height:'100%'}} >
@@ -378,13 +378,11 @@ const SettingPopup = () =>{
                             { 
                             <SettingItemWrapper>
                                 <TouchableWithoutFeedback onPress={()=>{ }} >
-                                    <SettingButtonText isMargin={false} >스토어 아이디 설정</SettingButtonText>
+                                    <SettingButtonText isMargin={false} >아이피 설정</SettingButtonText>
                                 </TouchableWithoutFeedback> 
                                 <SelectWrapper style={{marginRight:'auto', marginLeft:'auto', paddingBottom:20}} >
-                                    <StoreIDTextLabel>STORE ID:</StoreIDTextLabel>
-                                    <StoreIDTextInput keyboardType='numeric'  defaultValue={storeIDText} onChangeText={(val)=>{ setStoreIDText(val); }} />
-                                    <StoreIDTextLabel>SERVICE ID:</StoreIDTextLabel>
-                                    <StoreIDTextInput  keyboardType='numeric'  defaultValue={serviceIDText} onChangeText={(val)=>{ setServiceIDText(val); }} />
+                                    <StoreIDTextLabel>IP:</StoreIDTextLabel>
+                                    <StoreIDTextInput keyboardType='numeric'  defaultValue={ipText} onChangeText={(val)=>{ setIpText(val); }} />
                                     <TouchableWithoutFeedback onPress={()=>{setStoreInfo();}}>
                                         <SelectCancelWrapper>
                                             <SelectCancelText>설정하기</SelectCancelText>
@@ -394,10 +392,27 @@ const SettingPopup = () =>{
                             </SettingItemWrapper>
                             }
                             <SettingItemWrapper>
-                                <TouchableWithoutFeedback onPress={()=>{dispatch(getTableList()); setTableSettingShow(!isTableSettingShow) }} >
+                                <TouchableWithoutFeedback onPress={()=>{ }} >
                                     <SettingButtonText isMargin={false} >테이블 세팅</SettingButtonText>
                                 </TouchableWithoutFeedback> 
-                                <Dropdown/>
+                                <SelectWrapper style={{marginRight:'auto', marginLeft:'auto', paddingBottom:20}} >
+                                    <StoreIDTextLabel>테이블 번호:</StoreIDTextLabel>
+                                    <StoreIDTextInput keyboardType='numeric'  defaultValue={tableNo} onChangeText={(val)=>{ setTableNo(val); }} />
+                                    <TouchableWithoutFeedback onPress={()=>{setTableInfo()}}>
+                                        <SelectCancelWrapper>
+                                            <SelectCancelText>설정하기</SelectCancelText>
+                                        </SelectCancelWrapper>
+                                    </TouchableWithoutFeedback>
+                                </SelectWrapper>
+                                {/* 
+                                <StoreIDTextLabel>테이블 번호:</StoreIDTextLabel>
+                                <StoreIDTextInput keyboardType='numeric'  defaultValue={tableNo} onChangeText={(val)=>{ setTableNo(val); }} />
+                                    
+                                <TouchableWithoutFeedback onPress={()=>{ dispatch(getTableList()); setTableSettingShow(!isTableSettingShow) }} >
+                                    <SettingButtonText isMargin={false} >테이블 세팅</SettingButtonText>
+                                </TouchableWithoutFeedback> 
+                                <Dropdown/> 
+                                 */}
                             </SettingItemWrapper>
                             {/* 
                             <TouchableWithoutFeedback onPress={()=>{checkTableOrder(dispatch,{tableInfo})}} >

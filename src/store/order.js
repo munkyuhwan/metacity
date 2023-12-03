@@ -2,12 +2,12 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { MENU_DATA } from '../resources/menuData';
 //import { SERVICE_ID, STORE_ID } from '../resources/apiResources';
 import { addOrderToPos, getOrderByTable, postOrderToPos } from '../utils/apis';
-import { getStoreID, grandTotalCalculate, numberPad, openPopup, orderListDuplicateCheck, setOrderData } from '../utils/common';
+import { getStoreID, getTableInfo, grandTotalCalculate, numberPad, openPopup, orderListDuplicateCheck, setOrderData } from '../utils/common';
 import { isEqual, isEmpty } from 'lodash'
 import { posErrorHandler } from '../utils/errorHandler/ErrorHandler';
 import { setCartView } from './cart';
 import LogWriter from '../utils/logWriter';
-import { POS_WORK_CD_POSTPAY_ORDER } from '../resources/apiResources';
+import { POS_VERSION_CODE, POS_WORK_CD_POSTPAY_ORDER, POS_WORK_CD_VERSION } from '../resources/apiResources';
 import { postMetaPosOrder } from '../utils/api/metaApis';
 
 export const initOrderList = createAsyncThunk("order/initOrderList", async() =>{
@@ -207,12 +207,18 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
 export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispatch, getState,extra}) =>{
     const {orderList} = getState().order;
     const date = new Date();
+    const tableNo = await getTableInfo().catch(err=>{posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"테이블 설정",MSG2:"테이블 번호를 설정 해 주세요."});});
+    if(isEmpty(tableNo)) {
+        posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"테이블 설정",MSG2:"테이블 번호를 설정 해 주세요."});
+
+        return 
+    }
     const orderNo = `${date.getFullYear()}${numberPad(date.getMonth()+1,2)}${numberPad(date.getDate(),2)}${date.getMilliseconds()}`;
     let orderData = {
-        "VERSION" : "0011",
+        "VERSION" : POS_VERSION_CODE,
         "WORK_CD" : POS_WORK_CD_POSTPAY_ORDER,
         "ORDER_NO" : orderNo,
-        "TBL_NO" : "001", 
+        "TBL_NO" : `${tableNo.TABLE_INFO}`, 
         "PRINT_YN" : "Y",
         "USER_PRINT_YN" : "Y",
         "PRINT_ORDER_NO" : "101", 

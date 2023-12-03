@@ -23,7 +23,7 @@ const TopMenuList = (props) => {
         const selectedData = data.filter(el=>el.PROD_L2_CD == cateCode);
         const adminSelectedSubCatData = menuCategories.filter(el=>el.cate_code1==selectedMainCategory);
         const adminSubCat = adminSelectedSubCatData[0]?.level2;
-        const selectedAdminSub = adminSubCat.filter(el=>el.cate_code2 == cateCode);
+        const selectedAdminSub = adminSubCat?.filter(el=>el.cate_code2 == cateCode);
         if(language=="korean") {
             return selectedData[0].PROD_L2_NM;
         }else if(language=="japanese") {

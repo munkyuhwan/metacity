@@ -82,10 +82,34 @@ export async function getStoreID() {
             }
             
         })
-        
     })
 }
 
+export async function getIP() {
+    return await new Promise(function(resolve, reject){
+        AsyncStorage.getItem("POS_IP")
+        .then((POS_IP)=>{
+            if(POS_IP) {
+                resolve({POS_IP})
+            }else {
+                reject();                
+            }
+        })
+    })
+}
+
+export async function getTableInfo() {
+    return await new Promise(function(resolve, reject){
+        AsyncStorage.getItem("TABLE_INFO")
+        .then((TABLE_INFO)=>{
+            if(TABLE_INFO) {
+                resolve({TABLE_INFO})
+            }else {
+                reject();                
+            }
+        })
+    })
+}
 export function setOrderData (data, orderList) {
     if(data?.length<0) return;
     
