@@ -73,7 +73,6 @@ export async function getStoreID() {
             }else {
                 reject();                
             }
-            
         })
     })
 }
