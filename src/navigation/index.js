@@ -24,6 +24,8 @@ import StatusScreen from '../screens/StatusScreen'
 import { initOrderList } from '../store/order'
 import { DEFAULT_CATEGORY_ALL_CODE, DEFAULT_TABLE_STATUS_UPDATE_TIME } from '../resources/defaults'
 import { getAdminMenuItems } from '../store/menuExtra'
+import { getStoreInfo } from '../utils/api/metaApis'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Stack = createStackNavigator()
 
@@ -104,6 +106,21 @@ export default function Navigation() {
         dispatch(getAdminCategoryData());
         // 관리자 메뉴 정보 받아오기;
         dispatch(getAdminMenuItems());
+
+        getStoreInfo()
+        .then(result=>{
+            //console.log(result);
+            if(result) {
+                const STORE_IDX = result.STORE_IDX;
+                AsyncStorage.getItem("STORE_IDX")
+                .then((storeInfo)=>{
+                    if(isEmpty(storeInfo)) {
+                        AsyncStorage.setItem("STORE_IDX",STORE_IDX);
+                    }
+                })
+
+            }
+        })
         
         /*
         dispatch(getMenuEdit());

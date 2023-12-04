@@ -41,6 +41,7 @@ const SettingPopup = () =>{
     // store id, service id
     const [ipText, setIpText] = useState("");
     const [tableNo, setTableNo] = useState("");
+    const [storeIdx, setStoreIdx] = useState("");
 
 
     const getIndicateAvailableDeviceInfo = () =>{
@@ -353,6 +354,10 @@ const SettingPopup = () =>{
         .then((value)=>{
             setTableNo(value)
         })
+        AsyncStorage.getItem("STORE_IDX")
+        .then(value=>{
+            setStoreIdx(value);
+        })
     },[])
 
     const setStoreInfo = () =>{
@@ -375,7 +380,15 @@ const SettingPopup = () =>{
                     </TouchableWithoutFeedback>
                     <SettingScrollView showsVerticalScrollIndicator={false}>
                         <SettingButtonWrapper>
-                            { 
+                             <SettingItemWrapper>
+                                <TouchableWithoutFeedback onPress={()=>{ }} >
+                                    <SettingButtonText isMargin={false} >스토어 ID</SettingButtonText>
+                                </TouchableWithoutFeedback> 
+                                <SelectWrapper style={{marginRight:'auto', marginLeft:'auto', paddingBottom:20}} >
+                                    <StoreIDTextLabel style={{fontSize:30, fontWeight:"bold"}} >{storeIdx}</StoreIDTextLabel>
+                                </SelectWrapper>
+                            </SettingItemWrapper>
+
                             <SettingItemWrapper>
                                 <TouchableWithoutFeedback onPress={()=>{ }} >
                                     <SettingButtonText isMargin={false} >아이피 설정</SettingButtonText>
@@ -390,7 +403,6 @@ const SettingPopup = () =>{
                                     </TouchableWithoutFeedback>
                                 </SelectWrapper>
                             </SettingItemWrapper>
-                            }
                             <SettingItemWrapper>
                                 <TouchableWithoutFeedback onPress={()=>{ }} >
                                     <SettingButtonText isMargin={false} >테이블 세팅</SettingButtonText>
@@ -421,6 +433,7 @@ const SettingPopup = () =>{
                             <TouchableWithoutFeedback onPress={()=>{cancelOrder(dispatch,{tableInfo})}} >
                                 <SettingButtonText isMargin={true} >주문취소</SettingButtonText>
                             </TouchableWithoutFeedback>  */}
+                            {/* 
                             <TouchableWithoutFeedback onPress={()=>{getIndicateAvailableDeviceInfo();}} >
                                 <SettingButtonText isMargin={true} >단말기 서비스 확인</SettingButtonText>
                             </TouchableWithoutFeedback>
@@ -445,6 +458,7 @@ const SettingPopup = () =>{
                             <TouchableWithoutFeedback onPress={()=>{initTable(); }} >
                                 <SettingButtonText isMargin={true} >테이블 주문 초기화</SettingButtonText>
                             </TouchableWithoutFeedback>
+                            */}
                             {/* 
                             <TouchableWithoutFeedback onPress={()=>{uploadLog(); }} >
                                 <SettingButtonText isMargin={true} >로그 올리기</SettingButtonText>
