@@ -66,17 +66,10 @@ export function numberPad(n, width) {
 
 export async function getStoreID() {
     return await new Promise(function(resolve, reject){
-        AsyncStorage.getItem("STORE_ID")
-        .then((STORE_ID)=>{
-            if(STORE_ID) {
-                AsyncStorage.getItem("SERVICE_ID")
-                .then((SERVICE_ID)=>{
-                    if(SERVICE_ID) {
-                        resolve({STORE_ID,SERVICE_ID})
-                    }else {
-                        reject();
-                    }
-                })
+        AsyncStorage.getItem("STORE_IDX")
+        .then((STORE_IDX)=>{
+            if(STORE_IDX) {
+                resolve({STORE_IDX  })
             }else {
                 reject();                
             }

@@ -25,14 +25,12 @@ export const getTableList = createAsyncThunk("tableInfo/getTableList", async(dat
 })
 // 관리자 테이블 상테 받아오기
 export const getTableStatus = createAsyncThunk("tableInfo/getTableStatus", async(data,{dispatch, getState}) =>{
-    const {tableInfo} = getState().tableInfo;
-    const t_id = tableInfo?.TBL_CODE;
-    if(t_id) {
-        const tableStatus = await getAdminTableStatus(dispatch, {t_id:t_id});
+        const tableStatus = await getAdminTableStatus(dispatch, {});
+        
         const tableData = tableStatus?.data[0].table;
         const tStatus = tableData[0];
         return tStatus;
-    }
+    
 })
 
 // Slice

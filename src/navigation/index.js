@@ -90,10 +90,10 @@ export default function Navigation() {
     useEffect(()=>{
         //if(!isEmpty(tableInfo)) { 
             // 주석 나중에 빼자
-            //statusInterval = setInterval(() => {
+            statusInterval = setInterval(() => {
                 //console.log("status interval")
-            //    dispatch(getTableStatus());
-            //}, DEFAULT_TABLE_STATUS_UPDATE_TIME);
+                dispatch(getTableStatus());
+            }, DEFAULT_TABLE_STATUS_UPDATE_TIME);
         //}
     },[])
 
@@ -109,7 +109,7 @@ export default function Navigation() {
 
         getStoreInfo()
         .then(result=>{
-            //console.log(result);
+            console.log(result);
             if(result) {
                 const STORE_IDX = result.STORE_IDX;
                 AsyncStorage.getItem("STORE_IDX")
@@ -122,19 +122,19 @@ export default function Navigation() {
             }
         })
         
-        /*
-        dispatch(getMenuEdit());
-        dispatch(initTableInfo());
-        var getInterval = setTimeout(() => {
+        
+        //dispatch(getMenuEdit());
+        //dispatch(initTableInfo());
+       /*  var getInterval = setTimeout(() => {
             dispatch(getTableList());
             clearTimeout(getInterval);
-        }, 1000);
+        }, 1000); */
  
         // 메뉴 갱신을 위한 함수 실행 한시간에 한번
-        setInterval(()=>{
+       /*  setInterval(()=>{
            dispatch(getMenuState());
-        },1000*60*60)
-        */
+        },1000*60*60) */
+        
         
     },[])
 

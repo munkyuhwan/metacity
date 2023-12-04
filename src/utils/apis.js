@@ -541,14 +541,19 @@ export const postAdminServices = async(dispatch,data) => {
 
 // 관리자 테이블 상태 받아오기
 export const getAdminTableStatus = async(dispatch,data) => {
-    const {STORE_ID, SERVICE_ID} = await getStoreID()
+    const {STORE_IDX} = await getStoreID()
     .catch(err=>{
-        posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'STORE_ID, SERVICE_ID를 입력 해 주세요.',MSG2:""})
+        posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'STORE_ID 입력 해 주세요.',MSG2:""})
+    });
+
+    const TABLE_INFO =  await AsyncStorage.getItem("TABLE_INFO")
+    .catch(err=>{
+        posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'테이블 번호를 입력 해 주세요.',MSG2:""})
     });
     return await new Promise(function(resolve, reject){
         axios.post(
             `${ADMIN_BASE_URL}${ADMIN_TABLE_STATUS}`,
-            {"STORE_ID":STORE_ID, t_id:data?.t_id},
+            {"STORE_ID":STORE_IDX, t_id:TABLE_INFO},
             adminOrderHeader,
         ) 
         .then((response => {
