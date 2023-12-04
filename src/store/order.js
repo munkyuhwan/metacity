@@ -57,7 +57,6 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
     }else {
         itemCnt = 0;
     }
-    console.log("index: ",index, " itemCnt: ",itemCnt)
      
     if(itemCnt<=0) {
         tmpOrderList.splice(index,1);
@@ -78,7 +77,7 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
 })
 
 export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,{dispatch, getState,extra}) =>{
-console.log("addToOrderList addToOrderList addToOrderList addToOrderList");
+
     const {item,menuOptionSelected} = _;
     const {orderList} = getState().order;
     let currentOrderList = Object.assign([],orderList);
