@@ -258,8 +258,11 @@ export const getTableList = async(dispatch, data) =>{
 // 매장 정보 요청
 export const getStoreInfo = async(dispatch, data) =>{
     const {POS_IP} = await getIP()
+    .catch((err)=>{
+        posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'포스 IP 가져오기 실패.',MSG2:""})
+    }
+    )
     if(isEmpty(POS_IP)) {
-        EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""})
         posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'포스 IP를 입력 해 주세요.',MSG2:""})
         return;
     }

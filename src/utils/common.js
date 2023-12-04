@@ -87,6 +87,9 @@ export async function getIP() {
                 reject();                
             }
         })
+        .catch(err=>{
+            reject();
+        })
     })
 }
 

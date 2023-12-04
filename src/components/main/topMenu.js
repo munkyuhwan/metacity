@@ -23,6 +23,7 @@ const TopMenu = () =>{
     const dispatch = useDispatch();
     const {selectedMainCategory,subCategories} = useSelector(state => state.categories);
     const [tableNoText, setTableNoText] = useState("");
+    const {tableInfo} = useSelector(state => state.tableInfo);
     //console.log("subCategories: ",subCategories);
     
     const [currentVersion, setCurrentVersion ] = useState("version");
@@ -41,6 +42,12 @@ const TopMenu = () =>{
         } 
         */
     },[selectedMainCategory])
+
+    useEffect(()=>{
+        if(tableInfo) {
+            setTableNoText(tableInfo.tableNo)
+        }
+    },[tableInfo])
 
     useEffect(()=>{ 
         setCurrentVersion(VersionCheck.getCurrentVersion());

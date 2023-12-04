@@ -9,13 +9,17 @@ import { IndicatorWrapper, PopupIndicatorText, PopupIndicatorWrapper, PopupSpinn
 import { PopupCloseButton, PopupCloseButtonWrapper } from '../../styles/common/popup';
 import { openFullSizePopup } from '../../utils/common';
 import { Picker } from '@react-native-picker/picker';
-import { clearTableInfo, getTableList, initTableInfo, setTableInfo } from '../../store/tableInfo';
+import { changeTableInfo, clearTableInfo, getTableList, initTableInfo, setTableInfo, tableInfoSlice } from '../../store/tableInfo';
 import { SMARTRO_FUNCTION } from '../../resources/cardReaderConstant';
 import { useSharedValue } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { cancelOrder, checkTableOrder } from '../../utils/apis';
 import { initOrderList } from '../../store/order';
 import { setCartView } from '../../store/cart';
+import { getStoreInfo } from '../../utils/api/metaApis';
+import { getMenuState } from '../../store/menu';
+import { getAdminCategoryData, getMainCategories } from '../../store/categories';
+import { getAdminMenuItems } from '../../store/menuExtra';
 
 const SettingPopup = () =>{
 
@@ -149,8 +153,17 @@ const SettingPopup = () =>{
     }
 
     const checkUpdate =  async() =>{
-            CodePush
-            const update = await CodePush.checkForUpdate("73MTJE-Zu27E7cnvd0jdRVE66gkFu-zFUdZn-");
+        CodePush
+            const update = await CodePush.checkForUpdate("fd7f67b7-013a-4721-97ed-6f9477b584cc")
+            .catch(err=>{console.log(err);
+                Alert.alert(
+                "업데이트",
+                "업데이트를 진행할 수 없습니다.",
+                [{
+                    text:'확인',
+                }]
+                );
+             return;});
             if(update) {
                 /* Alert.alert(
                     "업데이트",
@@ -367,7 +380,33 @@ const SettingPopup = () =>{
 
     const setTableInfo = () =>{
         AsyncStorage.setItem("TABLE_INFO", tableNo);   
+        dispatch(changeTableInfo({tableNo:tableNo}))
         displayOnAlert("테이블이 설정되었습니다.",{});
+    }
+    const getStoreID = () => {
+        getStoreInfo()
+        .then(result=>{
+            displayOnAlert(`${result}`,{});
+            if(result) {
+                const STORE_IDX = result.STORE_IDX;
+                AsyncStorage.getItem("STORE_IDX")
+                .then((storeInfo)=>{
+                    //if(storeInfo==null) {
+                        setStoreIdx(STORE_IDX);
+                        AsyncStorage.setItem("STORE_IDX",STORE_IDX);
+                        displayOnAlert("스토어 아이디가 설정되었습니다.",{});
+                    //}
+                })
+                .catch(err=>{
+                    displayOnAlert("저장값 오류.",{});
+
+                })
+
+            }
+        })
+        .catch((err)=>{
+            displayOnAlert("스토어 아이디를 받아올 수 없습니다."+err,{});
+        })
     }
     return (
         <>
@@ -386,7 +425,13 @@ const SettingPopup = () =>{
                                 </TouchableWithoutFeedback> 
                                 <SelectWrapper style={{marginRight:'auto', marginLeft:'auto', paddingBottom:20}} >
                                     <StoreIDTextLabel style={{fontSize:30, fontWeight:"bold"}} >{storeIdx}</StoreIDTextLabel>
+                                    <TouchableWithoutFeedback onPress={()=>{getStoreID();}}>
+                                    <SelectCancelWrapper>
+                                        <SelectCancelText>스토어 ID받기</SelectCancelText>
+                                    </SelectCancelWrapper>
+                                </TouchableWithoutFeedback>
                                 </SelectWrapper>
+                               
                             </SettingItemWrapper>
 
                             <SettingItemWrapper>
@@ -464,11 +509,17 @@ const SettingPopup = () =>{
                                 <SettingButtonText isMargin={true} >로그 올리기</SettingButtonText>
                             </TouchableWithoutFeedback>
                             */}
-                            <TouchableWithoutFeedback onPress={()=>{ }} >
-                                <SettingButtonText isMargin={true} >메뉴 업데이트</SettingButtonText>
+                            <TouchableWithoutFeedback onPress={()=>{ 
+                                        dispatch(getMainCategories());
+                                        // 관리자 카테고리 추가 정보
+                                        dispatch(getAdminCategoryData());
+                                        // 관리자 메뉴 정보 받아오기;
+                                        dispatch(getAdminMenuItems());
+                            }} >
+                                <SettingButtonText isMargin={true} >화면 초기화</SettingButtonText>
                             </TouchableWithoutFeedback>
                             <TouchableWithoutFeedback onPress={()=>{checkUpdate();}} >
-                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.1-2</SettingButtonText>
+                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.1-5</SettingButtonText>
                             </TouchableWithoutFeedback> 
                         </SettingButtonWrapper>
                     </SettingScrollView>

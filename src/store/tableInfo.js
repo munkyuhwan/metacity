@@ -20,6 +20,10 @@ export const setTableInfo = createAsyncThunk("tableInfo/setTableInfo", async(dat
 
     return data;    
 })
+export const changeTableInfo = createAsyncThunk("tableInfo/changeTableInfo", async(data) =>{
+  
+    return data;    
+})
 export const getTableList = createAsyncThunk("tableInfo/getTableList", async(data,{dispatch}) =>{
     return await posTableList(dispatch)
 })
@@ -47,6 +51,10 @@ export const tableInfoSlice = createSlice({
         builder.addCase(setTableInfo.fulfilled,(state, action)=>{
             state.tableInfo = action.payload;
         })
+        builder.addCase(changeTableInfo.fulfilled,(state, action)=>{
+            state.tableInfo = action.payload;
+        })
+        
         builder.addCase(getTableList.fulfilled,(state, action)=>{
             state.tableList = action.payload;
         })
