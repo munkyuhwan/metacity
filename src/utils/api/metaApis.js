@@ -167,7 +167,8 @@ export const postMetaPosOrder = async(dispatch, data) =>{
         ) 
         .then((response => {
             if(metaErrorHandler(dispatch, response?.data)) {
-                openPopup(dispatch,{innerView:"OrderComplete", isPopupVisible:true});
+                //openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true});
+                //openPopup(dispatch,{innerView:"OrderComplete", isPopupVisible:true});
                 resolve()
             }    
         })) 

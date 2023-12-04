@@ -2,7 +2,7 @@ import axios from "axios";
 import { ADMIN_BANNER, ADMIN_BASE_URL, ADMIN_CALL_SERVICE, ADMIN_CATEGORIES, ADMIN_GOODS, ADMIN_OPTION, ADMIN_POST_CALL_SERVICE, ADMIN_TABLE_STATUS, POS_BASE_URL_REAL, POS_BASE_URL_TEST, POS_ORDER_ADD, POS_ORDER_NEW, POS_POST_MENU_EDIT, POS_POST_MENU_STATE, POS_POST_ORDER, POS_POST_ORDER_CANCEL, POS_POST_TABLE_LIST/* , SERVICE_ID, STORE_ID  */} from "../resources/apiResources";
 import { errorHandler, posErrorHandler } from "./errorHandler/ErrorHandler";
 import {isEmpty} from "lodash";
-import { getStoreID, numberPad, openPopup } from "./common";
+import { getStoreID, numberPad, openPopup, openTransperentPopup } from "./common";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { initOrderList } from "../store/order";
 import { setCartView } from "../store/cart";
@@ -185,7 +185,8 @@ export const postOrderToPos = async(dispatch, data) =>{
                         AsyncStorage.setItem("orderResult",JSON.stringify(orderData));
                     }
                 }
-                openPopup(dispatch,{innerView:"OrderComplete", isPopupVisible:true});
+                openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true});
+                //openPopup(dispatch,{innerView:"OrderComplete", isPopupVisible:true});
                 dispatch(initOrderList());
                 dispatch(setCartView(false));
                 resolve(responseData); 
@@ -259,7 +260,8 @@ export const addOrderToPos = async(dispatch, data) =>{
             
             if(posErrorHandler(dispatch, response.data)){
                 const responseData = response.data
-                openPopup(dispatch,{innerView:"OrderComplete", isPopupVisible:true});
+                openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true});
+                //openPopup(dispatch,{innerView:"OrderComplete", isPopupVisible:true});
                 dispatch(initOrderList());
                 dispatch(setCartView(false));
                 resolve(responseData); 

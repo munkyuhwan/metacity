@@ -13,9 +13,9 @@ export function openPopup (dispatch, {innerView, isPopupVisible, param}) {
         dispatch(setPopupContent({innerView:innerView})); 
     }
 }
-export function openTransperentPopup (dispatch, {innerView, isPopupVisible}) {
+export function openTransperentPopup (dispatch, {innerView, isPopupVisible, param}) {
     if(isPopupVisible) {
-        dispatch(setTransPopupContent({innerView:innerView})); 
+        dispatch(setTransPopupContent({innerView:innerView,param:param})); 
         dispatch(setTransPopupVisibility({isPopupVisible:isPopupVisible}));    
     }else {
         dispatch(setTransPopupVisibility({isPopupVisible:isPopupVisible}));    

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled, {css} from 'styled-components/native';
-import { colorBlack, colorRed, colorWhite } from '../../assets/colors/color';
+import { colorBlack, colorRed, colorWhite, mainTheme } from '../../assets/colors/color';
 import { RADIUS, RADIUS_SMALL } from '../values';
 
 export const PopupWrapper = styled.View`
@@ -98,4 +98,26 @@ export const FullsizePopupWrapper = styled.View`
     height:100%;
     position:absolute;
     backgroundColor:${colorBlack};
+`
+
+// 주문완료 스타일
+export const OrderCompleteWrapper = styled.View`
+    width:100%;
+    height:100%;
+    flex:1;
+`
+export const OrderCompleteItemWrapper = styled.View`
+    margin:auto;
+    textAlign:center;
+`
+export const OrderCompleteIcon = styled.Image`
+    width:100px;
+    height:100px;
+    marginLeft:auto;
+    marginRight:auto;
+`
+export const OrderCompleteText = styled.Text`
+    fontSize:90px;
+    color:${colorRed};
+    fontWeight:bold;
 `

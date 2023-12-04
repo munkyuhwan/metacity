@@ -26,6 +26,7 @@ import { DEFAULT_CATEGORY_ALL_CODE, DEFAULT_TABLE_STATUS_UPDATE_TIME } from '../
 import { getAdminMenuItems } from '../store/menuExtra'
 import { getStoreInfo } from '../utils/api/metaApis'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { openTransperentPopup } from '../utils/common'
 
 const Stack = createStackNavigator()
 
@@ -134,6 +135,7 @@ export default function Navigation() {
            dispatch(getMenuState());
         },1000*60*60) */
         
+  
         
     },[])
 

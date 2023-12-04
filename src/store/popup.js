@@ -46,6 +46,7 @@ export const popupsSlice = createSlice({
         })
         builder.addCase(setTransPopupContent.fulfilled,(state, action)=>{
             state.innerTransView = action.payload.innerView;
+            state.param = action.payload.param
         })
 
         builder.addCase(setFullPopupVisibility.fulfilled,(state, action)=>{

@@ -122,9 +122,9 @@ const PopUp = (props) =>{
                     {innerView=="Error"&&
                         <ErrorPopup/>
                     }
-                    {innerView=="OrderComplete"&&
+                    {/*innerView=="OrderComplete"&&
                         <OrderCompletePopup/>
-                    }
+                    */}
                     {innerView=="AutoClose"&&
                         <AutoClosePopup/>
                     }

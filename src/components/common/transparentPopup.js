@@ -12,15 +12,15 @@ import { TransparentPopupWrapper } from '../../styles/common/popup';
 import CallServerPopup from '../popups/callServerPopup';
 import OrderListPopup from '../popups/orderListPopup';
 import ErrorPopup from './errorPopup';
+import OrderCompletePopup from './orderCompletePopup';
 
 const TransparentPopUp = (props) =>{
     
     const dispatch = useDispatch();
     const {language} = useSelector(state=>state.languages);
-    const {isTransPopupVisible, innerTransView} = useSelector(state=>state.popup);
+    const {isTransPopupVisible, innerTransView,param} = useSelector(state=>state.popup);
     const [popupZIndex, setPopupZIndex] = useState(0);
     const [size, setSize] = useState("0") 
-    
 
     // animation set
     const [widthAnimation, setWidthAnimation] = useState(new Animated.Value(0));
@@ -87,9 +87,11 @@ const TransparentPopUp = (props) =>{
                      {(innerTransView=="OrderList") &&
                         <OrderListPopup/>
                     }
-                    
                     {innerTransView=="Error"&&
                         <ErrorPopup/>
+                    }
+                    {innerTransView=="OrderComplete"&&
+                        <OrderCompletePopup/>
                     }
             </Animated.View>
         </>

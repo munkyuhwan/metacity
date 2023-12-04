@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { MENU_DATA } from '../resources/menuData';
 //import { SERVICE_ID, STORE_ID } from '../resources/apiResources';
 import { addOrderToPos, getOrderByTable, postOrderToPos } from '../utils/apis';
-import { getStoreID, getTableInfo, grandTotalCalculate, numberPad, openPopup, orderListDuplicateCheck, setOrderData } from '../utils/common';
+import { getStoreID, getTableInfo, grandTotalCalculate, numberPad, openPopup, openTransperentPopup, orderListDuplicateCheck, setOrderData } from '../utils/common';
 import { isEqual, isEmpty } from 'lodash'
 import { posErrorHandler } from '../utils/errorHandler/ErrorHandler';
 import { setCartView } from './cart';
@@ -78,7 +78,7 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
 })
 
 export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,{dispatch, getState,extra}) =>{
-
+console.log("addToOrderList addToOrderList addToOrderList addToOrderList");
     const {item,menuOptionSelected} = _;
     const {orderList} = getState().order;
     let currentOrderList = Object.assign([],orderList);
@@ -95,7 +95,7 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
     orderData["SETITEM_INFO"] = optionTrim;
     orderData["SETITEM_CNT"] = optionTrim.length;
     orderData["ITEM_AMT"] = orderData["ITEM_AMT"]+optionPrice;
-    console.log("set info: ",orderData["SETITEM_INFO"])
+
     // 중복 체크 후 수량 변경
     let newOrderList = orderListDuplicateCheck(currentOrderList, orderData);
     //newOrderList.reverse();
@@ -107,7 +107,9 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
     }
     // 금액계산
     const totalResult = grandTotalCalculate(newOrderList)
-    openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
+    //openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
+    openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
+    
     return {orderList:newOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
   
     /* 
@@ -238,6 +240,7 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
     const result = await postMetaPosOrder(dispatch, orderData).catch(err=>{posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"주문오류",MSG2:"주문을 진행할 수 없습니다."}); return; });
     dispatch(setCartView(false));
     dispatch(initOrderList());
+    openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"주문을 완료했습니다."}});
 
     return result;
 })
