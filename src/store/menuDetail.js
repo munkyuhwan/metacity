@@ -34,7 +34,6 @@ export const getSingleMenuForRecommend = createAsyncThunk("menuDetail/getSingleM
     const {selectedMainCategory,selectedSubCategory} = getState().categories
     const {menuDetailID} = getState().menuDetail;
     const {related} = _;
-    console.log("related: ",related)
     if(selectedMainCategory == "0" || selectedMainCategory == undefined ) {
         return
     }
@@ -57,9 +56,19 @@ export const getItemSetGroup = createAsyncThunk("menuDetail/getItemSetGroup", as
 // 세트 그룹 아이템 받기
 export const getSetItems = createAsyncThunk("menuDetail/getSetItems", async(data,{dispatch,getState}) =>{
     const {menuOptionGroupCode} = getState().menuDetail;
+    const {selectedMainCategory,selectedSubCategory} = getState().categories
     const setGroupItem = await getPosSetGroupItem(dispatch,{menuOptionGroupCode}).catch(err=>{ posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"통신",MSG2:"아이템을 받아올 수 없습니다."}); return;});
     //const setGroup = await getPosSetGroup(dispatch,{menuDetailID} );
-    return setGroupItem;
+    const displaySetItem = [];
+    if(setGroupItem) {
+        if(setGroupItem.length > 0) {
+            for(var i=0;i<setGroupItem.length;i++) {
+                const groupItemDetail = await getPosItemsWithCategory(dispatch,{selectedMainCategory:"",selectedSubCategory:"",menuDetailID:setGroupItem[i].PROD_I_CD});
+                displaySetItem.push(groupItemDetail[0]);
+            }
+        }
+    }
+    return displaySetItem;
 });
 
 export const setMenuOptionSelect = createAsyncThunk("menuDetail/setMenuOptionSelect", async(data) =>{
@@ -75,7 +84,6 @@ export const setMenuOptionSelected = createAsyncThunk("menuDetail/setMenuOptionS
     return newOptSelect;
 });
 export const setMenuOptionGroupCode = createAsyncThunk("menuDetail/setMenuOptionGroupCode", async(data) =>{
-    console.log("reducer gropu code: ",data);
     return data;
 });
 

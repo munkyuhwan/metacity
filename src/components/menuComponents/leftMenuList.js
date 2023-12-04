@@ -8,6 +8,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { SideMenuItemTouchableOff } from './sideMenuItem';
 import {isEmpty} from 'lodash';
 import { DEFAULT_CATEGORY_ALL_CODE } from '../../resources/defaults';
+import { initMenuDetail } from '../../store/menuDetail';
 
 const LeftMenuList = (props) => {
     const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const LeftMenuList = (props) => {
 
     const onPressAction = (index, groupCode) =>{
         setSelectedIndex(index);
+        dispatch(initMenuDetail());
         props?.onSelectItem(groupCode);
     }
     const ItemTitle = (categoryID, index) => {

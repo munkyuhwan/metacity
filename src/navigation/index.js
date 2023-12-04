@@ -109,7 +109,6 @@ export default function Navigation() {
 
         getStoreInfo()
         .then(result=>{
-            console.log(result);
             if(result) {
                 const STORE_IDX = result.STORE_IDX;
                 AsyncStorage.getItem("STORE_IDX")

@@ -39,7 +39,7 @@ const ItemDetail = (props) => {
     //const optionSelect = menuDetail?.ADDITIVE_GROUP_LIST[0]?.ADDITIVE_ITEM_LIST;
     //const additiveData = menuDetail?.ADDITIVE_GROUP_LIST[1];
     const recommendMenu = menuDetail?.recommend;
-    
+
     // animation set
     const [widthAnimation, setWidthAnimation] = useState(new Animated.Value(0));
     // width interpolation
@@ -83,6 +83,7 @@ const ItemDetail = (props) => {
     }
     
     const onOptionSelect = (groupCode) =>{
+        
         dispatch(setMenuOptionGroupCode(groupCode));
         openPopup(dispatch,{innerView:"Option", isPopupVisible:true});
         /* 
@@ -304,7 +305,6 @@ const ItemDetail = (props) => {
                                                         );
                                                     }
                                                 })
-                                                
                                             }
                                         </OptList>
                                     </OptListWrapper>

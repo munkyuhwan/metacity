@@ -29,7 +29,6 @@ const RecommendItem = (props) => {
     useEffect(()=>{
         getPosItemsWithCategory(dispatch, {selectedMainCategory,selectedSubCategory,menuDetailID:recommentItemID})
         .then(result=>{
-            console.log("itemResult:",result);
             setItemDetail(result);
         })
     },[])

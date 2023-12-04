@@ -38,21 +38,32 @@ const OptItem = (props)=>{
     useEffect(()=>{
         // 옵션 선택한 메뉴 확인
         if(menuOptionSelected.length>0) {
+            console.log("menuOptionSelected: ",menuOptionSelected);
+             
             const checkMenu = menuOptionSelected.filter(el=>el.menuOptionGroupCode==optionData.GROUP_NO);
             setSelected(checkMenu.length>0);
             // 선택한 메뉴리스트
+            
             if(checkMenu.length>0){
-                const checkedOption = checkMenu[0]?.menuOptionSelected?.ADDITIVE_ID;
+                let priceToSet = 0;
+                for(var i=0;i<checkMenu.length;i++) {
+                    const totalPrice = Number(checkMenu[i].menuOptionSelected?.AMT)+Number(checkMenu[i].menuOptionSelected?.VAT);
+                    priceToSet = priceToSet+totalPrice;    
+                }
+                setAdditivePrice(priceToSet);
+                /*
+                const checkedOption = checkMenu[0]?.menuOptionSelected?.PROD_I_CD;
                 const itemList = optionData.ADDITIVE_ITEM_LIST;
                 const filteredItem = itemList.filter(el=>el.ADDITIVE_ID==checkedOption);
-                setAdditivePrice(filteredItem[0].ADDITIVE_SALE_PRICE);
-            }
+                setAdditivePrice(filteredItem[0].ADDITIVE_SALE_PRICE); */
+            } 
         }
 
     },[menuOptionGroupCode,menuOptionSelected])
 
     return(
         <>
+         
             <TouchableWithoutFeedback onPress={props.onPress} >
                 <OptItemWrapper>
                     <OptItemFastImage  source={{uri:`https:${optionItemCategoryExtra[0]?.gimg_chg}`}}/>

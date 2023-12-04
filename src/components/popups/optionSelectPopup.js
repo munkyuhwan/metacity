@@ -6,25 +6,32 @@ import { useEffect, useMemo, useState } from "react";
 import _ from 'lodash';
 import { getSetItems, setMenuOptionSelected } from "../../store/menuDetail";
 import FastImage from "react-native-fast-image";
-import { Text, TouchableWithoutFeedback, View } from "react-native";
+import { ScrollView, Text, TouchableWithoutFeedback, View } from "react-native";
 import { openPopup } from "../../utils/common";
+import { getPosItemsWithCategory } from "../../utils/api/metaApis";
 
 const OptionSelectPopup = () =>{
     const {language} = useSelector(state=>state.languages);
     const dispatch = useDispatch();
-    const {menuOptionList, menuOptionGroupCode, setGroupItem} = useSelector((state)=>state.menuDetail);
-    const [optionData, setOptionData] = useState([])
-    const radioButtons = useMemo(()=>optionData)
+    const {menuOptionList, menuOptionGroupCode, setGroupItem, menuOptionSelected} = useSelector((state)=>state.menuDetail);
+    
     const [selectedId, setSelectedId] = useState();
+    
 
     // 메뉴 옵션 선택 추가 정보
-    const {optionExtra} = useSelector(state=>state.menuExtra);
+    const {menuExtra} = useSelector(state=>state.menuExtra);
+
+    const itemImg = (additiveId) => {
+        let imgDir = "";
+        const selExtra = menuExtra.filter(el=>el.pos_code==additiveId);
+        return (selExtra[0]?.gimg_chg)
+    }
     
     const ItemTitle = (additiveId,index) =>{
         let selTitleLanguage = "";
-        const selExtra = optionExtra.filter(el=>el.pos_code==additiveId);
+        const selExtra = menuExtra.filter(el=>el.pos_code==additiveId);
         if(language=="korean") {
-            selTitleLanguage = menuOptionList[index]?.ADDITIVE_NAME;
+            selTitleLanguage = setGroupItem[index]?.PROD_NM;
         }
         else if(language=="japanese") {
             selTitleLanguage = selExtra[0]?.op_name_jp;
@@ -39,79 +46,65 @@ const OptionSelectPopup = () =>{
     }
     
     //console.log("optionExtra: ",optionExtra);
-    useEffect(()=>{
-        let radioData = [];
-        if(!_.isEmpty(menuOptionList)){
-            menuOptionList.map((el)=>{
-                radioData.push({id:el.ADDITIVE_ID, label:el.ADDITIVE_NAME, value:el.ADDITIVE_ID})
-            })
-        }
-        setOptionData(radioData);
-    },[menuOptionList])
+   
     useEffect(()=>{
         if(selectedId) { 
-            const selectedAddtive = menuOptionList.filter(el=>el.ADDITIVE_ID==selectedId);
-            const additiveData = {
-                "ADDITIVE_ID": selectedId,
-                "ADDITIVE_NAME": selectedAddtive[0].ADDITIVE_NAME,
-                "RULE_ID": menuOptionGroupCode,
-                "ADDITIVE_PRICE": selectedAddtive[0].ADDITIVE_SALE_PRICE,
-                "ADDITIVE_CNT": "1"
-            }
-
-            dispatch(setMenuOptionSelected(additiveData));
-            openPopup(dispatch,{innerView:"", isPopupVisible:false});
-
+            let setItem =  {
+                "ITEM_SEQ" : 0,
+                "SET_SEQ" : menuOptionSelected.length+1,
+                "PROD_I_CD" : selectedId?.PROD_CD,
+                "PROD_I_NM" : selectedId?.PROD_NM,
+                "QTY" : 1,
+                "AMT" : selectedId?.SAL_AMT,
+                "VAT" : selectedId?.SAL_VAT,
+            }; 
+            dispatch(setMenuOptionSelected(setItem));
+            openPopup(dispatch,{innerView:"", isPopupVisible:false}); 
         }
     },[selectedId])
+    const deleteOption = (selectedItem) => {
+
+    }
     
     useEffect(()=>{
         dispatch(getSetItems());
-
     },[menuOptionGroupCode])
+
+    
 
     return( 
         <>
-            <View style={{ width:'100%', textAlign:'center', alignItems:"center", padding:20}} >
-                <View style={{width:'100%', height:100, padding:0, flexDirection:'row', alignItems:'center', textAlign:'center'  }} >
-                    {setGroupItem?.map((el,index)=>{ 
-                        console.log("el: ",el);
-                        if(el.USE_YN == "Y") {
-                            <TouchableWithoutFeedback onPress={()=>{setSelectedId(el.PROD_I_CD)}} >
-                                <View style={{padding:10}} >
-                                        <FastImage style={{width:100, height:100, resizeMode:'contain',  }} source={{uri:`https:${optionRight[0]?.gimg_chg}`}} />
-                                        <Text style={{width:'100%', color:'black', fontWeight:'bold', fontSize:17, textAlign:'center'}}  >{ItemTitle(menuOptionList[index]?.ADDITIVE_ID, index)||menuOptionList[index]?.ADDITIVE_NAME}</Text>
-                                </View>
-                            </TouchableWithoutFeedback>
-                        }else {
-                            return(<></>);
-                        }
-                        /* 
-                        const optionRight = optionExtra.filter(optionEl => optionEl.pos_code == el.id);
-                        return(
-                            <TouchableWithoutFeedback onPress={()=>{setSelectedId(el.id)}} >
-                                <View style={{padding:10}} >
-                                        <FastImage style={{width:100, height:100, resizeMode:'contain',  }} source={{uri:`https:${optionRight[0]?.gimg_chg}`}} />
-                                        <Text style={{width:'100%', color:'black', fontWeight:'bold', fontSize:17, textAlign:'center'}}  >{ItemTitle(menuOptionList[index]?.ADDITIVE_ID, index)||menuOptionList[index]?.ADDITIVE_NAME}</Text>
-                                </View>
-                            </TouchableWithoutFeedback>
-                        )
-                         */
-                    })}
-                </View>
-            </View>
-            { /*
-            <View style={{ width:'100%', textAlign:'center', alignItems:"center"}} >
-                <RadioGroup 
-                    containerStyle={el=>{console.log("el: ",el)}}
-                    radioButtons={radioButtons} 
-                    onPress={setSelectedId}
-                    selectedId={selectedId}
-                    layout="row"
-                />
-                </View> 
-                */}
+            {setGroupItem?.length > 0 &&
+            <ScrollView horizontal={true} >
+                <View style={{ width:'100%', textAlign:'center', alignItems:"center", padding:20}} >
+                    <View style={{width:'100%', height:100, padding:0, flexDirection:'row', alignItems:'center', textAlign:'center'  }} >
+                        {/* <TouchableWithoutFeedback onPress={()=>{setSelectedId(el)}} >
+                            <View style={{padding:10}} >
+                                <FastImage style={{width:100, height:100, resizeMode:'contain',  }}/>
+                                <Text style={{width:'100%', color:'black', fontWeight:'bold', fontSize:17, textAlign:'center'}}  >없음</Text>
+                            </View>
+                        </TouchableWithoutFeedback>  */}
+                        {setGroupItem?.map((el,index)=>{ 
+                            if(el.USE_YN == "Y") {
+                                return (
+                                    <TouchableWithoutFeedback onPress={()=>{setSelectedId(el)}} >
+                                        <View style={{padding:10}} >
+                                            <FastImage style={{width:100, height:100, resizeMode:'contain',  }} source={{uri:`https:${itemImg(el.PROD_CD)}`}} />
+                                            <Text style={{width:'100%', color:'black', fontWeight:'bold', fontSize:17, textAlign:'center'}}  >{ItemTitle(el.PROD_CD, index)}</Text>
+                                            <Text style={{width:'100%', color:'black', fontWeight:'bold', fontSize:17, textAlign:'center'}}  >{"+"+el.SAL_TOT_AMT+"원"}</Text>
+                                        </View>
+                                    </TouchableWithoutFeedback> 
+                                )
+                            }else {
+                                return(<></>);
+                            }
 
+                        })}
+                    </View>
+                </View>
+            </ScrollView>
+
+            }
         </>
     );
 }
