@@ -28,7 +28,6 @@ export const deleteItem = createAsyncThunk("order/deleteItem", async(_,{dispatch
     let tmpOrderList = Object.assign([],orderList);
     tmpOrderList.remove(_.index)
     // 카트 여닫기
-    console.log("tmpOrderList.length: ",tmpOrderList.length);
     if(tmpOrderList.length <= 0) {
         dispatch(setCartView(false));
     }
@@ -85,12 +84,22 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
     let currentOrderList = Object.assign([],orderList);
     
     // 메뉴 데이터 주문데이터에 맞게 변경
-    const orderData = setOrderData(item, orderList);    
+    let orderData = setOrderData(item, orderList);
+    let optionTrim = [];
+    let optionPrice = 0;
+    for(var i=0;i<menuOptionSelected.length;i++) {
+        optionPrice = optionPrice+(menuOptionSelected[i].menuOptionSelected.AMT+menuOptionSelected[i].menuOptionSelected.VAT)
+        optionTrim.push({...menuOptionSelected[i].menuOptionSelected,...{ITEM_SEQ:orderData.ITEM_SEQ}});
+    }
+    // 세트 메뉴 추가
+    orderData["SETITEM_INFO"] = optionTrim;
+    orderData["SETITEM_CNT"] = optionTrim.length;
+    orderData["ITEM_AMT"] = orderData["ITEM_AMT"]+optionPrice;
+    console.log("set info: ",orderData["SETITEM_INFO"])
     // 중복 체크 후 수량 변경
     let newOrderList = orderListDuplicateCheck(currentOrderList, orderData);
-    
     //newOrderList.reverse();
-
+ 
     if(newOrderList.length <= 0) {
         dispatch(setCartView(false));
     }else {
@@ -100,7 +109,7 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
     const totalResult = grandTotalCalculate(newOrderList)
     openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
     return {orderList:newOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
-
+  
     /* 
     const {STORE_ID, SERVICE_ID} = await getStoreID()
     .catch(err=>{

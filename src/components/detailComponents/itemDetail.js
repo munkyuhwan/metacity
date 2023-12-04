@@ -253,7 +253,7 @@ const ItemDetail = (props) => {
                                         <DetailItemInfoSource>{ItemWonsanji()}</DetailItemInfoSource>
                                         <DetailPriceMoreWrapper>
                                             <DetailItemInfoPriceWrapper>
-                                                <DetailItemInfoPrice isBold={true} >{ menuDetail?.SAL_AMT?numberWithCommas(menuDetail?.SAL_AMT):""}</DetailItemInfoPrice><DetailItemInfoPrice isBold={false}> 원</DetailItemInfoPrice>
+                                                <DetailItemInfoPrice isBold={true} >{ menuDetail?.SAL_TOT_AMT?numberWithCommas(menuDetail?.SAL_TOT_AMT):""}</DetailItemInfoPrice><DetailItemInfoPrice isBold={false}> 원</DetailItemInfoPrice>
                                             </DetailItemInfoPriceWrapper>
                                             <DetailItemInfoMore>{ItemInfo()}</DetailItemInfoMore>
                                         </DetailPriceMoreWrapper>

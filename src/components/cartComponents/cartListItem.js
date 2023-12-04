@@ -18,12 +18,10 @@ const CartListItem = (props) => {
     const {menuExtra} = useSelector(state=>state.menuExtra);
     const {orderList} = useSelector(state=>state.order);
     // 메뉴 옵션 추가 정보
-    const {optionExtra} = useSelector(state=>state.menuExtra);
 
     const index = props?.index;
     const order = props?.item;
-    //console.log("order: ",order)
-    const additiveItemList = order?.ADDITIVE_ITEM_LIST;
+    const additiveItemList = order?.SETITEM_INFO;
     // 이미지 찾기
     const itemExtra = menuExtra.filter(el=>el.pos_code == order?.ITEM_CD);
     const ItemTitle = () => {
@@ -47,18 +45,18 @@ const CartListItem = (props) => {
 
     const ItemOptionTitle = (additiveId,index) =>{
         let selOptTitleLanguage = "";
-        const selExtra = optionExtra.filter(el=>el.pos_code==additiveId);
+        const selExtra = menuExtra.filter(el=>el.pos_code==additiveId);
         if(language=="korean") {
-            selOptTitleLanguage = additiveItemList[index]?.menuOptionSelected.ADDITIVE_NAME;
+            selOptTitleLanguage = additiveItemList[index]?.PROD_I_NM;
         }
         else if(language=="japanese") {
-            selOptTitleLanguage = selExtra[0]?.op_name_jp||additiveItemList[index]?.menuOptionSelected.ADDITIVE_NAME;
+            selOptTitleLanguage = selExtra[0]?.op_name_jp||additiveItemList[index]?.PROD_I_NM;
         }
         else if(language=="chinese") {
-            selOptTitleLanguage = selExtra[0]?.op_name_cn||additiveItemList[index]?.menuOptionSelected.ADDITIVE_NAME;
+            selOptTitleLanguage = selExtra[0]?.op_name_cn||additiveItemList[index]?.PROD_I_NM;
         }
         else if(language=="english") {
-            selOptTitleLanguage = selExtra[0]?.op_name_en||additiveItemList[index]?.menuOptionSelected.ADDITIVE_NAME;
+            selOptTitleLanguage = selExtra[0]?.op_name_en||additiveItemList[index]?.PROD_I_NM;
         }
         return selOptTitleLanguage;
     }
@@ -97,12 +95,11 @@ const CartListItem = (props) => {
                 <CartItemTitlePriceWrapper>
                     <CartItemTitle>{ItemTitle()||order.ITEM_NM}</CartItemTitle>
                     <CartItemOpts>
-                        {/*additiveItemList.length>0 &&
+                        {additiveItemList.length>0 &&
                             additiveItemList.map((el,index)=>{
-                                return `${ItemOptionTitle(el.menuOptionSelected.ADDITIVE_ID,index)||el.menuOptionSelected.ADDITIVE_NAME}`+`${index<(additiveItemList.length-1)?", ":""}`;
-                            
+                                return `${ItemOptionTitle(el.PROD_I_CD,index)||el.PROD_I_NM}`+`${index<(additiveItemList.length-1)?", ":""}`;
                             })
-                        */}
+                        }
                     </CartItemOpts>
                     <CartItemPrice>{numberWithCommas(order?.ITEM_AMT||0)}원</CartItemPrice>
                     <CartItemAmtWrapper>

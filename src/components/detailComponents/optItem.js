@@ -37,9 +37,7 @@ const OptItem = (props)=>{
  
     useEffect(()=>{
         // 옵션 선택한 메뉴 확인
-        if(menuOptionSelected.length>0) {
-            console.log("menuOptionSelected: ",menuOptionSelected);
-             
+        if(menuOptionSelected.length>0) {             
             const checkMenu = menuOptionSelected.filter(el=>el.menuOptionGroupCode==optionData.GROUP_NO);
             setSelected(checkMenu.length>0);
             // 선택한 메뉴리스트
