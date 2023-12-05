@@ -110,7 +110,7 @@ const ItemDetail = (props) => {
     }
 
     const closeDetail = () =>{
-        props.setDetailShow(false); 
+        //props.setDetailShow(false); 
         dispatch(setMenuDetail(null)); 
         init();
     }
@@ -344,7 +344,10 @@ const PopStyle = StyleSheet.create({
         position:'absolute', 
         width:'100%',
         height:'100%',
-        paddingTop:108,
+        paddingTop:0,
+        paddingLeft:0,
+        left:-30,
+        zIndex:99999,
      }
 
 })

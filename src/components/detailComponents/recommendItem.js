@@ -51,10 +51,10 @@ const RecommendItem = (props) => {
         }
         return selTitleLanguage;
     }
-    
+
     return(
         <>
-            <TouchableWithoutFeedback onPress={()=>{dispatch(addToOrderList({item:itemDetail[0]})); /* dispatch(setMenuDetail(recommentItemID)); */ }}>
+            <TouchableWithoutFeedback onPress={()=>{dispatch(addToOrderList({item:itemDetail[0],menuOptionSelected:[]})); /* dispatch(setMenuDetail(recommentItemID)); */ }}>
                 <RecommendItemWrapper>
                     <RecommendItemImageWrapper>
                         <RecommendItemImage  source={{uri:`${"https:"+itemExtra[0]?.gimg_chg}`}}/>

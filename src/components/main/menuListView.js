@@ -155,9 +155,9 @@ const MenuListView = () => {
                     }}
                 />
             </MenuListWrapper>
-            {isDetailShow&&
+            {/*isDetailShow&&
             <ItemDetail isDetailShow={isDetailShow} setDetailShow={setDetailShow} language={language}/>
-            }
+                */}
         </>
     );
 }

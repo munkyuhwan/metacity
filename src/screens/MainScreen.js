@@ -21,7 +21,8 @@ import {isEmpty} from 'lodash';
 const MainScreen = () =>{   
     const navigation = useNavigation();
     const dispatch = useDispatch();
-    const {tableList, tableInfo, tableStatus} = useSelector(state=>state.tableInfo);
+    const {language} = useSelector(state=>state.languages);
+    const {menuDetailID} = useSelector((state)=>state.menuDetail);
     useEffect(()=>{
       dispatch(setLanguage("korean"));  
     },[])
@@ -59,6 +60,9 @@ const MainScreen = () =>{
                     </MainWrapper>
                 </WholeWrapper> 
             </KeyboardAvoidingView>
+            {menuDetailID!=null &&
+                <ItemDetail isDetailShow={menuDetailID!=null} language={language}/>
+            }
         </>
     )
 }

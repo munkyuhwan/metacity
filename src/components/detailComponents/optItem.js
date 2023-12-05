@@ -73,7 +73,7 @@ const OptItem = (props)=>{
                     <OptItemDim isSelected={isSelected}/>
                     <OptItemInfoWrapper>
                         <OptItemInfoTitle>{ItemTitle()||optionData?.ADDITIVE_GROUP_NAME }</OptItemInfoTitle>
-                        <OptItemInfoPrice>{addtivePrice?"+"+Number(addtivePrice).toLocaleString(undefined,{maximumFractionDigits:0}):""}</OptItemInfoPrice>
+                        <OptItemInfoPrice>{addtivePrice?"+"+Number(addtivePrice).toLocaleString(undefined,{maximumFractionDigits:0})+"원":""}</OptItemInfoPrice>
                         <OptItemInfoChecked isSelected={isSelected} source={require("../../assets/icons/check_red.png")}/>
                     </OptItemInfoWrapper>
                 </OptItemWrapper>

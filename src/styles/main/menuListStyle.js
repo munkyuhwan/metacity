@@ -22,7 +22,8 @@ export const MenuImageDefaultWrapper = styled.View`
 `
 export const MenuImageDefault = styled.Image`
     margin:auto;
-    width:100px;
+    width:360px;
+    height:250px;
     resizeMode:contain;
 `
 export const MenuItemTopWrapper = styled.View`

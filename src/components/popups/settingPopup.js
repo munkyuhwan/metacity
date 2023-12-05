@@ -166,13 +166,13 @@ const SettingPopup = () =>{
                 );
              return;});
             if(update) {
-                /* Alert.alert(
+                Alert.alert(
                     "업데이트",
                     "앱 업데이트가 있습니다.",
                     [{
                         text:'확인',
                     }]
-                ) */
+                )
                 update
                 .download((progress)=>{
                     setSpinnerText("업데이트 중...",progress,"%");
@@ -520,7 +520,7 @@ const SettingPopup = () =>{
                                 <SettingButtonText isMargin={true} >화면 초기화</SettingButtonText>
                             </TouchableWithoutFeedback>
                             <TouchableWithoutFeedback onPress={()=>{checkUpdate();}} >
-                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.1-9</SettingButtonText>
+                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.7</SettingButtonText>
                             </TouchableWithoutFeedback> 
                         </SettingButtonWrapper>
                     </SettingScrollView>

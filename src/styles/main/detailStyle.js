@@ -7,8 +7,9 @@ import FastImage from 'react-native-fast-image';
 export const DetailWrapper=styled.View`
     width:100%;
     height:100%;
-    paddingRight:64px;
-    paddingBottom:23px;
+    paddingRight:0px;
+    paddingBottom:0px;
+    paddingLeft:0px;
     backgroundColor:#00000000;
 `
 export const DetailWhiteWrapper = styled.View`
@@ -16,10 +17,10 @@ export const DetailWhiteWrapper = styled.View`
     height:100%;
     borderRadius:${RADIUS};
     backgroundColor:${colorWhite};
-    paddingTop:10px;
-    paddingBottom:10px;
-    paddingRight:10px;
-    paddingLeft:10px;
+    paddingTop:20px;
+    paddingBottom:20px;
+    paddingRight:20px;
+    paddingLeft:20px;
     elevation: 100;
 `
 
@@ -32,7 +33,7 @@ export const DetailInfoWrapper = styled.View`
 // 상단 
 export const DetailItemInfoWrapper = styled.View`
     flexDirection:column;
-    paddingLeft:69px;
+    paddingLeft:99px;
     paddingTop:12px;
 `
 export const DetailItemInfoImageWrapper = styled.ImageBackground`
@@ -48,8 +49,8 @@ export const DetailItemInfoImage = styled.Image`
 `
 
 export const DetailItemInfoFastImage = styled(FastImage)`
-    width:350px;
-    height:210px;
+    width:360px;
+    height:250px;
     resizeMode:cover;
     borderRadius:${RADIUS};
 `
@@ -98,13 +99,13 @@ export const DetailItemInfoMore = styled.Text`
 export const OptRecommendWrapper = styled.View`
     flex:1;
     flexDirection:column;
-    paddingTop:38px;
+    paddingTop:95px;
 `
 export const OptListWrapper = styled.View`
     flexDirection:column;
 `
 export const OptTitleText = styled.Text`
-    fontSize:23px;   
+    fontSize:28px;   
     color:${colorBlack};
     fontWeight:bold;
     paddingTop:5px;
@@ -115,8 +116,8 @@ export const OptList = styled.ScrollView`
 `
 // 옵션선택 아이템
 export const OptItemWrapper= styled.View`
-    width:130px;
-    height:90px;
+    width:170px;
+    height:110px;
     borderRadius:${RADIUS_SMALL};
     marginRight:9px;
 `
@@ -129,6 +130,7 @@ export const OptItemFastImage = styled(FastImage)`
     width:100%;
     height:100%;
     borderRadius:${RADIUS_SMALL};
+    backgroundColor:${colorBlack};
 `
 export const OptItemInfoWrapper = styled.View`
     width:100%;
@@ -141,17 +143,18 @@ export const OptItemInfoWrapper = styled.View`
     paddingLeft:12px;
 `
 export const OptItemInfoTitle = styled.Text`
-    fontSize:12px;
+    fontSize:28px;
     color:${colorWhite};
     fontWeight:bold;
 `
 export const OptItemInfoPrice = styled.Text`
-    fontSize:12px;
+    fontSize:27px;
     color:${colorYellow};
+    fontWeight:bold;
 `
 export const OptItemInfoChecked = styled.Image`
-    width:18px;
-    height:18px;
+    width:22px;
+    height:22px;
     resizeMode:contain;
     position:absolute;
     right:8px;
@@ -170,8 +173,8 @@ export const RecommendItemWrapper= styled.View`
 
 `
 export const RecommendItemImageWrapper = styled.View`
-    width:130px;
-    height:90px;
+    width:170px;
+    height:110px;
     borderRadius:${RADIUS_SMALL};
     marginRight:9px;
 `
