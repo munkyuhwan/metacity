@@ -243,12 +243,17 @@ const ItemDetail = (props) => {
                                             <DetailItemInfoTitle>{ItemTitle()||menuDetail?.PROD_NM}</DetailItemInfoTitle>
                                             {itemExtra&&
                                         itemExtra[0]?.is_new=='Y'&&
-                                                 <DetailItemInfoTitleEtc source={require("../../assets/icons/new.png")}/>
+                                                 <DetailItemInfoTitleEtc source={require("../../assets/icons/new_menu.png")}/>
                                             }
                                             {itemExtra&&
                                         itemExtra[0]?.is_best=='Y'&&
-                                                <DetailItemInfoTitleEtc source={require("../../assets/icons/best.png")}/>
+                                                <DetailItemInfoTitleEtc source={require("../../assets/icons/best_menu.png")}/>
                                             }
+                                            {itemExtra&&
+                                        itemExtra[0]?.is_on=='Y'&&
+                                                <DetailItemInfoTitleEtc source={require("../../assets/icons/hot_menu.png")}/>
+                                            }
+                                            
                                         </DetailItemInfoTitleWrapper>
                                         <DetailItemInfoSource>{ItemWonsanji()}</DetailItemInfoSource>
                                         <DetailPriceMoreWrapper>

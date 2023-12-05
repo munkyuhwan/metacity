@@ -122,3 +122,7 @@ export const CALL_SERVICE_GROUP_CODE = "99999";
 // ADMIN API URL
 
 
+
+export const CODE_PUSH_SECRET = "fd7f67b7-013a-4721-97ed-6f9477b584cc";
+
+

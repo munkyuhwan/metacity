@@ -51,7 +51,7 @@ const MenuItem = ({item,index,setDetailShow}) => {
         return selTitleLanguage;
     }
     const itemPrice= item.SAL_TOT_AMT;
-
+    console.log(itemExtra[0]);
     return(
         <>
             <MenuItemWrapper>
@@ -74,10 +74,13 @@ const MenuItem = ({item,index,setDetailShow}) => {
                     <MenuItemImageWrapper>
                         <MenuItemHotnessWrapper>
                         {itemExtra[0]?.is_new=='Y'&&
-                            <MenuItemHotness source={require('../../assets/icons/new.png')} />
+                            <MenuItemHotness source={require('../../assets/icons/new_menu.png')} />
                         }
                         {itemExtra[0]?.is_best=='Y'&&
-                            <MenuItemHotness source={require('../../assets/icons/best.png')} />
+                            <MenuItemHotness source={require('../../assets/icons/best_menu.png')} />
+                        }
+                        {itemExtra[0]?.is_on=='Y'&&
+                            <MenuItemHotness source={require('../../assets/icons/hot_menu.png')} />
                         }
                         </MenuItemHotnessWrapper>
                         <MenuItemButtonWrapper>

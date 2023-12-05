@@ -67,7 +67,7 @@ export const DetailItemInfoTitleEtc = styled.Image`
     height:42px;
     marginRight:7px;
     resizeMode:contain;
-
+    
 `
 export const DetailItemInfoSource = styled.Text`
     fontSize:22px;

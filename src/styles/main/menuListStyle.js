@@ -74,6 +74,7 @@ export const MenuItemHotness = styled.Image`
     marginRight:6px;
     width:52px;
     resizeMode:contain;
+    backgroundColor:#00000000;
 `
 export const MenuItemBottomWRapper = styled.View`
     width:100%; 

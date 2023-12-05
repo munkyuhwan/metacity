@@ -20,6 +20,7 @@ import { getStoreInfo } from '../../utils/api/metaApis';
 import { getMenuState } from '../../store/menu';
 import { getAdminCategoryData, getMainCategories } from '../../store/categories';
 import { getAdminMenuItems } from '../../store/menuExtra';
+import { CODE_PUSH_SECRET } from '../../resources/apiResources';
 
 const SettingPopup = () =>{
 
@@ -154,7 +155,7 @@ const SettingPopup = () =>{
 
     const checkUpdate =  async() =>{
         CodePush
-            const update = await CodePush.checkForUpdate("fd7f67b7-013a-4721-97ed-6f9477b584cc")
+            const update = await CodePush.checkForUpdate(CODE_PUSH_SECRET)
             .catch(err=>{console.log(err);
                 Alert.alert(
                 "업데이트",
@@ -519,7 +520,7 @@ const SettingPopup = () =>{
                                 <SettingButtonText isMargin={true} >화면 초기화</SettingButtonText>
                             </TouchableWithoutFeedback>
                             <TouchableWithoutFeedback onPress={()=>{checkUpdate();}} >
-                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.1-5</SettingButtonText>
+                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.1-8</SettingButtonText>
                             </TouchableWithoutFeedback> 
                         </SettingButtonWrapper>
                     </SettingScrollView>
