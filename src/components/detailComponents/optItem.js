@@ -64,7 +64,12 @@ const OptItem = (props)=>{
          
             <TouchableWithoutFeedback onPress={props.onPress} >
                 <OptItemWrapper>
-                    <OptItemFastImage  source={{uri:`https:${optionItemCategoryExtra[0]?.gimg_chg}`}}/>
+                    {optionItemCategoryExtra[0]?.gimg_chg &&
+                        <OptItemFastImage  source={{uri:`https:${optionItemCategoryExtra[0]?.gimg_chg}`}}/>
+                    }
+                    {!optionItemCategoryExtra[0]?.gimg_chg &&
+                        <OptItemFastImage resizeMode='contain'  source={require('../../assets/icons/logo.png')}/>
+                    }
                     <OptItemDim isSelected={isSelected}/>
                     <OptItemInfoWrapper>
                         <OptItemInfoTitle>{ItemTitle()||optionData?.ADDITIVE_GROUP_NAME }</OptItemInfoTitle>
