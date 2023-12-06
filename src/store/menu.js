@@ -10,7 +10,7 @@ import { setMenuCategories, setMenuExtra, setOptionExtra } from './menuExtra';
 import { CALL_SERVICE_GROUP_CODE } from '../resources/apiResources';
 import { setCallServerList } from './callServer';
 import { DEFAULT_CATEGORY_ALL_CODE } from '../resources/defaults';
-import { getPosItemsWithCategory } from '../utils/api/metaApis';
+import { getPosItemsAll, getPosItemsWithCategory } from '../utils/api/metaApis';
 
 export const initMenu = createAsyncThunk("menu/initMenu", async(category) =>{
     return [];
@@ -18,14 +18,25 @@ export const initMenu = createAsyncThunk("menu/initMenu", async(category) =>{
 
 export const getDisplayMenu = createAsyncThunk("menu/getDisplayMenu", async(_, {dispatch, getState}) =>{
     const {selectedMainCategory,selectedSubCategory} = getState().categories
+    const {allItems} = getState().menu;
+
     if(selectedMainCategory == "0" || selectedMainCategory == undefined ) {
         return
     }
     if(selectedSubCategory == "0" || selectedSubCategory == undefined ) {
         return
     } 
-    const itemResult = await getPosItemsWithCategory(dispatch, {selectedMainCategory,selectedSubCategory});
-    return itemResult;
+    let itemResult = [];
+    itemResult = await getPosItemsWithCategory(dispatch, {selectedMainCategory,selectedSubCategory});
+    
+    let selectedItems = []
+    if(selectedSubCategory == "0000") {
+        selectedItems = allItems.filter(el=>el.PROD_L1_CD == selectedMainCategory); 
+    }else {
+        selectedItems = allItems.filter(el=>el.PROD_L1_CD == selectedMainCategory && el.PROD_L2_CD == selectedSubCategory ); 
+    }
+   
+    return selectedItems;
 
    /*  const {selectedMainCategory,selectedSubCategory} = getState().categories
     const {menu, allItems} = getState().menu;
@@ -66,6 +77,11 @@ export const getDisplayMenu = createAsyncThunk("menu/getDisplayMenu", async(_, {
 
 export const updateMenu = createAsyncThunk("menu/updateMenu", async(_,{rejectWithValue}) =>{
     return await posOrderNew();
+})
+// 전체 아이템 받아오기
+export const getAllItems = createAsyncThunk("menu/getAllItems",async(_,{dispatcy,getstate})=>{
+    const result = await getPosItemsAll().catch(err=>{return;});
+    return result;
 })
 
 export const getMenuState = createAsyncThunk("menu/menuState", async(_,{dispatch}) =>{
@@ -117,6 +133,9 @@ export const menuSlice = createSlice({
         })
         builder.addCase(getMenuState.fulfilled,(state, action)=>{
 
+        })
+        builder.addCase(getAllItems.fulfilled,(state, action)=>{
+            state.allItems = action.payload;
         })
         /* 
         builder.addCase(getMenuEdit.fulfilled,(state, action)=>{

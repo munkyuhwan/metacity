@@ -65,6 +65,34 @@ export const  getPosMidCategory = async(dispatch, data) =>{
         });
     }) 
 }
+// 전체 메뉴 받아오기
+export const getPosItemsAll = async(dispatch, data) =>{
+    const {POS_IP} = await getIP()
+    if(isEmpty(POS_IP)) {
+        EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""})
+        posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'포스 IP를 입력 해 주세요.',MSG2:""})
+        return;
+    }
+    return await new Promise(function(resolve, reject){
+        axios.post(
+            `${POS_BASE_URL(POS_IP)}`,
+            {VERSION:POS_VERSION_CODE, WORK_CD:POS_WORK_CD_MENU_ITEMS, PROD_L1_CD:"", PROD_L2_CD:"",PROD_L3_CD:"", PROD_CD:"",PROD_NM:""},
+            posOrderHeader,
+        ) 
+        .then((response => {
+            if(metaErrorHandler(dispatch, response?.data)) {
+                const data = response?.data;
+                const itemList = data.PROD_LIST;
+                resolve(itemList);
+            }    
+        })) 
+        .catch(error=>{
+            displayErrorPopup(dispatch,"XXXX",`포스에 연동할 수 없습니다.`);
+            reject(error.response.data)
+        });
+    }) 
+}
+
 // 포스 카테고리별 메뉴 받아오기
 export const getPosItemsWithCategory = async(dispatch, data) =>{
     const {POS_IP} = await getIP()

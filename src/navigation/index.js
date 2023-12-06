@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getAdminCategoryData, getMainCategories, getSubCategories, setSelectedMainCategory, setSelectedSubCategory } from '../store/categories'
 import FullSizePopup from '../components/common/fullsizePopup'
 import ErrorPopup from '../components/common/errorPopup'
-import { getMenuState } from '../store/menu'
+import { getAllItems, getDisplayMenu, getMenuState } from '../store/menu'
 import _ from 'lodash';
 import { getTableList, getTableStatus, initTableInfo } from '../store/tableInfo'
 import { EventRegister } from 'react-native-event-listeners'
@@ -27,6 +27,7 @@ import { getAdminMenuItems } from '../store/menuExtra'
 import { getStoreInfo } from '../utils/api/metaApis'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { openTransperentPopup } from '../utils/common'
+import { getDisplay } from 'react-native-device-info'
 
 const Stack = createStackNavigator()
 
@@ -34,7 +35,10 @@ export default function Navigation() {
     var statusInterval;
     const dispatch = useDispatch();
     const [spinnerText, setSpinnerText] = React.useState("")
-    const {tableList, tableInfo, tableStatus} = useSelector(state=>state.tableInfo);
+    
+    const {tableStatus} = useSelector(state=>state.tableInfo);
+    const {allItems} = useSelector(state=>state.menu);
+
     const navigate = useRef();
     const handleEventListener = () => {
         //리스너 중복방지를 위해 한번 삭제
@@ -108,6 +112,9 @@ export default function Navigation() {
         // 관리자 메뉴 정보 받아오기;
         dispatch(getAdminMenuItems());
 
+        // 전체 메뉴 받아오기
+        dispatch(getAllItems());
+
         getStoreInfo()
         .then(result=>{
             if(result) {
@@ -135,9 +142,14 @@ export default function Navigation() {
            dispatch(getMenuState());
         },1000*60*60) */
         
-  
-        
     },[])
+
+    useEffect(()=>{
+        //console.log("all items: ",allItems.length);
+        if(allItems?.length>0) {
+            dispatch(getDisplayMenu());
+        }
+    },[allItems])
 
     return (
         <>  

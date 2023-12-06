@@ -270,7 +270,14 @@ const ItemDetail = (props) => {
                                     <OptListWrapper>
                                         <OptTitleText>{LANGUAGE[language]?.detailView.selectOpt}</OptTitleText>
                                         <OptList horizontal showsHorizontalScrollIndicator={false} >
-                                            {menuOptionList!=null &&
+                                            {
+                                                menuOptionList!=null &&
+                                                menuOptionList.map((el,index)=>{
+                                                    //console.log("el: ",el);
+                                                    return(<></>);
+                                                })
+                                            }
+                                            {/*  menuOptionList!=null &&
                                                 menuOptionList.map((el,index)=>{
                                                     if(el.USE_YN == "Y") {
                                                         return(
@@ -281,7 +288,7 @@ const ItemDetail = (props) => {
                                                     }
                                                     
                                                 })
-                                            }
+                                             */}
                                             {selectedOptions==null &&
                                                 <OptItem key={"optItem_0"} optionData={{imgUrl:require("../../assets/icons/logo.png"),name:"loading...",price:0}} menuData={menuDetail}/>    
                                             }

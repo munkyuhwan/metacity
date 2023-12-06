@@ -67,7 +67,7 @@ const OptionSelectPopup = () =>{
     }
     
     useEffect(()=>{
-        dispatch(getSetItems());
+        //dispatch(getSetItems());
     },[menuOptionGroupCode])
 
     
