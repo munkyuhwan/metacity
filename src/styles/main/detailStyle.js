@@ -37,14 +37,14 @@ export const DetailItemInfoWrapper = styled.View`
     paddingTop:12px;
 `
 export const DetailItemInfoImageWrapper = styled.ImageBackground`
-    width:290px;
-    height:200px;
+    width:360px;
+    height:250px;
     borderRadius:${RADIUS};
     backgroundColor:black;
 `
 export const DetailItemInfoImage = styled.Image`
-    width:350px;
-    height:210px;
+    width:360px;
+    height:250px;
     resizeMode:contain;
 `
 
