@@ -170,7 +170,9 @@ export const postMetaPosOrder = async(dispatch, data) =>{
                 //openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true});
                 //openPopup(dispatch,{innerView:"OrderComplete", isPopupVisible:true});
                 resolve()
-            }    
+            } else {
+                reject();
+            }
         })) 
         .catch(error=>{
             displayErrorPopup(dispatch,"XXXX",`포스에 연동할 수 없습니다.`);
