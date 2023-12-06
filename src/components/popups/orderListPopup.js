@@ -18,31 +18,20 @@ const OrderListPopup = () =>{
     const {language} = useSelector(state=>state.languages);
     const {orderStatus} = useSelector(state=>state.order);    
     const [orderTotalAmt, setOrderTotalAmt] = useState(0);
-    const { tableInfo } = useSelector(state=>state.tableInfo);
+    const {param} = useSelector(state=>state.popup);
     useEffect(()=>{
-        //const orderStatus = await checkTableOrder(dispatch,{tableInfo}).catch(err=>{return});
-       /*  AsyncStorage.getItem("orderResult")
-        .then(result =>{
-            console.log("order result: ",result);
-            if(result) {
-                dispatch(getOrderStatus({orderData:orderResult}));  
-            }
-        })
-        .catch(error=>{
-
-        })  *//* 
-        checkTableOrder(dispatch,{tableInfo})
-        .then(orderStatus=>{
-            const orderNo = orderStatus.orderNo;
-            const mchatOrderNo = orderStatus.mchatOrderNo;
-            const orgOrderNo = orderStatus.orgOrderNo
-            const orderResult = {"ORG_ORDERNO":orgOrderNo,"MCHT_ORDERNO":mchatOrderNo,"ORDERNO":orderNo}
-            dispatch(getOrderStatus({orderData:orderResult}));
-        })
-        .catch(err=>{})  */
-
         dispatch(getOrderStatus());
     },[])
+    useEffect(()=>{
+        const timeOut = param?.timeOut;
+        if(timeOut){
+            const to = setInterval(() => {
+                clearInterval(to);
+                openTransperentPopup(dispatch,{innerView:"", isPopupVisible:false});
+            }, 3000);
+        }
+    },[param])
+
  
     useEffect(()=>{
         if(isEmpty(orderStatus)) {

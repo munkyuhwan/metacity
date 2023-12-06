@@ -4,7 +4,8 @@ import { getPosItemsWithCategory, getPosSetGroup, getPosSetGroupItem } from '../
 import { posErrorHandler } from '../utils/errorHandler/ErrorHandler';
 
 export const initMenuDetail = createAsyncThunk("menuDetail/initMenuDetail", async() =>{
-    return {menuDetailID: null,menuDetail:{},menuOptionGroupCode:"",menuOptionList:[],menuOptionSelected:[],};
+    //return {menuDetailID: null,menuDetail:{},menuOptionGroupCode:"",menuOptionList:[],menuOptionSelected:[],setGroupItem:[]};
+    return { menuDetailID: null,menuDetail:{},menuOptionGroupCode:"",menuOptionList:[],menuOptionSelected:[],setGroupItem:[],menuRecommendItems:[],}
 })
 
 export const setMenuDetail = createAsyncThunk("menuDetail/setMenuDetail", async(_) =>{
@@ -55,9 +56,18 @@ export const getItemSetGroup = createAsyncThunk("menuDetail/getItemSetGroup", as
 });
 // 세트 그룹 아이템 받기
 export const getSetItems = createAsyncThunk("menuDetail/getSetItems", async(data,{dispatch,getState}) =>{
-    const {menuOptionGroupCode} = getState().menuDetail;
-    const {selectedMainCategory,selectedSubCategory} = getState().categories
-    const setGroupItem = await getPosSetGroupItem(dispatch,{menuOptionGroupCode}).catch(err=>{ posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"통신",MSG2:"아이템을 받아올 수 없습니다."}); return;});
+    const{allItems} = getState().menu;
+    const {setGroup} = data;
+    const setGroupItem = await getPosSetGroupItem(dispatch,{menuOptionGroupCode:setGroup.GROUP_NO}).catch(err=>{ posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"통신",MSG2:"아이템을 받아올 수 없습니다."}); return;});
+
+    let displaySetItem = [];
+    for(var i=0;i<setGroupItem.length;i++) {
+        let selectedItem = allItems.filter(el=>el.PROD_CD == setGroupItem[i].PROD_I_CD );
+        displaySetItem.push(selectedItem[0]);
+    }
+    return displaySetItem;
+  
+    /* const setGroupItem = await getPosSetGroupItem(dispatch,{menuOptionGroupCode}).catch(err=>{ posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"통신",MSG2:"아이템을 받아올 수 없습니다."}); return;});
     //const setGroup = await getPosSetGroup(dispatch,{menuDetailID} );
     const displaySetItem = [];
     if(setGroupItem) {
@@ -67,8 +77,8 @@ export const getSetItems = createAsyncThunk("menuDetail/getSetItems", async(data
                 displaySetItem.push(groupItemDetail[0]);
             }
         }
-    }
-    return displaySetItem;
+    } */
+    //return displaySetItem;
 });
 
 export const setMenuOptionSelect = createAsyncThunk("menuDetail/setMenuOptionSelect", async(data) =>{
@@ -79,8 +89,13 @@ export const setMenuOptionSelectInit = createAsyncThunk("menuDetail/setMenuOptio
 });
 export const setMenuOptionSelected = createAsyncThunk("menuDetail/setMenuOptionSelected", async(data,{getState}) =>{
     const {menuOptionSelected, menuOptionGroupCode} = getState().menuDetail;
-    let newOptSelect= menuOptionSelected.filter(el=>el.menuOptionGroupCode!=menuOptionGroupCode);
-    newOptSelect.push({menuOptionGroupCode:menuOptionGroupCode,menuOptionSelected:data})
+    let newOptSelect= Object.assign([], menuOptionSelected);
+    let dupleCheck = newOptSelect.filter(el=>el.PROD_I_CD == data.PROD_I_CD);
+    if(dupleCheck.length <=0 ) {
+        newOptSelect.push(data)
+    }else {
+        newOptSelect = newOptSelect.filter(el=>el.PROD_I_CD != data.PROD_I_CD);
+    }
     return newOptSelect;
 });
 export const setMenuOptionGroupCode = createAsyncThunk("menuDetail/setMenuOptionGroupCode", async(data) =>{
@@ -108,6 +123,8 @@ export const menuDetailSlice = createSlice({
             state.menuOptionGroupCode = action.payload.menuOptionGroupCode;
             state.menuOptionList = action.payload.menuOptionList;
             state.menuOptionSelected = action.payload.menuOptionSelected;
+            state.setGroupItem = [];
+            state.menuRecommendItems = [];
         })
         // 메인 카테고리 받기
         builder.addCase(setMenuDetail.fulfilled,(state, action)=>{
@@ -145,7 +162,12 @@ export const menuDetailSlice = createSlice({
         })
         // 메뉴 세트 그룹 아이템 
         builder.addCase(getSetItems.fulfilled,(state, action)=>{
-            state.setGroupItem = action.payload;
+            let currentItems = Object.assign([],state.setGroupItem);
+            let itemsToSet = [...currentItems,...action.payload];
+            const itemResult = itemsToSet.filter(function(elem, pos) {
+                return itemsToSet.indexOf(elem) == pos;
+            }); 
+            state.setGroupItem = itemResult;
         })
         // 추천 메뉴
         builder.addCase(getSingleMenuForRecommend.fulfilled,(state, action)=>{

@@ -87,8 +87,8 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
     let optionTrim = [];
     let optionPrice = 0;
     for(var i=0;i<menuOptionSelected.length;i++) {
-        optionPrice = optionPrice+(menuOptionSelected[i].menuOptionSelected.AMT+menuOptionSelected[i].menuOptionSelected.VAT)
-        optionTrim.push({...menuOptionSelected[i].menuOptionSelected,...{ITEM_SEQ:orderData.ITEM_SEQ}});
+        optionPrice = optionPrice+(menuOptionSelected[i].AMT+menuOptionSelected[i].VAT)
+        optionTrim.push({...menuOptionSelected[i],...{ITEM_SEQ:orderData.ITEM_SEQ}});
     }
     // 세트 메뉴 추가
     orderData["SETITEM_INFO"] = optionTrim;
@@ -240,8 +240,8 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
     
     dispatch(setCartView(false));
     dispatch(initOrderList());
-    openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"주문을 완료했습니다."}});
-
+    //openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"주문을 완료했습니다."}});
+    openTransperentPopup(dispatch, {innerView:"OrderList", isPopupVisible:true, param:{timeOut:3000} });
     return result;
 })
 

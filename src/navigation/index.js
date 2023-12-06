@@ -145,7 +145,7 @@ export default function Navigation() {
     },[])
 
     useEffect(()=>{
-        //console.log("all items: ",allItems.length);
+        //console.log("all items: ",allItems?.length);
         if(allItems?.length>0) {
             dispatch(getDisplayMenu());
         }

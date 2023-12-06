@@ -11,23 +11,28 @@ import { CALL_SERVICE_GROUP_CODE } from '../resources/apiResources';
 import { setCallServerList } from './callServer';
 import { DEFAULT_CATEGORY_ALL_CODE } from '../resources/defaults';
 import { getPosItemsAll, getPosItemsWithCategory } from '../utils/api/metaApis';
+import { scanFile } from 'react-native-fs';
 
 export const initMenu = createAsyncThunk("menu/initMenu", async(category) =>{
     return [];
 })
 
 export const getDisplayMenu = createAsyncThunk("menu/getDisplayMenu", async(_, {dispatch, getState}) =>{
-    const {selectedMainCategory,selectedSubCategory} = getState().categories
+    const {selectedMainCategory,selectedSubCategory, mainCategories} = getState().categories
     const {allItems} = getState().menu;
 
+    let mCat ="";
+    let sCat = "";
     if(selectedMainCategory == "0" || selectedMainCategory == undefined ) {
-        return
+        console.log("mainCategories: ",mainCategories);
+        mCat=mainCategories[0];
     }
     if(selectedSubCategory == "0" || selectedSubCategory == undefined ) {
-        return
+        sCat= "0000"
     } 
+
     let itemResult = [];
-    itemResult = await getPosItemsWithCategory(dispatch, {selectedMainCategory,selectedSubCategory});
+    itemResult = await getPosItemsWithCategory(dispatch, {selectedMainCategory:mCat,selectedSubCategory:sCat});
     
     let selectedItems = []
     if(selectedSubCategory == "0000") {

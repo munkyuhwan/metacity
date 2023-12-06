@@ -138,8 +138,9 @@ export const PaymentTextInput = styled.TextInput`
 export const StoreIDTextInput = styled.TextInput`
     backgroundColor:${colorWhite};
     borderWidth:1px;
-    height:20px;
-    width:200px;
+    height:40px;
+    fontSize:30px;
+    width:240px;
     padding:0;
     marginRight:20px;
 `

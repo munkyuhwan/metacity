@@ -8,7 +8,7 @@ import OptItem from './optItem';
 import CommonIndicator from '../common/waitIndicator';
 import WaitIndicator from '../common/waitIndicator';
 import RecommendItem from './recommendItem';
-import { setMenuDetail, getSingleMenu, setMenuOptionSelect, setMenuOptionGroupCode, initMenuDetail, getSingleMenuFromAllItems, getItemSetGroup, getSingleMenuForRecommend } from '../../store/menuDetail';
+import { setMenuDetail, getSingleMenu, setMenuOptionSelect, setMenuOptionGroupCode, initMenuDetail, getSingleMenuFromAllItems, getItemSetGroup, getSingleMenuForRecommend, getSetItems, setMenuOptionSelected } from '../../store/menuDetail';
 import { numberWithCommas, openPopup } from '../../utils/common';
 import { MENU_DATA } from '../../resources/menuData';
 import { addToOrderList } from '../../store/order';
@@ -23,7 +23,7 @@ const ItemDetail = (props) => {
     const isDetailShow = props.isDetailShow;
     const dispatch = useDispatch();
     const {menu} = useSelector((state)=>state.menu);
-    const {menuDetailID, menuDetail, menuOptionSelected, menuOptionList} = useSelector((state)=>state.menuDetail);
+    const {menuDetailID, menuDetail, menuOptionSelected, menuOptionList, setGroupItem} = useSelector((state)=>state.menuDetail);
     const [detailZIndex, setDetailZIndex] = useState(0);
     // 메뉴 추가정보 찾기
     const {menuExtra} = useSelector(state=>state.menuExtra);
@@ -82,10 +82,19 @@ const ItemDetail = (props) => {
         }) 
     }
     
-    const onOptionSelect = (groupCode) =>{
-        
-        dispatch(setMenuOptionGroupCode(groupCode));
-        openPopup(dispatch,{innerView:"Option", isPopupVisible:true});
+    const onOptionSelect = (itemData) =>{
+        let setItem =  {
+            "ITEM_SEQ" : 0,
+            "SET_SEQ" : menuOptionSelected.length+1,
+            "PROD_I_CD" : itemData?.PROD_CD,
+            "PROD_I_NM" : itemData?.PROD_NM,
+            "QTY" : 1,
+            "AMT" : itemData?.SAL_AMT,
+            "VAT" : itemData?.SAL_VAT,
+        }; 
+        dispatch(setMenuOptionSelected(setItem));
+        //dispatch(setMenuOptionGroupCode(groupCode));
+        //openPopup(dispatch,{innerView:"Option", isPopupVisible:true});
         /* 
             dispatch(setMenuOptionGroupCode(selectedGroup[0].ADDITIVE_GROUP_CODE));
             dispatch(setMenuOptionSelect(selectedGroup[0].ADDITIVE_ITEM_LIST));
@@ -215,6 +224,21 @@ const ItemDetail = (props) => {
         }
         return selWonsanjiLanguage;
     }
+
+    useEffect(()=>{
+        if(menuOptionList.length>0) {    
+            menuOptionList.map(el=>{
+                if(el.USE_YN == "Y") {
+                    dispatch(getSetItems({setGroup:el}));
+                }
+            })
+        }
+    },[menuOptionList])
+/* 
+    useEffect(()=>{
+        console.log("menuOptionSelected: ",menuOptionSelected);
+    },[menuOptionSelected])
+     */
     return(
         <>
             <Animated.View  style={[{...PopStyle.animatedPop, ...boxWidthStyle,...{zIndex:detailZIndex} } ]} >
@@ -231,7 +255,7 @@ const ItemDetail = (props) => {
                                         
                                         {itemExtra&& 
                                         itemExtra[0]?.gimg_chg &&
-                                            <DetailItemInfoFastImage source={{uri:"https:"+itemExtra[0]?.gimg_chg}} /> 
+                                            <DetailItemInfoFastImage source={{uri:"https:"+itemExtra[0]?.gimg_chg,headers: { Authorization: 'AuthToken' },priority: FastImage.priority.normal}} /> 
                                         }
                                         {itemExtra&&
                                         !itemExtra[0]?.gimg_chg &&
@@ -271,13 +295,15 @@ const ItemDetail = (props) => {
                                         <OptTitleText>{LANGUAGE[language]?.detailView.selectOpt}</OptTitleText>
                                         <OptList horizontal showsHorizontalScrollIndicator={false} >
                                             {
-                                                menuOptionList!=null &&
-                                                menuOptionList.map((el,index)=>{
-                                                    //console.log("el: ",el);
-                                                    return(<></>);
+                                                setGroupItem &&
+                                                setGroupItem?.map((el,index)=>{
+                                                    return(
+                                                        <OptItem key={"optItem_"+index} isSelected={menuOptionSelected.filter(menuEl=>menuEl.PROD_I_CD ==el.PROD_CD).length>0 } optionData={el} menuData={menuDetail} onPress={()=>{onOptionSelect(el);} } />    
+                                                    );
+                                                     
                                                 })
                                             }
-                                            {/*  menuOptionList!=null &&
+                                            {/*menuOptionList!=null &&
                                                 menuOptionList.map((el,index)=>{
                                                     if(el.USE_YN == "Y") {
                                                         return(
@@ -288,10 +314,10 @@ const ItemDetail = (props) => {
                                                     }
                                                     
                                                 })
-                                             */}
+                                            }
                                             {selectedOptions==null &&
                                                 <OptItem key={"optItem_0"} optionData={{imgUrl:require("../../assets/icons/logo.png"),name:"loading...",price:0}} menuData={menuDetail}/>    
-                                            }
+                                            */}
                                         </OptList>
                                     </OptListWrapper>
                                     <OptListWrapper>

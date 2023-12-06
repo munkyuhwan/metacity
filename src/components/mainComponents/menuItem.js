@@ -27,6 +27,7 @@ const MenuItem = ({item,index,setDetailShow}) => {
     // 이미지 찾기
     const itemExtra = menuExtra?.filter(el=>el.pos_code == item.PROD_CD);
     const itemID = item.PROD_CD;
+    //console.log("item extra: ",itemExtra[0]);
     const imgUrl = "https:"+itemExtra[0]?.gimg_chg;
     //const itemTitle=>{} item.ITEM_NAME;
     const itemTitle = () => {
@@ -58,7 +59,7 @@ const MenuItem = ({item,index,setDetailShow}) => {
                     {imgUrl &&
                         <>
                             <TouchableWithoutFeedback onPress={()=>{setDetailShow(true); dispatch(setMenuDetail({itemID,item})); }} >
-                                <FastImage style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:imgUrl}}/>
+                                <FastImage style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:imgUrl,headers: { Authorization: 'AuthToken' },priority: FastImage.priority.normal}}/>
                             </TouchableWithoutFeedback>
                         </>
                     }
