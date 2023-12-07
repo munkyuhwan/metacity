@@ -241,7 +241,7 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
     dispatch(setCartView(false));
     dispatch(initOrderList());
     //openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"주문을 완료했습니다."}});
-    openTransperentPopup(dispatch, {innerView:"OrderList", isPopupVisible:true, param:{timeOut:3000} });
+    openTransperentPopup(dispatch, {innerView:"OrderList", isPopupVisible:true, param:{timeOut:10000} });
     return result;
 })
 

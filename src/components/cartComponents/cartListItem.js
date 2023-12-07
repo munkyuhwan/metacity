@@ -84,12 +84,13 @@ const CartListItem = (props) => {
             <CartItemWrapper>
                 <CartItemImageTogoWrapper>
                     <CartItemImage source={{uri:"https:"+itemExtra[0]?.gimg_chg}} />
+                    {/*
                     <TouchableWithoutFeedback onPress={()=>{ onTogoTouch(); }} >
                         <CartItemTogoWrapper>
                             <CartItemTogoText>{order?.ITEM_GB == "T"?LANGUAGE[language]?.cartView.togoCancel:LANGUAGE[language]?.cartView.togo}</CartItemTogoText>
                             <CartItemTogoIcon source={require("../../assets/icons/togo.png")}  />
                         </CartItemTogoWrapper>
-                    </TouchableWithoutFeedback> 
+                    </TouchableWithoutFeedback>  */}
                 </CartItemImageTogoWrapper>
                 
                 <CartItemTitlePriceWrapper>

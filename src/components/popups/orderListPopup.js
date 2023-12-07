@@ -28,7 +28,7 @@ const OrderListPopup = () =>{
             const to = setInterval(() => {
                 clearInterval(to);
                 openTransperentPopup(dispatch,{innerView:"", isPopupVisible:false});
-            }, 3000);
+            }, 10000);
         }
     },[param])
 

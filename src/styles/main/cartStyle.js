@@ -167,8 +167,8 @@ export const CartItemCancelWrapper = styled.View`
     flex:1;
 `
 export const CartItemCancelBtn = styled.Image`
-    width:32px;
-    height:32px;
+    width:42px;
+    height:42px;
     resizeMode:contain;
 `
 // 주문하기
