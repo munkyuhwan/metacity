@@ -66,7 +66,7 @@ const TopMenuList = (props) => {
     //console.log("render top menu")
     return (
         <>
-        {selectedSubCategory == DEFAULT_CATEGORY_ALL_CODE &&
+        {/*selectedSubCategory == DEFAULT_CATEGORY_ALL_CODE &&
             <TouchableWithoutFeedback key={"subcat_"} onPress={()=>{}}>
                 <CategorySelected>
                     <TopMenuText key={"subcatText_"} >{ItemWhole()}</TopMenuText>
@@ -79,7 +79,7 @@ const TopMenuList = (props) => {
                 <TopMenuText key={"subcatText_"} >{ItemWhole()}</TopMenuText>
                 </CategoryDefault>
             </TouchableWithoutFeedback>
-        }
+        */}
         {data &&
         data.map((el, index)=>{
             return(
