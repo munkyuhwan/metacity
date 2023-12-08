@@ -21,27 +21,12 @@ import { uploadFile } from '../../store/etcFunctions'
 
 const TopMenu = () =>{
     const dispatch = useDispatch();
-    const {selectedMainCategory,subCategories} = useSelector(state => state.categories);
+    const {selectedMainCategory,subCategories, allCategories} = useSelector(state => state.categories);
     const [tableNoText, setTableNoText] = useState("");
     const {tableInfo} = useSelector(state => state.tableInfo);
-    //console.log("subCategories: ",subCategories);
     
     const [currentVersion, setCurrentVersion ] = useState("version");
-
-    useEffect(()=>{
-        if(selectedMainCategory) {
-            dispatch(getSubCategories())
-        }
-        /*
-        const goodsCategories = menuCategories;
-        if(goodsCategories?.length > 0){
-            const selectedCategoryItem = goodsCategories.filter(el=>el.cate_code1==selectedMainCategory);
-            if(selectedCategoryItem.length > 0) {
-                dispatch(setCategories({subCategories:selectedCategoryItem[0]?.level2}));
-            }
-        } 
-        */
-    },[selectedMainCategory])
+    
 
     useEffect(()=>{
         if(tableInfo) {
@@ -60,11 +45,6 @@ const TopMenu = () =>{
     const onPressItem = (index) => {
         dispatch(setSelectedSubCategory(index)); 
     }
-    /* 
-    if(subCategories.length <=0) {
-        return(<></>)
-    }
-     */
     
     return(
         <>
@@ -82,19 +62,21 @@ const TopMenu = () =>{
                        </CategoryWrapper>
                     </CategoryScrollView>
                 </SafeAreaView>
-                <TableName>
-                    {/* <TableNameSmall>{tableInfo?.TBL_CODE}</TableNameSmall> */}
-                    <TableNameBig>{tableNoText}</TableNameBig>
-                </TableName>
-                {/*
+
                 <TouchableWithoutFeedback onPress={()=>{openFullSizePopup(dispatch,{innerFullView:"Setting", isFullPopupVisible:true}); }} >
-                    <Text style={{color:colorWhite}} >설정 {currentVersion}</Text>
+                    <Text style={{color:colorWhite }} >설정 {currentVersion}</Text>
                 </TouchableWithoutFeedback>
-                
+                  {/*
                 <TouchableWithoutFeedback onPress={()=>{ console.log("upload file"); dispatch(uploadFile()) }} >
                     <Text style={{color:colorWhite, fontSize:20}} >파일올리기 </Text>
                 </TouchableWithoutFeedback>
                         */}
+                <TableName>
+                    {/* <TableNameSmall>{tableInfo?.TBL_CODE}</TableNameSmall> */}
+                    <TableNameBig>{tableNoText}</TableNameBig>
+                </TableName>
+              
+                
             </TopMenuWrapper>
         </>
     )

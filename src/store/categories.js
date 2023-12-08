@@ -14,22 +14,27 @@ export const getAdminCategoryData = createAsyncThunk("categories/getAdminCategor
     dispatch(setMenuCategories(adminResult));
     return []; 
 })
-// 메인 카테고리 받기
-export const getMainCategories = createAsyncThunk("categories/getMainCategories", async(_,{dispatch}) =>{
-    const result = await getPosMainCategory(dispatch).catch(err=>{return []});
-    return result;
+// 전체 카테고리 전체 세팅
+export const setAllCategories = createAsyncThunk("categories/setAllCategories", async(_,{dispatch}) =>{
+    const {allCategories} = _;
+    return allCategories;
 })
-// 서브 카테고리 받기
-export const getSubCategories = createAsyncThunk("categories/getSubCategories", async(data,{dispatch,getState}) =>{
-    const {selectedMainCategory} = getState().categories;
-    const postMidCategories = await getPosMidCategory(dispatch, {selectedMainCategory:selectedMainCategory}).catch(err=>{return []});
-    return postMidCategories
+// 메인 카테고리 전체 세팅
+export const setAllMainCategories = createAsyncThunk("categories/setAllMainCategories", async(_,{dispatch}) =>{
+    return [];
 })
+// 서브 카테고리 전체 세팅
+export const setAllSubCategories = createAsyncThunk("categories/setAllSubCategories", async(_,{dispatch}) =>{
+    return [];
+})
+
+
 export const setMainCategories = createAsyncThunk("categories/setMainCategories", async(_)=>{
     return _;
 });
 
 export const setSelectedMainCategory = createAsyncThunk("categories/setSelectedMainCategory", async(index,{getState,dispatch}) =>{
+    console.log("setSelectedMainCategory: ",index)
     return index;
 })
 export const setSelectedSubCategory = createAsyncThunk("categories/setSelectedSubCategory", async(index) =>{
@@ -39,10 +44,11 @@ export const setSelectedSubCategory = createAsyncThunk("categories/setSelectedSu
 export const cagegoriesSlice = createSlice({
     name: 'categories',
     initialState: {
+        allCategories:[],
         categoryData:[],
         mainCategories:[],
-        selectedMainCategory:0,
         subCategories:[],
+        selectedMainCategory:0,
         selectedSubCategory:0,
     },
     extraReducers:(builder)=>{
@@ -57,9 +63,26 @@ export const cagegoriesSlice = createSlice({
             }
         })
         // 메인 카테고리 받기
-        builder.addCase(getMainCategories.fulfilled,(state, action)=>{
+       /*  builder.addCase(getMainCategories.fulfilled,(state, action)=>{
+            state.mainCategories = action.payload;
+        }) */
+        // 서브 카테고리 받기
+       /*  builder.addCase(getSubCategories.fulfilled,(state, action)=>{
+            state.subCategories = action.payload;
+        }) */
+        // 전체 카테고리 세팅
+        builder.addCase(setAllCategories.fulfilled,(state,action)=>{
+            state.allCategories = action.payload;
+        })
+        // 메인 카테고리 전체
+        builder.addCase(setAllMainCategories.fulfilled,(state, action)=>{
             state.mainCategories = action.payload;
         })
+        // 서브 카테고리 전체
+        builder.addCase(setAllSubCategories.fulfilled,(state, action)=>{
+            state.subCategories = action.payload;
+        })
+
         // 메인 카테고리 업데이트
         builder.addCase(setMainCategories.fulfilled,(state, action)=>{
             state.mainCategories = action.payload;
@@ -68,10 +91,6 @@ export const cagegoriesSlice = createSlice({
         builder.addCase(setSelectedMainCategory.fulfilled,(state, action)=>{
             //state.subCategories = MENU_DATA.categories[action.payload].subCategories||[]
             state.selectedMainCategory = action.payload;
-        })
-        // 서브 카테고리 받기
-        builder.addCase(getSubCategories.fulfilled,(state, action)=>{
-            state.subCategories = action.payload;
         })
         // 서브 카테고리 선택
         builder.addCase(setSelectedSubCategory.fulfilled,(state, action)=>{

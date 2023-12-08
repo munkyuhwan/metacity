@@ -23,9 +23,7 @@ const LeftMenuList = (props) => {
     //const itemExtra = menuExtra.filter(el=>el.pos_code == item.ITEM_ID);
 
     const onPressAction = (index, groupCode) =>{
-        setSelectedIndex(index);
-        dispatch(initMenuDetail());
-        props?.onSelectItem(groupCode);
+        if(groupCode) dispatch(setSelectedMainCategory(groupCode));
     }
     const ItemTitle = (categoryID, index) => {
         let selTitleLanguage = "";
@@ -46,39 +44,29 @@ const LeftMenuList = (props) => {
 
         return selTitleLanguage;    
     }
-
-    useEffect(()=>{
-        if(!isEmpty(mainCategories)){
-            if(mainCategories.length>0){
-                if(!isEmpty(menuCategories)){
-                    if(menuCategories.length>0){
-                        dispatch(setSelectedMainCategory(mainCategories[0].PROD_L1_CD)); 
-                        dispatch(setSelectedSubCategory(DEFAULT_CATEGORY_ALL_CODE));
-                    }
-                }
-            }
-        }
-    },[mainCategories, menuCategories])
-    //console.log("selectedMainCategory: ",selectedMainCategory);
      return(
         <>
-            {data?.map((item, index)=>{     
-                return(
-                    <TouchableWithoutFeedback key={"leftItem_"+index} onPress={()=>{{ onPressAction(index,item?.PROD_L1_CD); }}}>
-                        <SideMenuItemWrapper>
-                            {item?.PROD_L1_CD==selectedMainCategory &&
-                                <SideMenuItemOn>
-                                    <SideMenuText>{ItemTitle(item?.PROD_L1_CD,index)||data[index]?.PROD_L1_NM }</SideMenuText>
-                                </SideMenuItemOn>
-                            }
-                            {item?.PROD_L1_CD!=selectedMainCategory &&
-                                <SideMenuItemOff>
-                                    <SideMenuText>{ItemTitle(item?.PROD_L1_CD,index)||data[index]?.PROD_L1_NM}</SideMenuText>
-                                </SideMenuItemOff>
-                            }
-                        </SideMenuItemWrapper>
-                    </TouchableWithoutFeedback>
-                )
+            {data?.map((item, index)=>{    
+                if(item?.USE_YN == 'Y') { 
+                    return(
+                        <TouchableWithoutFeedback key={"leftItem_"+index} onPress={()=>{{ onPressAction(index,item?.PROD_L1_CD); }}}>
+                            <SideMenuItemWrapper>
+                                {item?.PROD_L1_CD==selectedMainCategory &&
+                                    <SideMenuItemOn>
+                                        <SideMenuText>{ItemTitle(item?.PROD_L1_CD,index)||data[index]?.PROD_L1_NM }</SideMenuText>
+                                    </SideMenuItemOn>
+                                }
+                                {item?.PROD_L1_CD!=selectedMainCategory &&
+                                    <SideMenuItemOff>
+                                        <SideMenuText>{ItemTitle(item?.PROD_L1_CD,index)||data[index]?.PROD_L1_NM}</SideMenuText>
+                                    </SideMenuItemOff>
+                                }
+                            </SideMenuItemWrapper>
+                        </TouchableWithoutFeedback>
+                    )
+                }else {
+                    return(<></>)
+                }
             })}
         </>
     )

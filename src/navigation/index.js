@@ -12,10 +12,10 @@ import WaitIndicator from '../components/common/waitIndicator'
 import { DeviceEventEmitter, Text, View } from 'react-native'
 import PopupIndicator from '../components/common/popupIndicator'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAdminCategoryData, getMainCategories, getSubCategories, setSelectedMainCategory, setSelectedSubCategory } from '../store/categories'
+import { getAdminCategoryData, getMainCategories, getSubCategories, setSelectedSubCategory } from '../store/categories'
 import FullSizePopup from '../components/common/fullsizePopup'
 import ErrorPopup from '../components/common/errorPopup'
-import { getAllItems, getDisplayMenu, getMenuState } from '../store/menu'
+import { getAllItems, getDisplayMenu, getMenuState, initMenu } from '../store/menu'
 import _ from 'lodash';
 import { getTableList, getTableStatus, initTableInfo } from '../store/tableInfo'
 import { EventRegister } from 'react-native-event-listeners'
@@ -106,14 +106,16 @@ export default function Navigation() {
         // 초기 세팅
         handleEventListener();
         // 포스 메인 카테고리
+        /* 
         dispatch(getMainCategories());
         // 관리자 카테고리 추가 정보
         dispatch(getAdminCategoryData());
         // 관리자 메뉴 정보 받아오기;
         dispatch(getAdminMenuItems());
-
         // 전체 메뉴 받아오기
         dispatch(getAllItems());
+ */
+        dispatch(initMenu());
 
         getStoreInfo()
         .then(result=>{

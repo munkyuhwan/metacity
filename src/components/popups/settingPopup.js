@@ -17,7 +17,7 @@ import { cancelOrder, checkTableOrder } from '../../utils/apis';
 import { initOrderList } from '../../store/order';
 import { setCartView } from '../../store/cart';
 import { getStoreInfo } from '../../utils/api/metaApis';
-import { getAllItems, getDisplayMenu, getMenuState } from '../../store/menu';
+import { getAllItems, getDisplayMenu, getMenuState, initMenu } from '../../store/menu';
 import { getAdminCategoryData, getMainCategories } from '../../store/categories';
 import { getAdminMenuItems } from '../../store/menuExtra';
 import { CODE_PUSH_SECRET } from '../../resources/apiResources';
@@ -510,15 +510,7 @@ const SettingPopup = () =>{
                                 <SettingButtonText isMargin={true} >로그 올리기</SettingButtonText>
                             </TouchableWithoutFeedback>
                             */}
-                            <TouchableWithoutFeedback onPress={()=>{ 
-                                        dispatch(getMainCategories());
-                                        // 관리자 카테고리 추가 정보
-                                        dispatch(getAdminCategoryData());
-                                        // 관리자 메뉴 정보 받아오기;
-                                        dispatch(getAdminMenuItems());
-                                        // 전체 메뉴 받아오기
-                                        dispatch(getAllItems());
-                            }} >
+                            <TouchableWithoutFeedback onPress={()=>{dispatch(initMenu());}} >
                                 <SettingButtonText isMargin={true} >화면 초기화</SettingButtonText>
                             </TouchableWithoutFeedback>
                             <TouchableWithoutFeedback onPress={()=>{checkUpdate();}} >

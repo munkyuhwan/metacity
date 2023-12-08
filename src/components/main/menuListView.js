@@ -44,7 +44,7 @@ const MenuListView = () => {
         var nextPage = 0;
         nextPage = selectedIndex+1;
         if(nextPage>mainCategories.length-1) nextPage=mainCategories.length-1;
-        dispatch(setSelectedMainCategory(mainCategories[nextPage].PROD_L1_CD)); 
+        //dispatch(setSelectedMainCategory(mainCategories[nextPage].PROD_L1_CD)); 
         dispatch(setSelectedSubCategory("0000"))
     }
     const toPrevCaterogy = () =>{
@@ -54,7 +54,7 @@ const MenuListView = () => {
         nextPage = selectedIndex-1;
         if(nextPage<0) nextPage=0;
         if(nextPage>mainCategories.length-1) nextPage=mainCategories.length-1;
-        dispatch(setSelectedMainCategory(mainCategories[nextPage].PROD_L1_CD)); 
+        //dispatch(setSelectedMainCategory(mainCategories[nextPage].PROD_L1_CD)); 
         dispatch(setSelectedSubCategory("0000"))
     }
     useEffect(()=>{
@@ -72,7 +72,7 @@ const MenuListView = () => {
 
     useEffect(()=>{
         if(mainCategories[0]) {
-            dispatch(setSelectedMainCategory(mainCategories[0].PROD_L1_CD));
+           // dispatch(setSelectedMainCategory(mainCategories[0].PROD_L1_CD));
         }
     },[mainCategories])
 

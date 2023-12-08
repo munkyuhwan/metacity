@@ -3,17 +3,37 @@ import { useSelector } from 'react-redux';
 import { MENU_DATA } from '../resources/menuData';
 import axios from 'axios';
 import { adminMenuEdit, adminOptionEdit, getAdminCategories, posMenuEdit, posMenuState, posOrderNew } from '../utils/apis';
-import { setMainCategories } from './categories';
+import { getAdminCategoryData, getMainCategories, setAllCategories, setMainCategories } from './categories';
 import { EventRegister } from 'react-native-event-listeners';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { setMenuCategories, setMenuExtra, setOptionExtra } from './menuExtra';
+import { getAdminMenuItems, setMenuCategories, setMenuExtra, setOptionExtra } from './menuExtra';
 import { CALL_SERVICE_GROUP_CODE } from '../resources/apiResources';
 import { setCallServerList } from './callServer';
 import { DEFAULT_CATEGORY_ALL_CODE } from '../resources/defaults';
-import { getPosItemsAll, getPosItemsWithCategory } from '../utils/api/metaApis';
+import { getPosItemsAll, getPosItemsWithCategory, getPosMainCategory, getPosMidCategory } from '../utils/api/metaApis';
 import { scanFile } from 'react-native-fs';
 
-export const initMenu = createAsyncThunk("menu/initMenu", async(category) =>{
+export const initMenu = createAsyncThunk("menu/initMenu", async(_,{dispatch,getState}) =>{
+    // 포스 메인 카테고리
+    
+    const mainCategories = await getPosMainCategory(dispatch).catch(err=>{return []});
+    let allCategories = Object.assign([],mainCategories);
+    if(allCategories?.length > 0 ) {
+        // 메인 카테고리 하위 메뉴 받기
+        for(var i=0;i<allCategories?.length;i++) {
+            const subCategoryResult = await getPosMidCategory(dispatch,{selectedMainCategory:allCategories[i].PROD_L1_CD})
+            allCategories[i]["PROD_L2_LIST"] = Object.assign([],subCategoryResult);
+        }
+        dispatch(setAllCategories({allCategories}));
+    }
+    
+    // 관리자 카테고리 추가 정보
+    //dispatch(getAdminCategoryData());
+    // 관리자 메뉴 정보 받아오기;
+    //dispatch(getAdminMenuItems());
+    // 전체 메뉴 받아오기
+    dispatch(getAllItems());
+
     return [];
 })
 
@@ -24,7 +44,6 @@ export const getDisplayMenu = createAsyncThunk("menu/getDisplayMenu", async(_, {
     let mCat ="";
     let sCat = "";
     if(selectedMainCategory == "0" || selectedMainCategory == undefined ) {
-        console.log("mainCategories: ",mainCategories);
         mCat=mainCategories[0];
     }
     if(selectedSubCategory == "0" || selectedSubCategory == undefined ) {
@@ -40,44 +59,7 @@ export const getDisplayMenu = createAsyncThunk("menu/getDisplayMenu", async(_, {
     }else {
         selectedItems = allItems.filter(el=>el.PROD_L1_CD == selectedMainCategory && el.PROD_L2_CD == selectedSubCategory ); 
     }
-   
     return selectedItems;
-
-   /*  const {selectedMainCategory,selectedSubCategory} = getState().categories
-    const {menu, allItems} = getState().menu;
-    const {menuExtra} = getState().menuExtra;
-
-    if(selectedMainCategory == 0 && selectedSubCategory == 0) {
-        return;
-    }
-
-    const cateCode = selectedSubCategory==DEFAULT_CATEGORY_ALL_CODE ? selectedMainCategory:selectedSubCategory;
-  
-    if(selectedSubCategory == DEFAULT_CATEGORY_ALL_CODE) {
-        // 소분류 전체 일떄
-        const displayMenu = menu.filter(item => item.ITEM_GROUP_CODE == selectedMainCategory);
-        const itemList = displayMenu[0].ITEM_LIST;
-        const finalItemList = itemList.filter(item => item.ITEM_USE_FLAG == "N");
-        return [...finalItemList];
-
-        //return finalItemList;
-    }else {
-        // 소분류 선택 되었을때
-        const displayMenuExtra = menuExtra.filter(el => el.cate_code == cateCode);
-        const displayMenu = [];
-        if(displayMenuExtra.length>0) {
-            displayMenuExtra.map(displayEl =>{
-                const filteredMenu = allItems.filter(menuItem => menuItem.ITEM_ID == displayEl.pos_code);
-                displayMenu.push(filteredMenu[0]);
-            })
-        }
-        const finalItemList = displayMenu.filter(item => item.ITEM_USE_FLAG == "N");
-        return finalItemList;
-    
-    } */
-   
-
-    
 })
 
 export const updateMenu = createAsyncThunk("menu/updateMenu", async(_,{rejectWithValue}) =>{

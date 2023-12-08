@@ -13,14 +13,16 @@ const TopMenuList = (props) => {
     const dispatch = useDispatch();
     const data = props.data;
     const initSelect = props.initSelect;
-    const {selectedMainCategory, selectedSubCategory, subCategories} = useSelector((state)=>state.categories);
+    const {selectedMainCategory, selectedSubCategory, subCategories, allCategories} = useSelector((state)=>state.categories);
     const [selectedCode, setSelectedCode] = useState(DEFAULT_CATEGORY_ALL_CODE);
 
     const {menuCategories} = useSelector(state=>state.menuExtra);
     const {language} =  useSelector(state=>state.languages);
+
+    const [selectedSubList, setSelectedSubList] = useState();
     
     const ItemTitle = (cateCode) => {
-        const selectedData = data.filter(el=>el.PROD_L2_CD == cateCode);
+        const selectedData = selectedSubList.filter(el=>el.PROD_L2_CD == cateCode);
         const adminSelectedSubCatData = menuCategories.filter(el=>el.cate_code1==selectedMainCategory);
         const adminSubCat = adminSelectedSubCatData[0]?.level2;
         const selectedAdminSub = adminSubCat?.filter(el=>el.cate_code2 == cateCode);
@@ -53,17 +55,21 @@ const TopMenuList = (props) => {
         }
         return selTitleLanguage; 
     }
+
     useEffect(()=>{
-        if(selectedCode!=null) {
-            props?.onSelectItem(selectedCode);
+        if(selectedMainCategory) {
+            const changedSelectedMainCat = allCategories.filter(el=>el.PROD_L1_CD==selectedMainCategory);
+            if(changedSelectedMainCat) {
+                if(changedSelectedMainCat?.length > 0) {
+                    setSelectedSubList(changedSelectedMainCat[0].PROD_L2_LIST);
+                }
+            }
         }
-    },[selectedCode])
+    },[selectedMainCategory])
 
     const onPressAction = (itemCD) =>{
-        setSelectedCode(itemCD);
-        //setSelectedCode(index);
+        dispatch(setSelectedSubCategory(itemCD)); 
     }
-    //console.log("render top menu")
     return (
         <>
         {/*selectedSubCategory == DEFAULT_CATEGORY_ALL_CODE &&
@@ -80,8 +86,8 @@ const TopMenuList = (props) => {
                 </CategoryDefault>
             </TouchableWithoutFeedback>
         */}
-        {data &&
-        data.map((el, index)=>{
+        {selectedSubList &&
+        selectedSubList.map((el, index)=>{
             return(
                 <>            
                         {
@@ -103,6 +109,7 @@ const TopMenuList = (props) => {
                         
                 </>
             )
+
         })}
         </>
     )
