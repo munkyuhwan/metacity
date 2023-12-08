@@ -15,7 +15,7 @@ const OptItem = (props)=>{
     const [isSelected, setSelected] = useState(false);
     const [addtivePrice, setAdditivePrice] = useState();
 
-
+//console.log("optionData: ",optionData);
     // 메뉴 옵션 추가 정보
     const {optionCategoryExtra,menuExtra} = useSelector(state=>state.menuExtra);
     const itemMenuExtra = menuExtra.filter(el=>el.pos_code==optionData?.PROD_CD);

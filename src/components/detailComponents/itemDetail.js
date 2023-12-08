@@ -233,12 +233,12 @@ const ItemDetail = (props) => {
                 }
             })
         }
-    },[menuOptionList])
-/* 
+    },[menuOptionList]) 
+
     useEffect(()=>{
-        console.log("menuOptionSelected: ",menuOptionSelected);
-    },[menuOptionSelected])
-     */
+        //console.log("setGroupItem: ",setGroupItem);
+    },[setGroupItem])
+    
     return(
         <>
             <Animated.View  style={[{...PopStyle.animatedPop, ...boxWidthStyle,...{zIndex:detailZIndex} } ]} >
@@ -293,59 +293,52 @@ const ItemDetail = (props) => {
                                 <OptRecommendWrapper>
                                     <OptListWrapper>
                                         <OptTitleText>{LANGUAGE[language]?.detailView.selectOpt}</OptTitleText>
-                                        <OptList horizontal showsHorizontalScrollIndicator={false} >
-                                            {
-                                                setGroupItem &&
-                                                setGroupItem?.map((el,index)=>{
-                                                    return(
-                                                        <OptItem key={"optItem_"+index} isSelected={menuOptionSelected.filter(menuEl=>menuEl.PROD_I_CD ==el.PROD_CD).length>0 } optionData={el} menuData={menuDetail} onPress={()=>{onOptionSelect(el);} } />    
-                                                    );
-                                                     
-                                                })
-                                            }
-                                            {/*menuOptionList!=null &&
-                                                menuOptionList.map((el,index)=>{
-                                                    if(el.USE_YN == "Y") {
-                                                        return(
-                                                            <OptItem key={"optItem_"+index} isSelected={additiveGroupList.indexOf(index)>=0} optionData={el} menuData={menuDetail} onPress={()=>{onOptionSelect(el.GROUP_NO);} } />    
-                                                        );
-                                                    }else {
-                                                        return(<></>);
-                                                    }
-                                                    
-                                                })
-                                            }
-                                            {selectedOptions==null &&
-                                                <OptItem key={"optItem_0"} optionData={{imgUrl:require("../../assets/icons/logo.png"),name:"loading...",price:0}} menuData={menuDetail}/>    
-                                            */}
-                                        </OptList>
+                                        {
+                                            menuOptionList &&
+                                            menuOptionList.map((el,groupIdx)=>{
+                                                return(
+                                                    <>
+                                                        <OptTitleText>{el.GROUP_NM}</OptTitleText>
+                                                        <OptList horizontal showsHorizontalScrollIndicator={false} >
+                                                        {
+                                                            setGroupItem[groupIdx] &&
+                                                            setGroupItem[groupIdx]?.map((itemEl,index)=>{
+                                                                return(
+                                                                    <OptItem key={"optItem_"+index} isSelected={menuOptionSelected.filter(menuEl=>menuEl.PROD_I_CD ==itemEl.PROD_CD).length>0 } optionData={itemEl} menuData={menuDetail} onPress={()=>{onOptionSelect(itemEl);} } />    
+                                                                );
+                                                                
+                                                            })
+                                                        }
+                                                        </OptList> 
+                                                    </>
+                                                )
+                                            })
+                                        }
+                                        
                                     </OptListWrapper>
-                                    <OptListWrapper>
-                                        <OptTitleText>{LANGUAGE[language]?.detailView.recommendMenu}</OptTitleText>
-                                        <OptList horizontal showsHorizontalScrollIndicator={false} >
-                                            {/*recommendMenu!=null&&
-                                                recommendMenu.map((el,index)=>{
-                                                    const recommendItem = MENU_DATA.menuAll[el]
-                                                    return(
-                                                        <RecommendItem key={"recoItem_"+index} isSelected={selectedRecommend.indexOf(recommendItem.index)>=0}  recommendData={el} menuData={menuDetail} onPress={()=>{onRecommendSelect(recommendItem.index)}}/>    
-                                                    );
-                                                })
-                                            */}
-                                            {itemExtra&&
+                                    {itemExtra&&
                                             itemExtra[0]?.related &&
-                                                itemExtra[0]?.related.length > 0 &&
-                                                itemExtra[0]?.related.map((el,index)=>{
-                                                    if(isEmpty(el)) {
-                                                        return (<></>)
-                                                    }else {
-                                                        return(
-                                                            <RecommendItem key={"recoItem_"+index}   recommendData={el} menuData={menuDetail}  />    
-                                                        );
-                                                    }
-                                                })
-                                            }
-                                        </OptList>
-                                    </OptListWrapper>
+                                            itemExtra[0]?.related.length > 0 &&
+                                            <>
+                                                <OptListWrapper>
+                                                    <OptTitleText>{LANGUAGE[language]?.detailView.recommendMenu}</OptTitleText>
+                                                    <OptList horizontal showsHorizontalScrollIndicator={false} >
+                                                        {
+                                                            
+                                                            itemExtra[0]?.related.map((el,index)=>{
+                                                                if(isEmpty(el)) {
+                                                                    return (<></>)
+                                                                }else {
+                                                                    return(
+                                                                        <RecommendItem key={"recoItem_"+index}   recommendData={el} menuData={menuDetail}  />    
+                                                                    );
+                                                                }
+                                                            })
+                                                        }
+                                                    </OptList>
+                                                </OptListWrapper>
+                                            </>
+                                        }
                                 </OptRecommendWrapper>
                             }   
                             <BottomButtonWrapper>

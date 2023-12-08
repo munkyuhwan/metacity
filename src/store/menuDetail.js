@@ -59,12 +59,20 @@ export const getSetItems = createAsyncThunk("menuDetail/getSetItems", async(data
     const{allItems} = getState().menu;
     const {setGroup} = data;
     const setGroupItem = await getPosSetGroupItem(dispatch,{menuOptionGroupCode:setGroup.GROUP_NO}).catch(err=>{ posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"통신",MSG2:"아이템을 받아올 수 없습니다."}); return;});
-
-    let displaySetItem = [];
-    for(var i=0;i<setGroupItem.length;i++) {
+    //console.log(setGroupItem);
+    const displaySetItem = [];
+    if(setGroupItem) {
+        if(setGroupItem.length > 0) {
+            for(var i=0;i<setGroupItem.length;i++) {
+                const groupItemDetail = await getPosItemsWithCategory(dispatch,{selectedMainCategory:"",selectedSubCategory:"",menuDetailID:setGroupItem[i].PROD_I_CD});
+                displaySetItem.push(groupItemDetail[0]);
+            }
+        }
+    }
+   /*  for(var i=0;i<setGroupItem.length;i++) {
         let selectedItem = allItems.filter(el=>el.PROD_CD == setGroupItem[i].PROD_I_CD );
         displaySetItem.push(selectedItem[0]);
-    }
+    } */
     return displaySetItem;
   
     /* const setGroupItem = await getPosSetGroupItem(dispatch,{menuOptionGroupCode}).catch(err=>{ posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"통신",MSG2:"아이템을 받아올 수 없습니다."}); return;});
@@ -163,11 +171,12 @@ export const menuDetailSlice = createSlice({
         // 메뉴 세트 그룹 아이템 
         builder.addCase(getSetItems.fulfilled,(state, action)=>{
             let currentItems = Object.assign([],state.setGroupItem);
-            let itemsToSet = [...currentItems,...action.payload];
-            const itemResult = itemsToSet.filter(function(elem, pos) {
+            //let itemsToSet = [...currentItems,...action.payload];
+            currentItems.push(action.payload);
+            /* const itemResult = itemsToSet.filter(function(elem, pos) {
                 return itemsToSet.indexOf(elem) == pos;
-            }); 
-            state.setGroupItem = itemResult;
+            }); */ 
+            state.setGroupItem = currentItems;
         })
         // 추천 메뉴
         builder.addCase(getSingleMenuForRecommend.fulfilled,(state, action)=>{
