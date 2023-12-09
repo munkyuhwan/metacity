@@ -32,7 +32,6 @@ export const initMenu = createAsyncThunk("menu/initMenu", async(_,{dispatch,getS
     dispatch(getAdminMenuItems());
     // 전체 메뉴 받아오기
     dispatch(getAllItems());
-    console.log("allCategories[0]: ",allCategories[0]);
     dispatch(setSelectedMainCategory(allCategories[0]?.PROD_L1_CD));
     return [];
 })
