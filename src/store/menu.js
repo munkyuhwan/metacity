@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux';
 import { MENU_DATA } from '../resources/menuData';
-import axios from 'axios';
+import axios, { all } from 'axios';
 import { adminMenuEdit, adminOptionEdit, getAdminCategories, posMenuEdit, posMenuState, posOrderNew } from '../utils/apis';
 import { getAdminCategoryData, getMainCategories, setAllCategories, setMainCategories, setSelectedMainCategory } from './categories';
 import { EventRegister } from 'react-native-event-listeners';
@@ -10,8 +10,9 @@ import { getAdminMenuItems, setMenuCategories, setMenuExtra, setOptionExtra } fr
 import { CALL_SERVICE_GROUP_CODE } from '../resources/apiResources';
 import { setCallServerList } from './callServer';
 import { DEFAULT_CATEGORY_ALL_CODE } from '../resources/defaults';
-import { getPosItemsAll, getPosItemsWithCategory, getPosMainCategory, getPosMidCategory } from '../utils/api/metaApis';
+import { getPosItemsAll, getPosItemsWithCategory, getPosMainCategory, getPosMidCategory, getPosSetGroup, getPosSetGroupItem } from '../utils/api/metaApis';
 import { scanFile } from 'react-native-fs';
+import { setMenuOptionGroupCode } from './menuDetail';
 
 export const initMenu = createAsyncThunk("menu/initMenu", async(_,{dispatch,getState}) =>{
     // 포스 메인 카테고리
@@ -31,12 +32,13 @@ export const initMenu = createAsyncThunk("menu/initMenu", async(_,{dispatch,getS
     // 관리자 메뉴 정보 받아오기;
     dispatch(getAdminMenuItems());
     // 전체 메뉴 받아오기
-    dispatch(getAllItems());
+    await dispatch(getAllItems());
     dispatch(setSelectedMainCategory(allCategories[0]?.PROD_L1_CD));
     return [];
 })
 
 export const getDisplayMenu = createAsyncThunk("menu/getDisplayMenu", async(_, {dispatch, getState}) =>{
+    //console.log("getDisplayMenu==========================================");
     const {selectedMainCategory,selectedSubCategory, mainCategories} = getState().categories
     const {allItems} = getState().menu;
 
@@ -49,15 +51,20 @@ export const getDisplayMenu = createAsyncThunk("menu/getDisplayMenu", async(_, {
         sCat= "0000"
     } 
 
-    let itemResult = [];
-    itemResult = await getPosItemsWithCategory(dispatch, {selectedMainCategory:mCat,selectedSubCategory:sCat});
-    
     let selectedItems = []
-    if(selectedSubCategory == "0000") {
-        selectedItems = allItems.filter(el=>el.PROD_L1_CD == selectedMainCategory); 
-    }else {
-        selectedItems = allItems.filter(el=>el.PROD_L1_CD == selectedMainCategory && el.PROD_L2_CD == selectedSubCategory ); 
+    //let itemResult = [];
+    //itemResult = await getPosItemsWithCategory(dispatch, {selectedMainCategory:mCat,selectedSubCategory:sCat});
+    if(selectedMainCategory!=0) {
+        if(sCat == "0000") {
+            console.log("메인 카테고리 선택")
+            console.log("selectedMainCategory: ",selectedMainCategory);
+            console.log(allItems)
+            selectedItems = allItems.filter(el=>el.PROD_L1_CD == selectedMainCategory); 
+        }else {
+            selectedItems = allItems.filter(el=>el.PROD_L1_CD == selectedMainCategory && el.PROD_L2_CD == selectedSubCategory ); 
+        }
     }
+    
     return selectedItems;
 })
 
@@ -65,9 +72,32 @@ export const updateMenu = createAsyncThunk("menu/updateMenu", async(_,{rejectWit
     return await posOrderNew();
 })
 // 전체 아이템 받아오기
-export const getAllItems = createAsyncThunk("menu/getAllItems",async(_,{dispatcy,getstate})=>{
-    const result = await getPosItemsAll().catch(err=>{return;});
-    return result;
+export const getAllItems = createAsyncThunk("menu/getAllItems",async(_,{dispatch,getstate})=>{
+    // 메뉴 전부 받아오기
+    let result = await getPosItemsAll().catch(err=>{return;});
+    result = result.filter(el=> el.USE_YN=="Y");
+    let setGroupData = [];
+    // 세트 그룹받아오기
+    for(var i=0;i<result.length;i++) {
+        if(result[i]?.USE_YN == "Y") {
+            // set dataform;
+            let dataForm = {
+                "PROD_CD":0,
+                "SET_GROUP":[],
+            }
+            //console.log("result: ",result[i]);
+            dataForm.PROD_CD = result[i].PROD_CD;
+            // 옵션 그룹 받기
+            const optGroup = await getPosSetGroup(dispatch,{menuDetailID:result[i].PROD_CD}).catch(err=>{return[];});
+            dataForm.SET_GROUP = Object.assign([],optGroup);
+            for(var j=0;j<optGroup.length;j++) {
+                const optItem = await getPosSetGroupItem(dispatch,{menuOptionGroupCode:optGroup[j]?.GROUP_NO})
+                dataForm.SET_GROUP[j].OPT_ITEMS = optItem;
+            }
+            setGroupData.push(dataForm);
+        }
+    }
+    return {allItems:result,allSets:setGroupData};
 })
 
 export const getMenuState = createAsyncThunk("menu/menuState", async(_,{dispatch}) =>{
@@ -92,6 +122,7 @@ export const menuSlice = createSlice({
         menu: [],
         displayMenu:[],
         allItems:[],
+        allSets:[],
     },
     extraReducers:(builder)=>{
         // 메인 카테고리 받기
@@ -121,7 +152,8 @@ export const menuSlice = createSlice({
 
         })
         builder.addCase(getAllItems.fulfilled,(state, action)=>{
-            state.allItems = action.payload;
+            state.allItems = action.payload.allItems;
+            state.allSets = action.payload.allSets;
         })
         /* 
         builder.addCase(getMenuEdit.fulfilled,(state, action)=>{

@@ -9,6 +9,9 @@ import { addToOrderList } from '../../store/order';
 import { MENU_DATA } from '../../resources/menuData';
 import { colorWhite } from '../../assets/colors/color';
 import {isEmpty} from 'lodash'
+import RNFetchBlob from 'rn-fetch-blob';
+import RNFS from 'react-native-fs';
+
 /* 메인메뉴 메뉴 아이템 */
 const MenuItem = ({item,index,setDetailShow}) => {
     //<MenuItemImage />    
@@ -52,6 +55,18 @@ const MenuItem = ({item,index,setDetailShow}) => {
         return selTitleLanguage;
     }
     const itemPrice= item.SAL_TOT_AMT;
+    const ext = imgUrl.split(".");
+    RNFS.exists(`${RNFetchBlob.fs.dirs.DownloadDir}/wooriorder/${itemID}.${ext[ext.length-1]}`)
+    .then( (result) => {
+
+        if(result){
+            console.log("file exist result: ",result)
+        }
+
+      })
+      .catch((err) => {
+        //console.log(err.message);
+      });
     return(
         <>
             <MenuItemWrapper>
@@ -60,6 +75,7 @@ const MenuItem = ({item,index,setDetailShow}) => {
                         <>
                             <TouchableWithoutFeedback onPress={()=>{setDetailShow(true); dispatch(setMenuDetail({itemID,item})); }} >
                                 <FastImage style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:imgUrl,headers: { Authorization: 'AuthToken' },priority: FastImage.priority.normal}}/>
+                                {/* <FastImage style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:`file://${RNFetchBlob.fs.dirs.DownloadDir}/wooriorder/${itemID}.${ext[ext.length-1]}`,headers: { Authorization: 'AuthToken' },priority: FastImage.priority.normal}}/> */}
                             </TouchableWithoutFeedback>
                         </>
                     }

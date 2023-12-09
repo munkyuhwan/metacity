@@ -13,7 +13,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import LogWriter from '../utils/logWriter'
 import { getTableList, getTableStatus } from '../store/tableInfo'
 import { openPopup } from '../utils/common'
-import RNFS from "react-native-fs";
 import { setLanguage } from '../store/languages'
 import { DEFAULT_TABLE_STATUS_UPDATE_TIME } from '../resources/defaults'
 import {isEmpty} from 'lodash';

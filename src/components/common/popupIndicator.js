@@ -5,7 +5,7 @@ const { default: WaitIndicator } = require("./waitIndicator")
 
 
 const PopupIndicator = (props) => {
-    
+    console.log("PopupIndicator=========================================");
     return (
     <PopupIndicatorWrapper>
         <IndicatorWrapper>

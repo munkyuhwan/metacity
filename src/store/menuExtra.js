@@ -6,6 +6,7 @@ import { adminMenuEdit, posMenuEdit, posMenuState, posOrderNew } from '../utils/
 import { setMainCategories } from './categories';
 import { EventRegister } from 'react-native-event-listeners';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { fileDownloader } from '../utils/common';
 
 export const initMenuExtra = createAsyncThunk("menu/initMenuExtra", async() =>{
     return [];
@@ -22,7 +23,11 @@ export const setOptionExtra = createAsyncThunk("menu/setOptionExtra", async(data
 export const getAdminMenuItems = createAsyncThunk("menu/getAdminMenuItems", async(data,{dispatch}) =>{
     const adminItems = await adminMenuEdit(dispatch);
     if(adminItems?.result) {
-        return adminItems.order;
+        const order = adminItems.order;
+        order.map(el=>{
+            fileDownloader(`${el.pos_code}`,`https:${el.gimg_chg}`);
+        })
+        return order;
     }else {
         return [];
     }

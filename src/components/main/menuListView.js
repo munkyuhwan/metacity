@@ -25,7 +25,7 @@ const MenuListView = () => {
     const dispatch = useDispatch();
     const listRef = useRef();
 
-    const {displayMenu,menu} = useSelector((state)=>state.menu);
+    const {displayMenu,menu, allSets} = useSelector((state)=>state.menu);
     const {isOn} = useSelector((state)=>state.cartView);
     const {language} = useSelector(state=>state.languages);
 
@@ -67,18 +67,14 @@ const MenuListView = () => {
 
     useEffect(()=>{
         if(isDetailShow)setDetailShow(false);
-        dispatch(getDisplayMenu())
+        //if((selectedMainCategory!=0 || selectedSubCategory!=0)) {
+            dispatch(getDisplayMenu())
+        //}
     },[selectedMainCategory,selectedSubCategory])
 
     useEffect(()=>{
-        if(mainCategories[0]) {
-           // dispatch(setSelectedMainCategory(mainCategories[0].PROD_L1_CD));
-        }
-    },[mainCategories])
-
-    useEffect(()=>{
         if(displayMenu.length<=0) {
-            dispatch(getDisplayMenu());
+            //dispatch(getDisplayMenu());
         }
     },[displayMenu, menu])
     const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {

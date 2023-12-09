@@ -26,7 +26,7 @@ import { DEFAULT_CATEGORY_ALL_CODE, DEFAULT_TABLE_STATUS_UPDATE_TIME } from '../
 import { getAdminMenuItems } from '../store/menuExtra'
 import { getStoreInfo } from '../utils/api/metaApis'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { openTransperentPopup } from '../utils/common'
+import { fileDownloader, openTransperentPopup } from '../utils/common'
 import { getDisplay } from 'react-native-device-info'
 
 const Stack = createStackNavigator()
@@ -100,6 +100,7 @@ export default function Navigation() {
                 dispatch(getTableStatus());
             }, DEFAULT_TABLE_STATUS_UPDATE_TIME);
         //}
+
     },[])
 
     useEffect(()=>{
@@ -139,7 +140,7 @@ export default function Navigation() {
     useEffect(()=>{
         //console.log("all items: ",allItems?.length);
         if(allItems?.length>0) {
-            dispatch(getDisplayMenu());
+            //dispatch(getDisplayMenu());
         }
     },[allItems])
 

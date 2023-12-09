@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setFullPopupContent, setFullPopupVisibility, setPopupContent, setPopupVisibility, setTransPopupContent, setTransPopupVisibility } from '../store/popup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEqual} from 'lodash';
+import RNFS from 'react-native-fs';
+import RNFetchBlob from 'rn-fetch-blob';
 
 export function openPopup (dispatch, {innerView, isPopupVisible, param}) {
     if(isPopupVisible) {
@@ -170,8 +172,43 @@ export function orderListDuplicateCheck (currentOrderList, orderData) {
         
         return [orderData];
     }
-    
 }
+
+// 파일 다운로드
+export async function fileDownloader(name,url) {
+    const ext = url.split(".");
+    await deleteImageFile(`${RNFetchBlob.fs.dirs.DownloadDir}/wooriorder/${name}.${ext[ext.length-1]}`);
+    await RNFetchBlob.config({
+        overwrite:true,
+        addAndroidDownloads: {
+            useDownloadManager: true,
+            notification: true,
+            path: `${RNFetchBlob.fs.dirs.DownloadDir}/wooriorder/${name}.jpg`,
+        },
+      }).fetch('GET', url);
+}
+async function deleteImageFile(dir) {
+
+    const filepath = `${dir}`;
+
+    RNFS.exists(filepath)
+    .then( (result) => {
+
+        if(result){
+          return RNFS.unlink(filepath)
+            .then(() => {
+            })
+            // `unlink` will throw an error, if the item to unlink does not exist
+            .catch((err) => {
+              console.log(err.message);
+            });
+        }
+
+      })
+      .catch((err) => {
+        //console.log(err.message);
+      });
+  }
 
 
 /* 
