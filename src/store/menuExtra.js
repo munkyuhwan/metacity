@@ -25,7 +25,7 @@ export const getAdminMenuItems = createAsyncThunk("menu/getAdminMenuItems", asyn
     if(adminItems?.result) {
         const order = adminItems.order;
         order.map(el=>{
-            fileDownloader(`${el.pos_code}`,`https:${el.gimg_chg}`);
+            //fileDownloader(`${el.pos_code}`,`https:${el.gimg_chg}`);
         })
         return order;
     }else {

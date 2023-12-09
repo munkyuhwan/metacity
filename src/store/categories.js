@@ -90,6 +90,7 @@ export const cagegoriesSlice = createSlice({
         builder.addCase(setSelectedMainCategory.fulfilled,(state, action)=>{
             //state.subCategories = MENU_DATA.categories[action.payload].subCategories||[]
             state.selectedMainCategory = action.payload;
+            state.selectedSubCategory = "0000";
         })
         // 서브 카테고리 선택
         builder.addCase(setSelectedSubCategory.fulfilled,(state, action)=>{

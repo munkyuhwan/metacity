@@ -55,10 +55,7 @@ export const getDisplayMenu = createAsyncThunk("menu/getDisplayMenu", async(_, {
     //let itemResult = [];
     //itemResult = await getPosItemsWithCategory(dispatch, {selectedMainCategory:mCat,selectedSubCategory:sCat});
     if(selectedMainCategory!=0) {
-        if(sCat == "0000") {
-            console.log("메인 카테고리 선택")
-            console.log("selectedMainCategory: ",selectedMainCategory);
-            console.log(allItems)
+        if(selectedSubCategory == "0000") {
             selectedItems = allItems.filter(el=>el.PROD_L1_CD == selectedMainCategory); 
         }else {
             selectedItems = allItems.filter(el=>el.PROD_L1_CD == selectedMainCategory && el.PROD_L2_CD == selectedSubCategory ); 
