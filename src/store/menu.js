@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { MENU_DATA } from '../resources/menuData';
 import axios from 'axios';
 import { adminMenuEdit, adminOptionEdit, getAdminCategories, posMenuEdit, posMenuState, posOrderNew } from '../utils/apis';
-import { getAdminCategoryData, getMainCategories, setAllCategories, setMainCategories } from './categories';
+import { getAdminCategoryData, getMainCategories, setAllCategories, setMainCategories, setSelectedMainCategory } from './categories';
 import { EventRegister } from 'react-native-event-listeners';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAdminMenuItems, setMenuCategories, setMenuExtra, setOptionExtra } from './menuExtra';
@@ -15,7 +15,6 @@ import { scanFile } from 'react-native-fs';
 
 export const initMenu = createAsyncThunk("menu/initMenu", async(_,{dispatch,getState}) =>{
     // 포스 메인 카테고리
-    
     const mainCategories = await getPosMainCategory(dispatch).catch(err=>{return []});
     let allCategories = Object.assign([],mainCategories);
     if(allCategories?.length > 0 ) {
@@ -28,12 +27,13 @@ export const initMenu = createAsyncThunk("menu/initMenu", async(_,{dispatch,getS
     }
     
     // 관리자 카테고리 추가 정보
-    //dispatch(getAdminCategoryData());
+    dispatch(getAdminCategoryData());
     // 관리자 메뉴 정보 받아오기;
-    //dispatch(getAdminMenuItems());
+    dispatch(getAdminMenuItems());
     // 전체 메뉴 받아오기
     dispatch(getAllItems());
-
+    console.log("allCategories[0]: ",allCategories[0]);
+    dispatch(setSelectedMainCategory(allCategories[0]?.PROD_L1_CD));
     return [];
 })
 

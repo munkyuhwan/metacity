@@ -105,16 +105,6 @@ export default function Navigation() {
     useEffect(()=>{
         // 초기 세팅
         handleEventListener();
-        // 포스 메인 카테고리
-        /* 
-        dispatch(getMainCategories());
-        // 관리자 카테고리 추가 정보
-        dispatch(getAdminCategoryData());
-        // 관리자 메뉴 정보 받아오기;
-        dispatch(getAdminMenuItems());
-        // 전체 메뉴 받아오기
-        dispatch(getAllItems());
- */
         dispatch(initMenu());
 
         getStoreInfo()

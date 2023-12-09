@@ -34,7 +34,6 @@ export const setMainCategories = createAsyncThunk("categories/setMainCategories"
 });
 
 export const setSelectedMainCategory = createAsyncThunk("categories/setSelectedMainCategory", async(index,{getState,dispatch}) =>{
-    console.log("setSelectedMainCategory: ",index)
     return index;
 })
 export const setSelectedSubCategory = createAsyncThunk("categories/setSelectedSubCategory", async(index) =>{
