@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { BottomButton, BottomButtonIcon, BottomButtonText, BottomButtonWrapper, ButtonWrapper, DetailInfoWrapper, DetailItemInfoFastImage, DetailItemInfoImage, DetailItemInfoImageWrapper, DetailItemInfoMore, DetailItemInfoPrice, DetailItemInfoPriceWrapper, DetailItemInfoSource, DetailItemInfoTitle, DetailItemInfoTitleEtc, DetailItemInfoTitleWrapper, DetailItemInfoWrapper, DetailPriceMoreWrapper, DetailWhiteWrapper, DetailWrapper, OptList, OptListWrapper, OptRecommendWrapper, OptTitleText } from '../../styles/main/detailStyle';
-import { ActivityIndicator, Animated, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { ActivityIndicator, Animated, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { colorBlack, colorRed } from '../../assets/colors/color';
 import { LANGUAGE } from '../../resources/strings';
 import OptItem from './optItem';
@@ -222,16 +222,6 @@ const ItemDetail = (props) => {
         return selWonsanjiLanguage;
     }
 
-    useEffect(()=>{
-        if(menuOptionList.length>0) {    
-            menuOptionList.map(el=>{
-                if(el.USE_YN == "Y") {
-                    //dispatch(getSetItems({setGroup:el}));
-                }
-            })
-        }
-    },[menuOptionList]) 
-
     return(
         <>
             <Animated.View  style={[{...PopStyle.animatedPop, ...boxWidthStyle,...{zIndex:detailZIndex} } ]} >
@@ -283,6 +273,8 @@ const ItemDetail = (props) => {
                                 </DetailInfoWrapper>
                             }
                             {menuDetailID!=null &&
+                            <ScrollView style={{marginTop:95}} >
+
                                 <OptRecommendWrapper>
                                     <OptListWrapper>
                                         <OptTitleText>{LANGUAGE[language]?.detailView.selectOpt}</OptTitleText>
@@ -312,6 +304,7 @@ const ItemDetail = (props) => {
                                     {itemExtra&&
                                             itemExtra[0]?.related &&
                                             itemExtra[0]?.related.length > 0 &&
+                                            itemExtra[0]?.related[0]!="" &&
                                             <>
                                                 <OptListWrapper>
                                                     <OptTitleText>{LANGUAGE[language]?.detailView.recommendMenu}</OptTitleText>
@@ -333,6 +326,8 @@ const ItemDetail = (props) => {
                                             </>
                                         }
                                 </OptRecommendWrapper>
+                            </ScrollView>
+
                             }   
                             <BottomButtonWrapper>
                                 <TouchableWithoutFeedback onPress={()=>{closeDetail(); }}>

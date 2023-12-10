@@ -33,8 +33,9 @@ export const DetailInfoWrapper = styled.View`
 // 상단 
 export const DetailItemInfoWrapper = styled.View`
     flexDirection:column;
-    paddingLeft:99px;
-    paddingTop:12px;
+    height:250px;
+    paddingLeft:19px;
+    paddingTop:0px;
 `
 export const DetailItemInfoImageWrapper = styled.ImageBackground`
     width:360px;
@@ -92,14 +93,13 @@ export const DetailItemInfoPrice = styled.Text`
 export const DetailItemInfoMore = styled.Text`
     fontSize:22px;
     color:${colorBlack};
-    flex:1
+    flex:1;
 `
 
 // 옵션 & 추천메뉴
 export const OptRecommendWrapper = styled.View`
     flex:1;
     flexDirection:column;
-    paddingTop:95px;
 `
 export const OptListWrapper = styled.View`
     flexDirection:column;
