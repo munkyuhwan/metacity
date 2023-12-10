@@ -1,7 +1,7 @@
 import axios from "axios";
 import { posErrorHandler } from "../errorHandler/ErrorHandler";
 
-import { POS_BASE_URL, POS_VERSION_CODE, POS_WORK_CD_MAIN_CAT, POS_WORK_CD_MENU_ITEMS, POS_WORK_CD_MID_CAT, POS_WORK_CD_REQ_STORE_INFO, POS_WORK_CD_SET_GROUP_INFO, POS_WORK_CD_SET_GROUP_ITEM_INFO, POS_WORK_CD_TABLE_ORDER_LIST, POS_WORK_CD_VERSION } from "../../resources/apiResources";
+import { POS_BASE_URL, POS_VERSION_CODE, POS_WORK_CD_MAIN_CAT, POS_WORK_CD_MENU_ITEMS, POS_WORK_CD_MID_CAT, POS_WORK_CD_REQ_STORE_INFO, POS_WORK_CD_SET_GROUP_INFO, POS_WORK_CD_SET_GROUP_ITEM_INFO, POS_WORK_CD_TABLE_INFO, POS_WORK_CD_TABLE_ORDER_LIST, POS_WORK_CD_VERSION } from "../../resources/apiResources";
 import { displayErrorPopup, metaErrorHandler } from "../errorHandler/metaErrorHandler";
 import { getIP, getStoreID, getTableInfo, openPopup } from "../common";
 import { EventRegister } from "react-native-event-listeners";
@@ -247,7 +247,7 @@ export const getTableOrderList = async(dispatch, data) =>{
 }
 
 // 테이블 주문 목록 받기
-export const getTableList = async(dispatch, data) =>{
+export const getTableListInfo = async(dispatch, data) =>{
     const {POS_IP} = await getIP()
     if(isEmpty(POS_IP)) {
         EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""})
@@ -265,7 +265,7 @@ export const getTableList = async(dispatch, data) =>{
             `${POS_BASE_URL(POS_IP)}`,
             {
                 "VERSION" : POS_VERSION_CODE,
-                "WORK_CD" : POS_WORK_CD_TABLE_ORDER_LIST,
+                "WORK_CD" : POS_WORK_CD_TABLE_INFO,
                 "FLOOR" : data?.floor,
                 "TBL_NO":"",
                 "TBL_NM":"",
@@ -274,7 +274,7 @@ export const getTableList = async(dispatch, data) =>{
         ) 
         .then((response => {
             if(metaErrorHandler(dispatch, response?.data)) {
-                const itemInfo = response?.data?.ITEM_INFO;
+                const itemInfo = response?.data?.TBL_LIST;
                 //openPopup(dispatch,{innerView:"OrderComplete", isPopupVisible:true});
                 resolve(itemInfo)
             }    
@@ -318,4 +318,3 @@ export const getStoreInfo = async(dispatch, data) =>{
         });
     }) 
 }
-

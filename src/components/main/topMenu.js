@@ -18,6 +18,7 @@ import { colorWhite } from '../../assets/colors/color'
 import TopMenuList from '../menuComponents/topMenuList'
 import VersionCheck from 'react-native-version-check';
 import { uploadFile } from '../../store/etcFunctions'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const TopMenu = () =>{
     const dispatch = useDispatch();
@@ -40,9 +41,17 @@ const TopMenu = () =>{
 
     useEffect(()=>{ 
         setCurrentVersion(VersionCheck.getCurrentVersion());
-        getTableInfo()
+        /* getTableInfo()
         .then(result=>{
             setTableNoText(result.TABLE_INFO);
+        }) */
+        AsyncStorage.getItem("TABLE_NM")
+        .then((TABLE_NM)=>{
+            if(TABLE_NM) {
+                console.log("TABLE_NM: ",TABLE_NM);
+                setTableNoText(TABLE_NM)
+            }else {
+            }
         })
     },[])
 

@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { getAdminTableStatus, posTableList } from '../utils/apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo, { getUniqueId, getManufacturer, getAndroidId } from 'react-native-device-info';
+import { getTableListInfo } from '../utils/api/metaApis';
 
 export const initTableInfo =  createAsyncThunk("tableInfo/initTableInfo", async() =>{
     const getTableInfo = await AsyncStorage.getItem("tableInfo");
@@ -25,7 +26,8 @@ export const changeTableInfo = createAsyncThunk("tableInfo/changeTableInfo", asy
     return data;    
 })
 export const getTableList = createAsyncThunk("tableInfo/getTableList", async(data,{dispatch}) =>{
-    return await posTableList(dispatch)
+    const result = await getTableListInfo(dispatch,{floor:1}).catch(err=>[]);
+    return result
 })
 // 관리자 테이블 상테 받아오기
 export const getTableStatus = createAsyncThunk("tableInfo/getTableStatus", async(data,{dispatch, getState}) =>{

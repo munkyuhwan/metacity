@@ -35,8 +35,6 @@ const MenuListView = () => {
     // 선택 카테고리
     const {mainCategories, selectedMainCategory, selectedSubCategory} = useSelector((state)=>state.categories);
 
-    //console.log("menu:",menu[1].ITEM_LIST[0]);
-
 
     const toNextCaterogy = () =>{
         const selectedCat = mainCategories.filter(e => e.PROD_L1_CD==selectedMainCategory);
@@ -44,7 +42,8 @@ const MenuListView = () => {
         var nextPage = 0;
         nextPage = selectedIndex+1;
         if(nextPage>mainCategories.length-1) nextPage=mainCategories.length-1;
-        //dispatch(setSelectedMainCategory(mainCategories[nextPage].PROD_L1_CD)); 
+        console.log(nextPage,"mainCategories: ",mainCategories)
+        dispatch(setSelectedMainCategory(mainCategories[nextPage].PROD_L1_CD)); 
         dispatch(setSelectedSubCategory("0000"))
     }
     const toPrevCaterogy = () =>{
@@ -54,7 +53,7 @@ const MenuListView = () => {
         nextPage = selectedIndex-1;
         if(nextPage<0) nextPage=0;
         if(nextPage>mainCategories.length-1) nextPage=mainCategories.length-1;
-        //dispatch(setSelectedMainCategory(mainCategories[nextPage].PROD_L1_CD)); 
+        dispatch(setSelectedMainCategory(mainCategories[nextPage].PROD_L1_CD)); 
         dispatch(setSelectedSubCategory("0000"))
     }
     useEffect(()=>{

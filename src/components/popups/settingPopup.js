@@ -48,7 +48,6 @@ const SettingPopup = () =>{
     const [tableNo, setTableNo] = useState("");
     const [storeIdx, setStoreIdx] = useState("");
 
-
     const getIndicateAvailableDeviceInfo = () =>{
         serviceIndicate()
         .then((result)=>{
@@ -258,6 +257,12 @@ const SettingPopup = () =>{
         );
     }
 
+    const setTableInfo = (itemValue, itemNM) =>{
+        AsyncStorage.setItem("TABLE_INFO", itemValue);   
+        AsyncStorage.setItem("TABLE_NM", itemNM);   
+        dispatch(changeTableInfo({tableNo:itemValue}))
+        displayOnAlert("테이블이 설정되었습니다.",{});
+    }
     const Dropdown = () => {
 
         return (
@@ -267,8 +272,9 @@ const SettingPopup = () =>{
                     key={"tablePicker"}
                     mode='dialog'
                     onValueChange = {(itemValue, itemIndex) => {
-                        dispatch(setTableInfo(itemValue))
-                        AsyncStorage.removeItem("orderResult");
+                        const filteredItem = tableList.filter(el=>el.TBL_NO == itemValue);
+                        const itemNM = filteredItem[0]?.TBL_NM;;
+                        setTableInfo(itemValue, itemNM)
                         dispatch(initOrderList());
                         dispatch(setCartView(false));
                         displayOnAlert("수정되었습니다.",[]);
@@ -282,9 +288,12 @@ const SettingPopup = () =>{
                     }}>
                         <Picker.Item key={"none"} label = {"미선택"} value ={{}} />
                     {tableList.map(el=>{
+                        //console.log("tableList: ",el)
+                         
                         return(
-                            <Picker.Item key={el.FLR_NAME+"_"+el.TBL_NAME}  label = {el.FLR_NAME+"층 "+el.TBL_NAME+"테이블"} value ={el} />
+                            <Picker.Item key={"_"+el.TBL_NO}  label = {el.FLOOR_NM+" "+el.TBL_NM} value ={el.TBL_NO} />
                         )
+                         
                     })
                     }
                 </Picker>
@@ -372,6 +381,7 @@ const SettingPopup = () =>{
         .then(value=>{
             setStoreIdx(value);
         })
+        dispatch(getTableList());
     },[])
 
     const setStoreInfo = () =>{
@@ -379,11 +389,6 @@ const SettingPopup = () =>{
         displayOnAlert("설정되었습니다.",{});
     }
 
-    const setTableInfo = () =>{
-        AsyncStorage.setItem("TABLE_INFO", tableNo);   
-        dispatch(changeTableInfo({tableNo:tableNo}))
-        displayOnAlert("테이블이 설정되었습니다.",{});
-    }
     const getStoreID = () => {
         getStoreInfo()
         .then(result=>{
@@ -453,6 +458,8 @@ const SettingPopup = () =>{
                                 <TouchableWithoutFeedback onPress={()=>{ }} >
                                     <SettingButtonText isMargin={false} >테이블 세팅</SettingButtonText>
                                 </TouchableWithoutFeedback> 
+                                    <Dropdown/>
+                                    {/* 
                                 <SelectWrapper style={{marginRight:'auto', marginLeft:'auto', paddingBottom:20}} >
                                     <StoreIDTextLabel>테이블 번호:</StoreIDTextLabel>
                                     <StoreIDTextInput keyboardType='numeric'  defaultValue={tableNo} onChangeText={(val)=>{ setTableNo(val); }} />
@@ -462,6 +469,7 @@ const SettingPopup = () =>{
                                         </SelectCancelWrapper>
                                     </TouchableWithoutFeedback>
                                 </SelectWrapper>
+                                    */}
                                 {/* 
                                 <StoreIDTextLabel>테이블 번호:</StoreIDTextLabel>
                                 <StoreIDTextInput keyboardType='numeric'  defaultValue={tableNo} onChangeText={(val)=>{ setTableNo(val); }} />
