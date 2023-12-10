@@ -13,14 +13,11 @@ import { changeTableInfo, clearTableInfo, getTableList, initTableInfo, setTableI
 import { SMARTRO_FUNCTION } from '../../resources/cardReaderConstant';
 import { useSharedValue } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { cancelOrder, checkTableOrder } from '../../utils/apis';
 import { initOrderList } from '../../store/order';
 import { setCartView } from '../../store/cart';
 import { getStoreInfo } from '../../utils/api/metaApis';
-import { getAllItems, getDisplayMenu, getMenuState, initMenu } from '../../store/menu';
-import { getAdminCategoryData, getMainCategories } from '../../store/categories';
-import { getAdminMenuItems } from '../../store/menuExtra';
-import { CODE_PUSH_SECRET } from '../../resources/apiResources';
+import { initMenu } from '../../store/menu';
+import { CODE_PUSH_PRODUCTION, CODE_PUSH_SECRET } from '../../resources/apiResources';
 
 const SettingPopup = () =>{
 
@@ -154,7 +151,7 @@ const SettingPopup = () =>{
 
     const checkUpdate =  async() =>{
         CodePush
-            const update = await CodePush.checkForUpdate(CODE_PUSH_SECRET)
+            const update = await CodePush.checkForUpdate(CODE_PUSH_PRODUCTION)
             .catch(err=>{console.log(err);
                 Alert.alert(
                 "업데이트",
@@ -522,7 +519,7 @@ const SettingPopup = () =>{
                                 <SettingButtonText isMargin={true} >화면 초기화</SettingButtonText>
                             </TouchableWithoutFeedback>
                             <TouchableWithoutFeedback onPress={()=>{checkUpdate();}} >
-                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.7</SettingButtonText>
+                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.8</SettingButtonText>
                             </TouchableWithoutFeedback> 
                         </SettingButtonWrapper>
                     </SettingScrollView>

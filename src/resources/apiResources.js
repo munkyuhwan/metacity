@@ -124,5 +124,8 @@ export const CALL_SERVICE_GROUP_CODE = "99999";
 
 
 export const CODE_PUSH_SECRET = "fd7f67b7-013a-4721-97ed-6f9477b584cc";
+export const CODE_PUSH_PRODUCTION = "iYrtFKnInPx-Wg7uhqWxYa6aZBZWypGvN8u6B";
+export const CODE_PUSH_DEBUG = "vIqmW0KUnHQLD4FgriHUrrUjdCRIYLzB84Mtw";
+export const CODE_PUSH_STAGING = "UuUzv_hgPcqZssi-4OmvXgNd9DQBuUU5w1crm";
 
 
