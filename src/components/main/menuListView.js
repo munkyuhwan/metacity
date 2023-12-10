@@ -33,27 +33,26 @@ const MenuListView = () => {
     const [isDetailShow, setDetailShow] = useState(false);
 
     // 선택 카테고리
-    const {mainCategories, selectedMainCategory, selectedSubCategory} = useSelector((state)=>state.categories);
+    const {mainCategories, selectedMainCategory, selectedSubCategory, allCategories} = useSelector((state)=>state.categories);
 
 
     const toNextCaterogy = () =>{
-        const selectedCat = mainCategories.filter(e => e.PROD_L1_CD==selectedMainCategory);
-        const selectedIndex = mainCategories.indexOf(selectedCat[0]);
+        const selectedCat = allCategories.filter(e => e.PROD_L1_CD==selectedMainCategory);
+        const selectedIndex = allCategories.indexOf(selectedCat[0]);
         var nextPage = 0;
         nextPage = selectedIndex+1;
-        if(nextPage>mainCategories.length-1) nextPage=mainCategories.length-1;
-        console.log(nextPage,"mainCategories: ",mainCategories)
-        dispatch(setSelectedMainCategory(mainCategories[nextPage].PROD_L1_CD)); 
+        if(nextPage>allCategories.length-1) nextPage=allCategories.length-1;
+        dispatch(setSelectedMainCategory(allCategories[nextPage].PROD_L1_CD)); 
         dispatch(setSelectedSubCategory("0000"))
     }
     const toPrevCaterogy = () =>{
-        const selectedCat = mainCategories.filter(e => e.PROD_L1_CD==selectedMainCategory);
-        const selectedIndex = mainCategories.indexOf(selectedCat[0]);
+        const selectedCat = allCategories.filter(e => e.PROD_L1_CD==selectedMainCategory);
+        const selectedIndex = allCategories.indexOf(selectedCat[0]);
         var nextPage = 0;
         nextPage = selectedIndex-1;
         if(nextPage<0) nextPage=0;
-        if(nextPage>mainCategories.length-1) nextPage=mainCategories.length-1;
-        dispatch(setSelectedMainCategory(mainCategories[nextPage].PROD_L1_CD)); 
+        if(nextPage>allCategories.length-1) nextPage=allCategories.length-1;
+        dispatch(setSelectedMainCategory(allCategories[nextPage].PROD_L1_CD)); 
         dispatch(setSelectedSubCategory("0000"))
     }
     useEffect(()=>{
