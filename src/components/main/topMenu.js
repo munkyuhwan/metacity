@@ -35,7 +35,14 @@ const TopMenu = () =>{
 
     useEffect(()=>{
         if(tableInfo) {
-            setTableNoText(tableInfo.tableNo)
+            //setTableNoText(tableInfo.tableNo)
+            AsyncStorage.getItem("TABLE_NM")
+            .then((TABLE_NM)=>{
+                if(TABLE_NM) {
+                    setTableNoText(TABLE_NM)
+                }else {
+                }
+            })
         }
     },[tableInfo])
 
