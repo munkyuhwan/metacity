@@ -11,28 +11,29 @@ const OptItem = (props)=>{
     const dispatch = useDispatch();
 
     const optionData = props.optionData;
+    const {allItems} = useSelector((state)=>state.menu);
     const {menuDetailID, menuOptionGroupCode, menuOptionSelected, menuOptionList, setGroupItem} = useSelector((state)=>state.menuDetail);
     const [isSelected, setSelected] = useState(false);
     const [addtivePrice, setAdditivePrice] = useState();
 
-//console.log("optionData: ",optionData);
     // 메뉴 옵션 추가 정보
     const {optionCategoryExtra,menuExtra} = useSelector(state=>state.menuExtra);
-    const itemMenuExtra = menuExtra.filter(el=>el.pos_code==optionData?.PROD_CD);
+    const itemDetail = allItems.filter(el=>el.PROD_CD==optionData?.PROD_I_CD);
+    const itemMenuExtra = menuExtra.filter(el=>el.pos_code==optionData?.PROD_I_CD);
     const ItemTitle = () =>{
         let selTitleLanguage = "";
-        const selExtra = itemMenuExtra.filter(el=>el.pos_code==optionData.PROD_CD);
+        const selExtra = itemMenuExtra.filter(el=>el.pos_code==optionData.PROD_I_CD);
         if(language=="korean") {
             selTitleLanguage = optionData?.GROUP_NM;
         }
         else if(language=="japanese") {
-            selTitleLanguage = selExtra[0]?.cate_name_jp||optionData?.PROD_CD;
+            selTitleLanguage = selExtra[0]?.cate_name_jp||optionData?.PROD_I_CD;
         }
         else if(language=="chinese") {
-            selTitleLanguage = selExtra[0]?.cate_name_cn||optionData?.PROD_CD;
+            selTitleLanguage = selExtra[0]?.cate_name_cn||optionData?.PROD_I_CD;
         }
         else if(language=="english") {
-            selTitleLanguage = selExtra[0]?.cate_name_en||optionData?.PROD_CD;
+            selTitleLanguage = selExtra[0]?.cate_name_en||optionData?.PROD_I_CD;
         }
         return selTitleLanguage;
     }
@@ -86,7 +87,7 @@ const OptItem = (props)=>{
             })
         */}
             { 
-            <TouchableWithoutFeedback onPress={props.onPress} >
+            <TouchableWithoutFeedback onPress={()=>{props.onPress(itemDetail[0])}} >
                 <OptItemWrapper>
                     {itemMenuExtra[0]?.gimg_chg &&
                         <OptItemFastImage  source={{uri:`https:${itemMenuExtra[0]?.gimg_chg}`,headers: { Authorization: 'AuthToken' },priority: FastImage.priority.normal}}/>
@@ -96,8 +97,8 @@ const OptItem = (props)=>{
                     }
                     <OptItemDim isSelected={props.isSelected}/>
                     <OptItemInfoWrapper>
-                        <OptItemInfoTitle>{ItemTitle()||optionData?.PROD_NM }</OptItemInfoTitle>
-                        <OptItemInfoPrice>{optionData?.SAL_TOT_AMT?"+"+Number(optionData?.SAL_TOT_AMT).toLocaleString(undefined,{maximumFractionDigits:0})+"원":""}</OptItemInfoPrice>
+                        <OptItemInfoTitle>{ItemTitle()||itemDetail[0]?.PROD_NM }</OptItemInfoTitle>
+                        <OptItemInfoPrice>{itemDetail[0]?.SAL_TOT_AMT?"+"+Number(itemDetail[0]?.SAL_TOT_AMT).toLocaleString(undefined,{maximumFractionDigits:0})+"원":""}</OptItemInfoPrice>
                         <OptItemInfoChecked isSelected={props.isSelected} source={require("../../assets/icons/check_red.png")}/>
                     </OptItemInfoWrapper>
                 </OptItemWrapper>

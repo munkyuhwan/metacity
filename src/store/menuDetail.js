@@ -2,15 +2,32 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux';
 import { getPosItemsWithCategory, getPosSetGroup, getPosSetGroupItem } from '../utils/api/metaApis';
 import { posErrorHandler } from '../utils/errorHandler/ErrorHandler';
+import { openPopup } from '../utils/common';
 
 export const initMenuDetail = createAsyncThunk("menuDetail/initMenuDetail", async() =>{
     //return {menuDetailID: null,menuDetail:{},menuOptionGroupCode:"",menuOptionList:[],menuOptionSelected:[],setGroupItem:[]};
     return { menuDetailID: null,menuDetail:{},menuOptionGroupCode:"",menuOptionList:[],menuOptionSelected:[],setGroupItem:[],menuRecommendItems:[],}
 })
 
-export const setMenuDetail = createAsyncThunk("menuDetail/setMenuDetail", async(_) =>{
+export const setMenuDetail = createAsyncThunk("menuDetail/setMenuDetail", async(_,{dispatch,getState}) =>{
+    const {allItems, allSets} = getState().menu;
     const index = _.itemID;
-    return index;
+
+    // 아이템 상세
+    const allItemsFiltered = allItems.filter(el=>el.PROD_CD == index);
+    let menuDetail = {}
+    if(allItemsFiltered?.length>0) {
+        menuDetail = allItemsFiltered[0];
+    }
+
+    // 아이템 옵션
+    const setFiltered = allSets.filter(el=>el.PROD_CD == index);
+    let filterdSetList = []
+    if(setFiltered?.length>0) {
+        filterdSetList = setFiltered[0];
+    }
+
+    return {menuDetailID:index,menuDetail:menuDetail, menuOptionList:filterdSetList.SET_GROUP};
 })
 export const getSingleMenu = createAsyncThunk("menuDetail/getSingleMenu", async(itemID,{getState}) =>{
     const {displayMenu} = getState().menu;
@@ -95,8 +112,9 @@ export const setMenuOptionSelect = createAsyncThunk("menuDetail/setMenuOptionSel
 export const setMenuOptionSelectInit = createAsyncThunk("menuDetail/setMenuOptionSelectInit", async() =>{
     return {menuOptionSelect: []};
 });
-export const setMenuOptionSelected = createAsyncThunk("menuDetail/setMenuOptionSelected", async(data,{getState}) =>{
+export const setMenuOptionSelected = createAsyncThunk("menuDetail/setMenuOptionSelected", async(_,{dispatch, getState}) =>{
     const {menuOptionSelected, menuOptionGroupCode} = getState().menuDetail;
+    const {data, isAdd} = _;
     let newOptSelect= Object.assign([], menuOptionSelected);
     let dupleCheck = newOptSelect.filter(el=>el.PROD_I_CD == data.PROD_I_CD);
     if(dupleCheck.length <=0 ) {
@@ -104,6 +122,15 @@ export const setMenuOptionSelected = createAsyncThunk("menuDetail/setMenuOptionS
     }else {
         newOptSelect = newOptSelect.filter(el=>el.PROD_I_CD != data.PROD_I_CD);
     }
+    if(isAdd) {
+
+    }else {
+       //openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"옵션을 추가할 수 없습니다."}});
+
+        newOptSelect = newOptSelect.filter(el=>el.PROD_I_CD!=data.PROD_I_CD);
+        //newOptSelect = newOptSelect.slice(0,newOptSelect.length-1);
+    } 
+
     return newOptSelect;
 });
 export const setMenuOptionGroupCode = createAsyncThunk("menuDetail/setMenuOptionGroupCode", async(data) =>{
@@ -136,7 +163,9 @@ export const menuDetailSlice = createSlice({
         })
         // 메인 카테고리 받기
         builder.addCase(setMenuDetail.fulfilled,(state, action)=>{
-            state.menuDetailID = action.payload;
+            state.menuDetailID = action.payload.menuDetailID;
+            state.menuDetail = action.payload.menuDetail;
+            state.menuOptionList = action.payload.menuOptionList;
         })
         // 메뉴 상세 받기
         builder.addCase(getSingleMenu.fulfilled,(state, action)=>{

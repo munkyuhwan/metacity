@@ -8,7 +8,7 @@ import OptItem from './optItem';
 import CommonIndicator from '../common/waitIndicator';
 import WaitIndicator from '../common/waitIndicator';
 import RecommendItem from './recommendItem';
-import { setMenuDetail, getSingleMenu, setMenuOptionSelect, setMenuOptionGroupCode, initMenuDetail, getSingleMenuFromAllItems, getItemSetGroup, getSingleMenuForRecommend, getSetItems, setMenuOptionSelected } from '../../store/menuDetail';
+import { setMenuDetail, initMenuDetail, getSingleMenuFromAllItems, getItemSetGroup, getSingleMenuForRecommend, getSetItems, setMenuOptionSelected } from '../../store/menuDetail';
 import { numberWithCommas, openPopup } from '../../utils/common';
 import { MENU_DATA } from '../../resources/menuData';
 import { addToOrderList } from '../../store/order';
@@ -22,7 +22,7 @@ const ItemDetail = (props) => {
     const language = props.language;
     const isDetailShow = props.isDetailShow;
     const dispatch = useDispatch();
-    const {menu} = useSelector((state)=>state.menu);
+    const {allItems} = useSelector((state)=>state.menu);
     const {menuDetailID, menuDetail, menuOptionSelected, menuOptionList, setGroupItem} = useSelector((state)=>state.menuDetail);
     const [detailZIndex, setDetailZIndex] = useState(0);
     // 메뉴 추가정보 찾기
@@ -35,6 +35,7 @@ const ItemDetail = (props) => {
     const [selectedOptions, setSelectedOptions] = useState([]);
     // 함께먹기 좋은 메뉴
     const [selectedRecommend, setSelectedRecommend] = useState([]);
+    
 
     //const optionSelect = menuDetail?.ADDITIVE_GROUP_LIST[0]?.ADDITIVE_ITEM_LIST;
     //const additiveData = menuDetail?.ADDITIVE_GROUP_LIST[1];
@@ -82,7 +83,7 @@ const ItemDetail = (props) => {
         }) 
     }
     
-    const onOptionSelect = (itemData) =>{
+    const onOptionSelect = (groupNo, itemData) =>{
         let setItem =  {
             "ITEM_SEQ" : 0,
             "SET_SEQ" : menuOptionSelected.length+1,
@@ -92,14 +93,25 @@ const ItemDetail = (props) => {
             "AMT" : itemData?.SAL_AMT,
             "VAT" : itemData?.SAL_VAT,
         }; 
-        dispatch(setMenuOptionSelected(setItem));
-        //dispatch(setMenuOptionGroupCode(groupCode));
-        //openPopup(dispatch,{innerView:"Option", isPopupVisible:true});
-        /* 
-            dispatch(setMenuOptionGroupCode(selectedGroup[0].ADDITIVE_GROUP_CODE));
-            dispatch(setMenuOptionSelect(selectedGroup[0].ADDITIVE_ITEM_LIST));
-            openPopup(dispatch,{innerView:"Option", isPopupVisible:true});
-        */
+        // 옵션 구룹의 수량 초과 하지 않도록 체크
+        let tmpOptionSelected = Object.assign([],menuOptionSelected);
+        const filteredOptList = menuOptionList.filter(el=>el.GROUP_NO==groupNo);
+        const optionGroupQty = filteredOptList[0]?.QTY;
+        let itemCheckCnt = 0;
+        if(filteredOptList?.length>0) {
+            for(var i=0;i<tmpOptionSelected?.length;i++) {
+                //console.log("tmpOptionSelected; ",tmpOptionSelected[i]);
+                const checkItems = filteredOptList[0]?.OPT_ITEMS?.filter(el=>el.PROD_I_CD == tmpOptionSelected[i]?.PROD_I_CD);
+                if(checkItems?.length > 0) {
+                    itemCheckCnt = itemCheckCnt+1;
+                }
+            }
+
+        }/* 
+        if(optionGroupQty<itemCheckCnt) {
+            openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:`옵션을 ${optionGroupQty}개까지 추가 할 수 있습니다.`}});
+        } */
+        dispatch(setMenuOptionSelected({data:setItem,isAdd:optionGroupQty>itemCheckCnt}));
     }
     const onRecommendSelect = (index) =>{
         var tmpArr = selectedRecommend;
@@ -130,21 +142,6 @@ const ItemDetail = (props) => {
         setAdditiveGroupList([]);
         dispatch(initMenuDetail());
     }
-
-    useEffect(()=>{
-        if(menuDetailID!= null) {
-            dispatch(getSingleMenuFromAllItems(menuDetailID))
-            dispatch(getItemSetGroup());
-            if(itemExtra[0]?.related) {
-                if(itemExtra[0]?.related.length>0) {
-                    dispatch(getSingleMenuForRecommend({related:itemExtra[0]?.related}));
-                }
-            } 
-        }else {
-            onSelectHandleAnimation(0);
-        }
-        
-    },[menuDetailID])
 
     useEffect(()=>{
         if(isDetailShow) {
@@ -229,16 +226,12 @@ const ItemDetail = (props) => {
         if(menuOptionList.length>0) {    
             menuOptionList.map(el=>{
                 if(el.USE_YN == "Y") {
-                    dispatch(getSetItems({setGroup:el}));
+                    //dispatch(getSetItems({setGroup:el}));
                 }
             })
         }
     },[menuOptionList]) 
 
-    useEffect(()=>{
-        //console.log("setGroupItem: ",setGroupItem);
-    },[setGroupItem])
-    
     return(
         <>
             <Animated.View  style={[{...PopStyle.animatedPop, ...boxWidthStyle,...{zIndex:detailZIndex} } ]} >
@@ -294,17 +287,17 @@ const ItemDetail = (props) => {
                                     <OptListWrapper>
                                         <OptTitleText>{LANGUAGE[language]?.detailView.selectOpt}</OptTitleText>
                                         {
-                                            menuOptionList &&
+                                            (menuOptionList && menuOptionList?.length>0) &&
                                             menuOptionList.map((el,groupIdx)=>{
                                                 return(
                                                     <>
-                                                        <OptTitleText>{el.GROUP_NM}</OptTitleText>
+                                                        <OptTitleText>{el.GROUP_NM}(최대{el.QTY}개 선택)</OptTitleText>
                                                         <OptList horizontal showsHorizontalScrollIndicator={false} >
                                                         {
-                                                            setGroupItem[groupIdx] &&
-                                                            setGroupItem[groupIdx]?.map((itemEl,index)=>{
+                                                            el?.OPT_ITEMS &&
+                                                            el?.OPT_ITEMS?.map((itemEl,index)=>{
                                                                 return(
-                                                                    <OptItem key={"optItem_"+index} isSelected={menuOptionSelected.filter(menuEl=>menuEl.PROD_I_CD ==itemEl.PROD_CD).length>0 } optionData={itemEl} menuData={menuDetail} onPress={()=>{onOptionSelect(itemEl);} } />    
+                                                                    <OptItem key={"optItem_"+index} isSelected={menuOptionSelected.filter(menuEl=>menuEl.PROD_I_CD ==itemEl.PROD_I_CD).length>0 } optionData={itemEl} menuData={menuDetail} onPress={(itemSel)=>{onOptionSelect(el.GROUP_NO, itemSel);} } />    
                                                                 );
                                                                 
                                                             })
