@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { 
     SafeAreaView,
     Text,
@@ -21,12 +21,16 @@ import { uploadFile } from '../../store/etcFunctions'
 
 const TopMenu = () =>{
     const dispatch = useDispatch();
+    const scrollViewRef = useRef();
     const {selectedMainCategory,subCategories, allCategories} = useSelector(state => state.categories);
     const [tableNoText, setTableNoText] = useState("");
     const {tableInfo} = useSelector(state => state.tableInfo);
     
     const [currentVersion, setCurrentVersion ] = useState("version");
     
+    useEffect(()=>{
+        scrollViewRef.current.scrollTo({x:0,animated: false});
+    },[selectedMainCategory])
 
     useEffect(()=>{
         if(tableInfo) {
@@ -50,7 +54,7 @@ const TopMenu = () =>{
         <>
             <TopMenuWrapper>
                 <SafeAreaView>
-                    <CategoryScrollView  horizontal showsHorizontalScrollIndicator={false} >
+                    <CategoryScrollView ref={scrollViewRef} horizontal showsHorizontalScrollIndicator={false} >
                         <CategoryWrapper>
                             {
                                 <TopMenuList
