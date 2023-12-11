@@ -114,13 +114,21 @@ export const setMenuOptionSelectInit = createAsyncThunk("menuDetail/setMenuOptio
 });
 export const setMenuOptionSelected = createAsyncThunk("menuDetail/setMenuOptionSelected", async(_,{dispatch, getState}) =>{
     const {menuOptionSelected, menuOptionGroupCode} = getState().menuDetail;
-    const {data, isAdd} = _;
+    const {data, isAdd, isAmt} = _;
     let newOptSelect= Object.assign([], menuOptionSelected);
-    let dupleCheck = newOptSelect.filter(el=>el.PROD_I_CD == data.PROD_I_CD);
-    if(dupleCheck.length <=0 ) {
-        newOptSelect.push(data)
+    if(!isAmt){
+        let dupleCheck = newOptSelect.filter(el=>el.PROD_I_CD == data.PROD_I_CD);
+        if(dupleCheck.length <=0 ) {
+            newOptSelect.push(data)
+        }else {
+            newOptSelect = newOptSelect.filter(el=>el.PROD_I_CD != data.PROD_I_CD);
+        }
     }else {
         newOptSelect = newOptSelect.filter(el=>el.PROD_I_CD != data.PROD_I_CD);
+        if(data?.QTY>0) {
+            newOptSelect.push(data)
+        }
+        
     }
     if(isAdd) {
 

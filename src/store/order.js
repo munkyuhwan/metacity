@@ -87,7 +87,7 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
     let optionTrim = [];
     let optionPrice = 0;
     for(var i=0;i<menuOptionSelected.length;i++) {
-        optionPrice = optionPrice+(menuOptionSelected[i].AMT+menuOptionSelected[i].VAT)
+        optionPrice = optionPrice+(menuOptionSelected[i].AMT+menuOptionSelected[i].VAT)*menuOptionSelected[i].QTY
         optionTrim.push({...menuOptionSelected[i],...{ITEM_SEQ:orderData.ITEM_SEQ}});
     }
     // 세트 메뉴 추가

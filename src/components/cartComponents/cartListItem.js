@@ -98,7 +98,7 @@ const CartListItem = (props) => {
                     <CartItemOpts>
                         {additiveItemList.length>0 &&
                             additiveItemList.map((el,index)=>{
-                                return `${ItemOptionTitle(el.PROD_I_CD,index)||el.PROD_I_NM}`+`${index<(additiveItemList.length-1)?", ":""}`;
+                                return `${ItemOptionTitle(el.PROD_I_CD,index)||el.PROD_I_NM}`+`${el.QTY}개`+`${index<(additiveItemList.length-1)?", ":""}`;
                             })
                         }
                     </CartItemOpts>

@@ -113,12 +113,12 @@ export const OptTitleText = styled.Text`
 `
 export const OptList = styled.ScrollView`
     width:100%;
-    height:110px;
+    height:145px;
 `
 // 옵션선택 아이템
 export const OptItemWrapper= styled.View`
     width:170px;
-    height:110px;
+    height:100px;
     borderRadius:${RADIUS_SMALL};
     marginRight:9px;
 `

@@ -107,11 +107,8 @@ const ItemDetail = (props) => {
                 }
             }
 
-        }/* 
-        if(optionGroupQty<itemCheckCnt) {
-            openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:`옵션을 ${optionGroupQty}개까지 추가 할 수 있습니다.`}});
-        } */
-        dispatch(setMenuOptionSelected({data:setItem,isAdd:optionGroupQty>itemCheckCnt}));
+        }
+        dispatch(setMenuOptionSelected({data:setItem,isAdd:optionGroupQty>itemCheckCnt, isAmt:false  }));
     }
     const onRecommendSelect = (index) =>{
         var tmpArr = selectedRecommend;
@@ -272,11 +269,11 @@ const ItemDetail = (props) => {
                                 </DetailInfoWrapper>
                             }
                             {menuDetailID!=null &&
-                            <ScrollView style={{marginTop:95}} >
+                            <ScrollView style={{marginTop:83}} >
 
                                 <OptRecommendWrapper>
                                     <OptListWrapper>
-                                        <OptTitleText>{LANGUAGE[language]?.detailView.selectOpt}</OptTitleText>
+                                        {/* <OptTitleText>{LANGUAGE[language]?.detailView.selectOpt}</OptTitleText> */}
                                         {
                                             (menuOptionList && menuOptionList?.length>0) &&
                                             menuOptionList.map((el,groupIdx)=>{

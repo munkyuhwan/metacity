@@ -160,6 +160,50 @@ export const CartItemAmtText = styled.Text`
     textAlign:center;
     lineHeight:58px;
 `
+// 수량 조절 메뉴 상세
+export const DetailItemAmtWrapper = styled.View`
+    width:171px;
+    height: 40px;
+    backgroundColor:${colorGrey};
+    borderRadius:${RADIUS};
+    flexDirection:row;
+    padding:3px;
+    marginTop:3px;
+`
+export const DetailItemAmtController = styled.View`
+    width:32px;
+    height:32px;
+    backgroundColor:${colorWhite};
+    borderRadius:${RADIUS};
+    marginTop:auto;
+    marginBottom:auto;
+    flexDirection:row;
+    textAlign:center;
+`
+export const DetailItemAmtControllerImage = styled.Image`
+    width:52px;
+    height:52px;
+    flex:1;
+    resizeMode:contain;
+ `
+export const DetailItemAmtText = styled.Text`
+    fontSize:30px;
+    fontWeight:bold;
+    flex:1;
+    textAlign:center;
+    lineHeight:42px;
+`
+export const DetailOperandorText = styled.Text`
+    fontSize:48px;
+    color:${colorBlack};
+    width:100%;
+    textAlign:center;
+    justifyContent:center;
+    lineHeight:45px;
+
+`
+
+
 // 취소 버튼
 export const CartItemCancelWrapper = styled.View`
     width:100%;
