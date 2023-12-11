@@ -125,7 +125,6 @@ const ItemDetail = (props) => {
     }
     const addToCart = () => {
         //dispatch(addToOrderList({menuDetail, menuDetailID, selectedOptions,selectedRecommend}))
-        const itemID = menuDetailID
         dispatch(addToOrderList({item:menuDetail,menuOptionSelected:menuOptionSelected}));
         closeDetail();
     }
@@ -281,22 +280,26 @@ const ItemDetail = (props) => {
                                         {
                                             (menuOptionList && menuOptionList?.length>0) &&
                                             menuOptionList.map((el,groupIdx)=>{
-                                                return(
-                                                    <>
-                                                        <OptTitleText>{el.GROUP_NM}(최대{el.QTY}개 선택)</OptTitleText>
-                                                        <OptList horizontal showsHorizontalScrollIndicator={false} >
-                                                        {
-                                                            el?.OPT_ITEMS &&
-                                                            el?.OPT_ITEMS?.map((itemEl,index)=>{
-                                                                return(
-                                                                    <OptItem key={"optItem_"+index} isSelected={menuOptionSelected.filter(menuEl=>menuEl.PROD_I_CD ==itemEl.PROD_I_CD).length>0 } optionData={itemEl} menuData={menuDetail} onPress={(itemSel)=>{onOptionSelect(el.GROUP_NO, itemSel);} } />    
-                                                                );
-                                                                
-                                                            })
-                                                        }
-                                                        </OptList> 
-                                                    </>
-                                                )
+                                                if(el.QTY>0){
+                                                    return(
+                                                        <>
+                                                            <OptTitleText>{el.GROUP_NM} {el.QTY>0?`(최대 ${el.QTY}개 선택)`:''}</OptTitleText>
+                                                            <OptList horizontal showsHorizontalScrollIndicator={false} >
+                                                            {
+                                                                el?.OPT_ITEMS &&
+                                                                el?.OPT_ITEMS?.map((itemEl,index)=>{
+                                                                    return(
+                                                                        <OptItem key={"optItem_"+index} isSelected={menuOptionSelected.filter(menuEl=>menuEl.PROD_I_CD ==itemEl.PROD_I_CD).length>0 } optionData={itemEl} menuData={menuDetail} onPress={(itemSel)=>{onOptionSelect(el.GROUP_NO, itemSel);} } />    
+                                                                    );
+                                                                    
+                                                                })
+                                                            }
+                                                            </OptList> 
+                                                        </>
+                                                    )
+                                                }else {
+                                                    return(<></>)
+                                                }
                                             })
                                         }
                                         
