@@ -18,6 +18,7 @@ import { errorSlice } from './error'
 import { tableInfoSlice } from './tableInfo'
 import { memberInfoSlice } from './member'
 import { menuExtraSlice } from './menuExtra'
+import { imageStorageSlice } from './imageStorage'
 
 const store = configureStore({
     reducer:{
@@ -33,6 +34,7 @@ const store = configureStore({
         tableInfo:tableInfoSlice.reducer,
         memberInfo:memberInfoSlice.reducer,
         menuExtra:menuExtraSlice.reducer,
+        imageStorage:imageStorageSlice.reducer,
         
         error:errorSlice.reducer,
     },

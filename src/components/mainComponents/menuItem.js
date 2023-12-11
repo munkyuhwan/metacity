@@ -20,6 +20,8 @@ const MenuItem = ({item,index,setDetailShow}) => {
     const dispatch = useDispatch();
     const {menuExtra} = useSelector(state=>state.menuExtra);
     const {language} =  useSelector(state=>state.languages);
+    const {images} = useSelector(state=>state.imageStorage);
+ 
     //console.log("item: ",item); 
     if(isEmpty(item)) {
         return <></>
@@ -55,7 +57,6 @@ const MenuItem = ({item,index,setDetailShow}) => {
         return selTitleLanguage;
     }
     const itemPrice= item.SAL_TOT_AMT;
-    const ext = imgUrl.split(".");
     return(
         <>
             <MenuItemWrapper>
@@ -63,8 +64,11 @@ const MenuItem = ({item,index,setDetailShow}) => {
                     {imgUrl &&
                         <>
                             <TouchableWithoutFeedback onPress={()=>{setDetailShow(true); dispatch(setMenuDetail({itemID,item})); }} >
-                                <FastImage style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:imgUrl,headers: { Authorization: 'AuthToken' },priority: FastImage.priority.normal}}/> 
-                                {/* <FastImage style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:(`file://${RNFetchBlob.fs.dirs.DownloadDir}/wooriorder/${itemID}.${ext[ext.length-1]}`)}}/> */}
+                                {/* <FastImage style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:imgUrl,headers: { Authorization: 'AuthToken' },priority: FastImage.priority.normal}}/> */}
+                                {/*<FastImage style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:(`file://${RNFetchBlob.fs.dirs.DownloadDir}/wooriorder/${itemID}.${ext[ext.length-1]}`)}}/>*/}
+                                <FastImage style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:(`${images.filter(el=>el.name==itemID)[0]?.imgData}`)}} resizeMode={FastImage.resizeMode.contain} />
+                                {/* <Image style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:(`${images.filter(el=>el.name==itemID)[0]?.imgData}`)}}/> */}
+                                {/* <Image style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:imgUrl}} /> */}
                             </TouchableWithoutFeedback>
                         </>
                     }

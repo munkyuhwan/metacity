@@ -519,7 +519,7 @@ const SettingPopup = () =>{
                                 <SettingButtonText isMargin={true} >메뉴 업데이트 여부 체크</SettingButtonText>
                             </TouchableWithoutFeedback>
                             <TouchableWithoutFeedback onPress={()=>{dispatch(initMenu());}} >
-                                <SettingButtonText isMargin={true} >화면 초기화</SettingButtonText>
+                                <SettingButtonText isMargin={true} >화면 업데이트</SettingButtonText>
                             </TouchableWithoutFeedback>
                             <TouchableWithoutFeedback onPress={()=>{checkUpdate();}} >
                                 <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.9</SettingButtonText>

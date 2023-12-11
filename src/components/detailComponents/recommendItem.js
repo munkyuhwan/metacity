@@ -7,6 +7,7 @@ import {isEmpty} from "lodash";
 import { getSingleMenu, getSingleMenuFromAllItems, setMenuDetail } from '../../store/menuDetail';
 import { addToOrderList } from '../../store/order';
 import { getPosItemsWithCategory } from '../../utils/api/metaApis';
+import FastImage from 'react-native-fast-image';
 
 const RecommendItem = (props) => {
     const recommentItemID = props?.recommendData
@@ -14,6 +15,7 @@ const RecommendItem = (props) => {
     const {menuExtra} = useSelector(state=>state.menuExtra);
     const {language} =  useSelector(state=>state.languages);
     const {selectedMainCategory,selectedSubCategory} = useSelector(state=>state.categories)
+    const {images} = useSelector(state=>state.imageStorage);
     const [itemDetail, setItemDetail] = useState();
     const dispatch = useDispatch();
 
@@ -57,7 +59,7 @@ const RecommendItem = (props) => {
             <TouchableWithoutFeedback onPress={()=>{dispatch(addToOrderList({item:itemDetail[0],menuOptionSelected:[]})); /* dispatch(setMenuDetail(recommentItemID)); */ }}>
                 <RecommendItemWrapper>
                     <RecommendItemImageWrapper>
-                        <RecommendItemImage  source={{uri:`${"https:"+itemExtra[0]?.gimg_chg}`}}/>
+                        <RecommendItemImage  source={{uri:(`${images.filter(el=>el.name==recommentItemID)[0]?.imgData}`),priority: FastImage.priority.high }} />
 
                         <RecommendItemDim isSelected={props?.isSelected}/>
                         {props?.isSelected &&

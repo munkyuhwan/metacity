@@ -32,6 +32,7 @@ const MenuListView = () => {
     const [numColumns, setNumColumns] = useState(3);
     const [isDetailShow, setDetailShow] = useState(false);
 
+
     // 선택 카테고리
     const {mainCategories, selectedMainCategory, selectedSubCategory, allCategories} = useSelector((state)=>state.categories);
 

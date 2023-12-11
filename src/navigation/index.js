@@ -9,7 +9,7 @@ import TransparentPopUp from '../components/common/transparentPopup'
 import LoginScreen from '../screens/LoginScreen'
 import ADScreen from '../screens/ADScreen'
 import WaitIndicator from '../components/common/waitIndicator'
-import { DeviceEventEmitter, Text, View } from 'react-native'
+import { DeviceEventEmitter, PermissionsAndroid, Text, View } from 'react-native'
 import PopupIndicator from '../components/common/popupIndicator'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAdminCategoryData, getMainCategories, getSubCategories, setSelectedSubCategory } from '../store/categories'
@@ -133,8 +133,15 @@ export default function Navigation() {
         // 메뉴 갱신을 위한 함수 실행 한시간에 한번
         setInterval(()=>{
            dispatch(getMenuState());
-        },1000*60*60)
-        
+        },1000*60)
+        const granted = PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+            {
+              title: '파일접근 권한을 허용 해 주세요.',
+              message:
+                '파일접근 권한을 허용 해 주세요.',
+            }
+          );
     },[])
 
     useEffect(()=>{

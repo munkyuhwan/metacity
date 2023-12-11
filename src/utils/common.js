@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEqual} from 'lodash';
 import RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
+import { addImageStorage } from '../store/imageStorage';
 
 export function openPopup (dispatch, {innerView, isPopupVisible, param}) {
     if(isPopupVisible) {
@@ -175,7 +176,27 @@ export function orderListDuplicateCheck (currentOrderList, orderData) {
 }
 
 // 파일 다운로드
-export async function fileDownloader(name,url) {
+export async function fileDownloader(dispatch, name,url) {
+    const ext = url.split(".");
+    const extensionType = ext[ext.length-1]
+    RNFetchBlob.config({
+        fileCache: true
+    })
+    .fetch("GET", url)
+    // the image is now dowloaded to device's storage
+    .then(resp => {
+      // the image path you can use it directly with Image component
+      imagePath = resp.path();
+      return resp.readFile("base64");
+    })
+    .then(base64Data => {
+      // here's base64 encoded image
+      dispatch(addImageStorage({name:name,imgData:`data:image/${extensionType};base64,`+base64Data}));
+      // remove the file from storage
+      return fs.unlink(imagePath);
+    });
+      
+    /* 
     const ext = url.split(".");
     await deleteImageFile(`${RNFetchBlob.fs.dirs.DownloadDir}/wooriorder/${name}.${ext[ext.length-1]}`);
     await RNFetchBlob.config({
@@ -186,6 +207,7 @@ export async function fileDownloader(name,url) {
             path: `${RNFetchBlob.fs.dirs.DownloadDir}/wooriorder/${name}.jpg`,
         },
       }).fetch('GET', url);
+ */
 }
 async function deleteImageFile(dir) {
 

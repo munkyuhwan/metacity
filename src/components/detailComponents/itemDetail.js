@@ -28,18 +28,8 @@ const ItemDetail = (props) => {
     // 메뉴 추가정보 찾기
     const {menuExtra} = useSelector(state=>state.menuExtra);
     const itemExtra = menuExtra?.filter(el=>el.pos_code == menuDetailID);
-    // 옵션스테이트
-    const [additiveGroupList, setAdditiveGroupList] = useState([]);
-    const [additiveItemList, setAdditiveItemList] = useState([]);
-    // 선택된 옵션
-    const [selectedOptions, setSelectedOptions] = useState([]);
-    // 함께먹기 좋은 메뉴
-    const [selectedRecommend, setSelectedRecommend] = useState([]);
-    
+    const {images} = useSelector(state=>state.imageStorage);
 
-    //const optionSelect = menuDetail?.ADDITIVE_GROUP_LIST[0]?.ADDITIVE_ITEM_LIST;
-    //const additiveData = menuDetail?.ADDITIVE_GROUP_LIST[1];
-    const recommendMenu = menuDetail?.recommend;
 
     // animation set
     const [widthAnimation, setWidthAnimation] = useState(new Animated.Value(0));
@@ -110,16 +100,6 @@ const ItemDetail = (props) => {
         }
         dispatch(setMenuOptionSelected({data:setItem,isAdd:optionGroupQty>itemCheckCnt, isAmt:false  }));
     }
-    const onRecommendSelect = (index) =>{
-        var tmpArr = selectedRecommend;
-        if(!tmpArr.includes(index)) {
-            tmpArr.push(index);
-        }else {
-            tmpArr.splice(tmpArr.indexOf(index),1);
-        }
-        tmpArr.sort();        
-        setSelectedRecommend([...tmpArr])
-    }
     const addToCart = () => {
         //dispatch(addToOrderList({menuDetail, menuDetailID, selectedOptions,selectedRecommend}))
         dispatch(addToOrderList({item:menuDetail,menuOptionSelected:menuOptionSelected}));
@@ -133,9 +113,6 @@ const ItemDetail = (props) => {
     }
 
     const init = () => {
-        setSelectedOptions([]);
-        setSelectedRecommend([]);
-        setAdditiveGroupList([]);
         dispatch(initMenuDetail());
     }
 
@@ -217,6 +194,8 @@ const ItemDetail = (props) => {
         }
         return selWonsanjiLanguage;
     }
+    {/*  <DetailItemInfoFastImage source={{uri:"https:"+itemExtra[0]?.gimg_chg,headers: { Authorization: 'AuthToken' },priority: FastImage.priority.normal}} />
+  */}
 
     return(
         <>
@@ -234,7 +213,7 @@ const ItemDetail = (props) => {
                                         
                                         {itemExtra&& 
                                         itemExtra[0]?.gimg_chg &&
-                                            <DetailItemInfoFastImage source={{uri:"https:"+itemExtra[0]?.gimg_chg,headers: { Authorization: 'AuthToken' },priority: FastImage.priority.normal}} /> 
+                                            <DetailItemInfoFastImage source={ {uri:(`${images.filter(el=>el.name==menuDetailID)[0]?.imgData}`),priority: FastImage.priority.high } } />
                                         }
                                         {itemExtra&&
                                         !itemExtra[0]?.gimg_chg &&

@@ -47,25 +47,29 @@ const LeftMenuList = (props) => {
      return(
         <>
             {data?.map((item, index)=>{    
-                if(item?.USE_YN == 'Y') { 
-                    return(
-                        <TouchableWithoutFeedback key={"leftItem_"+index} onPress={()=>{{ onPressAction(index,item?.PROD_L1_CD); }}}>
-                            <SideMenuItemWrapper>
-                                {item?.PROD_L1_CD==selectedMainCategory &&
-                                    <SideMenuItemOn>
-                                        <SideMenuText>{ItemTitle(item?.PROD_L1_CD,index)||data[index]?.PROD_L1_NM }</SideMenuText>
-                                    </SideMenuItemOn>
-                                }
-                                {item?.PROD_L1_CD!=selectedMainCategory &&
-                                    <SideMenuItemOff>
-                                        <SideMenuText>{ItemTitle(item?.PROD_L1_CD,index)||data[index]?.PROD_L1_NM}</SideMenuText>
-                                    </SideMenuItemOff>
-                                }
-                            </SideMenuItemWrapper>
-                        </TouchableWithoutFeedback>
-                    )
-                }else {
+                if(item?.PROD_L1_NM=="주문X") {
                     return(<></>)
+                }else {
+                    if(item?.USE_YN == 'Y') { 
+                        return(
+                            <TouchableWithoutFeedback key={"leftItem_"+index} onPress={()=>{{ onPressAction(index,item?.PROD_L1_CD); }}}>
+                                <SideMenuItemWrapper>
+                                    {item?.PROD_L1_CD==selectedMainCategory &&
+                                        <SideMenuItemOn>
+                                            <SideMenuText>{ItemTitle(item?.PROD_L1_CD,index)||data[index]?.PROD_L1_NM }</SideMenuText>
+                                        </SideMenuItemOn>
+                                    }
+                                    {item?.PROD_L1_CD!=selectedMainCategory &&
+                                        <SideMenuItemOff>
+                                            <SideMenuText>{ItemTitle(item?.PROD_L1_CD,index)||data[index]?.PROD_L1_NM}</SideMenuText>
+                                        </SideMenuItemOff>
+                                    }
+                                </SideMenuItemWrapper>
+                            </TouchableWithoutFeedback>
+                        )
+                    }else {
+                        return(<></>)
+                    }
                 }
             })}
         </>

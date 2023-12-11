@@ -11,12 +11,14 @@ import { numberWithCommas, openPopup } from '../../utils/common';
 import { MENU_DATA } from '../../resources/menuData';
 import { LANGUAGE } from '../../resources/strings';
 import { resetAmtOrderList, setOrderList } from '../../store/order';
+import FastImage from 'react-native-fast-image';
 
 const CartListItem = (props) => {
     const dispatch = useDispatch();
     const {language} = useSelector(state=>state.languages);
     const {menuExtra} = useSelector(state=>state.menuExtra);
     const {orderList} = useSelector(state=>state.order);
+    const {images} = useSelector(state=>state.imageStorage);
     // 메뉴 옵션 추가 정보
 
     const index = props?.index;
@@ -83,7 +85,8 @@ const CartListItem = (props) => {
         <>
             <CartItemWrapper>
                 <CartItemImageTogoWrapper>
-                    <CartItemImage source={{uri:"https:"+itemExtra[0]?.gimg_chg}} />
+                    <CartItemImage source={ {uri:(`${images.filter(el=>el.name==order?.ITEM_CD)[0]?.imgData}`),priority: FastImage.priority.high } } />
+                   {/*  <CartItemImage source={{uri:"https:"+itemExtra[0]?.gimg_chg}} /> */}
                     {/*
                     <TouchableWithoutFeedback onPress={()=>{ onTogoTouch(); }} >
                         <CartItemTogoWrapper>

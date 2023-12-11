@@ -17,6 +17,7 @@ const OptItem = (props)=>{
     const [isSelected, setSelected] = useState(false);
     const [addtivePrice, setAdditivePrice] = useState();
     const [qty,setQty] = useState(1);
+    const {images} = useSelector(state=>state.imageStorage);
 
     // 메뉴 옵션 추가 정보
     const {optionCategoryExtra,menuExtra} = useSelector(state=>state.menuExtra);
@@ -70,6 +71,8 @@ const OptItem = (props)=>{
             setQty(filteredTmpOptions[0].QTY);
         }
     },[menuOptionSelected])
+// <OptItemFastImage  source={{uri:`https:${itemMenuExtra[0]?.gimg_chg}`,headers: { Authorization: 'AuthToken' },priority: FastImage.priority.normal}}/>
+
 
     return(
         <>
@@ -79,8 +82,7 @@ const OptItem = (props)=>{
 
                     <OptItemWrapper>
                         {itemMenuExtra[0]?.gimg_chg &&
-                            <OptItemFastImage  source={{uri:`https:${itemMenuExtra[0]?.gimg_chg}`,headers: { Authorization: 'AuthToken' },priority: FastImage.priority.normal}}/>
-                        }
+                            <OptItemFastImage  source={{uri:(`${images.filter(el=>el.name==optionData?.PROD_I_CD)[0]?.imgData}`),priority: FastImage.priority.high }}/>}
                         {!itemMenuExtra[0]?.gimg_chg &&
                             <OptItemFastImage resizeMode='contain'  source={require('../../assets/icons/logo.png')}/>
                         }

@@ -20,7 +20,9 @@ import moment from 'moment';
 import 'moment/locale/ko';
 import { setCartView } from './cart';
 import { initOrderList } from './order';
-
+export const clearAllItems = createAsyncThunk("menu/clearAllItems", async(_,{dispatch,getState}) =>{ 
+    return [];
+})
 export const initMenu = createAsyncThunk("menu/initMenu", async(_,{dispatch,getState}) =>{
     // 포스 메인 카테고리
     EventRegister.emit("showSpinner",{isSpinnerShow:true, msg:"메뉴 업데이트 중입니다. "})
@@ -41,8 +43,9 @@ export const initMenu = createAsyncThunk("menu/initMenu", async(_,{dispatch,getS
     dispatch(getAdminMenuItems());
     // 전체 메뉴 받아오기
     await dispatch(getAllItems());
-    dispatch(setSelectedMainCategory(allCategories[0]?.PROD_L1_CD));
+    await dispatch(setSelectedMainCategory(allCategories[0]?.PROD_L1_CD));
     dispatch(getDisplayMenu());
+    
     EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""});
     return [];
 })
@@ -116,17 +119,20 @@ export const getMenuState = createAsyncThunk("menu/menuState", async(_,{dispatch
         const updateDateTime = resultData?.UPD_DT;
         const msg = resultData?.ERROR_MSG;
         if(isUpdated) {
-            
+
             // 날짜 기준 메뉴 업트가 있으면 새로 받아 온다.
             const lastUpdateDate = await AsyncStorage.getItem("lastUpdate");      
-            const currentDate = moment(lastUpdateDate).format("x");
+            const currentDate = moment(lastUpdateDate||moment().format("YYYY-MM-DD HH:mm:ss")).format("x");
             const updateDate = moment(updateDateTime).format("x");
             if(updateDate>currentDate) {
+                console.log("go update==========================");
+                //await dispatch(getAllItems());
                 dispatch(initMenu());
                 const saveDate = moment().format("YYYY-MM-DD HH:mm:ss");
                 AsyncStorage.setItem("lastUpdate",saveDate);
                 dispatch(setCartView(false));
                 dispatch(initOrderList());
+                //dispatch(getDisplayMenu());
             }else {
                 /* Alert.alert(
                     "업데이트",
@@ -180,6 +186,10 @@ export const menuSlice = createSlice({
             state.allItems = action.payload.allItems;
             state.allSets = action.payload.allSets;
         })
+        builder.addCase(clearAllItems.fulfilled,(state, action)=>{
+            state.allItems = [];
+        })
+        
         /* 
         builder.addCase(getMenuEdit.fulfilled,(state, action)=>{
             state.menu = action.payload.menu;
