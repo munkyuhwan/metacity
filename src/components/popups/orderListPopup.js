@@ -14,6 +14,7 @@ import { checkTableOrder } from '../../utils/apis';
 import {isEmpty} from 'lodash';
 
 const OrderListPopup = () =>{
+    let to = null;
     const dispatch = useDispatch();
     const {language} = useSelector(state=>state.languages);
     const {orderStatus} = useSelector(state=>state.order);    
@@ -24,9 +25,12 @@ const OrderListPopup = () =>{
     },[])
     useEffect(()=>{
         const timeOut = param?.timeOut;
+        clearInterval(to);
+        to=null;
         if(timeOut){
-            const to = setInterval(() => {
+            to = setInterval(() => {
                 clearInterval(to);
+                to=null;
                 openTransperentPopup(dispatch,{innerView:"", isPopupVisible:false});
             }, 10000);
         }
@@ -83,7 +87,7 @@ const OrderListPopup = () =>{
                             <BottomButtonIcon source={require("../../assets/icons/card.png")} />
                         </BottomButton>
                     */}
-                    <TouchableWithoutFeedback onPress={()=>{ openTransperentPopup(dispatch, {innerView:"", isPopupVisible:false}); }} >
+                    <TouchableWithoutFeedback onPress={()=>{clearInterval(to);to=null; openTransperentPopup(dispatch, {innerView:"", isPopupVisible:false}); }} >
                         <BottomButton backgroundColor={colorBlack} >
                             <BottomButtonText>{LANGUAGE[language]?.orderListPopup.orderListOK}</BottomButtonText>
                             <BottomButtonIcon source={require("../../assets/icons/cancel.png")} />

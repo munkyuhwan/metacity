@@ -78,7 +78,7 @@ const TransparentPopUp = (props) =>{
     return(
         <>
             <Animated.View  style={[{...PopStyle.animatedPop,...boxWidthStyle,...{zIndex:popupZIndex, width:size, height:size}} ]} >   
-                <TouchableWithoutFeedback onPress={()=>{openTransperentPopup(dispatch, {innerView:"", isPopupVisible:false});} }>
+                <TouchableWithoutFeedback onPress={()=>{/* openTransperentPopup(dispatch, {innerView:"", isPopupVisible:false}); */} }>
                     <PopupWrapper/>
                 </TouchableWithoutFeedback>
                     {innerTransView=="CallServer"&&
