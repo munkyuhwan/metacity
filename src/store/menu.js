@@ -121,10 +121,18 @@ export const getMenuState = createAsyncThunk("menu/menuState", async(_,{dispatch
         if(isUpdated) {
 
             // 날짜 기준 메뉴 업트가 있으면 새로 받아 온다.
-            const lastUpdateDate = await AsyncStorage.getItem("lastUpdate");      
+            const lastUpdateDate = await AsyncStorage.getItem("lastUpdate");   
             const currentDate = moment(lastUpdateDate||moment().format("YYYY-MM-DD HH:mm:ss")).format("x");
             const updateDate = moment(updateDateTime).format("x");
-            if(updateDate>currentDate) {
+            if(resultData?.ERROR_MSG == "업데이트 된 데이터가 있습니다.") {
+                dispatch(initMenu());
+                const saveDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                AsyncStorage.setItem("lastUpdate",saveDate);
+                dispatch(setCartView(false));
+                dispatch(initOrderList());
+            }
+/* 
+            if(updateDate<currentDate) {
                 console.log("go update==========================");
                 //await dispatch(getAllItems());
                 dispatch(initMenu());
@@ -134,14 +142,8 @@ export const getMenuState = createAsyncThunk("menu/menuState", async(_,{dispatch
                 dispatch(initOrderList());
                 //dispatch(getDisplayMenu());
             }else {
-                /* Alert.alert(
-                    "업데이트",
-                    msg,
-                    [{
-                        text:'확인',
-                    }]
-                ) */
-            }
+               
+            } */
 
         }
     } 

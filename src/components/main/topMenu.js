@@ -19,6 +19,7 @@ import TopMenuList from '../menuComponents/topMenuList'
 import VersionCheck from 'react-native-version-check';
 import { uploadFile } from '../../store/etcFunctions'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { getMenuState } from '../../store/menu'
 
 const TopMenu = () =>{
     const dispatch = useDispatch();
@@ -85,6 +86,9 @@ const TopMenu = () =>{
                 {/*
                 <TouchableWithoutFeedback onPress={()=>{openFullSizePopup(dispatch,{innerFullView:"Setting", isFullPopupVisible:true}); }} >
                     <Text style={{color:colorWhite }} >설정 {currentVersion}</Text>
+                </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={()=>{dispatch(getMenuState()); }} >
+                    <Text style={{color:colorWhite }} >업데이트 첵</Text>
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={()=>{ console.log("upload file"); dispatch(uploadFile()) }} >
                     <Text style={{color:colorWhite, fontSize:20}} >파일올리기 </Text>
