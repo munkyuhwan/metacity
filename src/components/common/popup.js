@@ -137,7 +137,8 @@ const PopStyle = StyleSheet.create({
     animatedPop:{
         position:'absolute',
         width:'100%',
-        height:'100%'
+        height:'100%',
+        zIndex:99999999,
     }
 
 })

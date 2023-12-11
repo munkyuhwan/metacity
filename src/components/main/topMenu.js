@@ -55,7 +55,6 @@ const TopMenu = () =>{
         AsyncStorage.getItem("TABLE_NM")
         .then((TABLE_NM)=>{
             if(TABLE_NM) {
-                console.log("TABLE_NM: ",TABLE_NM);
                 setTableNoText(TABLE_NM)
             }else {
             }

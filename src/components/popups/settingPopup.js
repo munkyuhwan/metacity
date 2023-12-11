@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initOrderList } from '../../store/order';
 import { setCartView } from '../../store/cart';
 import { getStoreInfo } from '../../utils/api/metaApis';
-import { initMenu } from '../../store/menu';
+import { getMenuState, initMenu } from '../../store/menu';
 import { CODE_PUSH_PRODUCTION, CODE_PUSH_SECRET } from '../../resources/apiResources';
 
 const SettingPopup = () =>{
@@ -515,6 +515,9 @@ const SettingPopup = () =>{
                                 <SettingButtonText isMargin={true} >로그 올리기</SettingButtonText>
                             </TouchableWithoutFeedback>
                             */}
+                            <TouchableWithoutFeedback onPress={()=>{dispatch(getMenuState());}} >
+                                <SettingButtonText isMargin={true} >메뉴 업데이트 여부 체크</SettingButtonText>
+                            </TouchableWithoutFeedback>
                             <TouchableWithoutFeedback onPress={()=>{dispatch(initMenu());}} >
                                 <SettingButtonText isMargin={true} >화면 초기화</SettingButtonText>
                             </TouchableWithoutFeedback>

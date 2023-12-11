@@ -1,11 +1,13 @@
 import axios from "axios";
 import { posErrorHandler } from "../errorHandler/ErrorHandler";
 
-import { POS_BASE_URL, POS_VERSION_CODE, POS_WORK_CD_MAIN_CAT, POS_WORK_CD_MENU_ITEMS, POS_WORK_CD_MID_CAT, POS_WORK_CD_REQ_STORE_INFO, POS_WORK_CD_SET_GROUP_INFO, POS_WORK_CD_SET_GROUP_ITEM_INFO, POS_WORK_CD_TABLE_INFO, POS_WORK_CD_TABLE_ORDER_LIST, POS_WORK_CD_VERSION } from "../../resources/apiResources";
+import { POS_BASE_URL, POS_VERSION_CODE, POS_WORK_CD_IS_MENU_CHANGE, POS_WORK_CD_MAIN_CAT, POS_WORK_CD_MENU_ITEMS, POS_WORK_CD_MID_CAT, POS_WORK_CD_REQ_STORE_INFO, POS_WORK_CD_SET_GROUP_INFO, POS_WORK_CD_SET_GROUP_ITEM_INFO, POS_WORK_CD_TABLE_INFO, POS_WORK_CD_TABLE_ORDER_LIST, POS_WORK_CD_VERSION } from "../../resources/apiResources";
 import { displayErrorPopup, metaErrorHandler } from "../errorHandler/metaErrorHandler";
 import { getIP, getStoreID, getTableInfo, openPopup } from "../common";
 import { EventRegister } from "react-native-event-listeners";
 import {isEmpty} from 'lodash';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import moment from "moment";
 
 const posOrderHeader = {Accept: 'application/json','Content-Type': 'application/json'}
 const adminOrderHeader = {'Content-Type' : "text/plain"};
@@ -317,4 +319,49 @@ export const getStoreInfo = async(dispatch, data) =>{
             reject(error.response.data)
         });
     }) 
+}
+// 메뉴 업데이트 체크
+export const  getMenuUpdateState = async (dispatch) =>{
+    const {POS_IP} = await getIP()
+    if(isEmpty(POS_IP)) {
+        EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""})
+        posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'포스 IP를 입력 해 주세요.',MSG2:""})
+        return;
+    }
+    var lastUpdate="";
+    try {
+        lastUpdate = await AsyncStorage.getItem("lastUpdate");
+        if(lastUpdate == null || lastUpdate== "") {
+            lastUpdate = `2018-08-01 12:13:02`;
+        }
+    }catch(err) {
+        lastUpdate = `2018-08-01 12:13:02`;
+    }
+    return await new Promise(function(resolve, reject){
+        axios.post(
+            `${POS_BASE_URL(POS_IP)}`,
+            {
+                "VERSION" : POS_VERSION_CODE,
+                "WORK_CD" : POS_WORK_CD_IS_MENU_CHANGE,
+                "PROD_L1_CD" : "",
+                "PROD_L2_CD" : "",
+                "PROD_L3_CD" : "",
+                "PROD_CD" : "",
+                "UPD_DT" : lastUpdate,
+            },
+            posOrderHeader,
+        ) 
+        .then((response => { 
+            if(metaErrorHandler(dispatch, response.data)){
+                const data = response.data;
+                resolve(data); 
+            }else {
+                reject();
+            } 
+        }))
+        .catch(error=>{
+            console.log("error: ",error)    
+            reject(error.response.data)
+        });
+    })
 }

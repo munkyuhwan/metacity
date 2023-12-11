@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { 
+    Alert,
     Animated,
     Text,
     TouchableWithoutFeedback,
@@ -13,7 +14,7 @@ import { setCartView, setIconClick } from '../../store/cart';
 import { IconWrapper } from '../../styles/main/topMenuStyle';
 import TopButton from '../menuComponents/topButton';
 import { openPopup, openTransperentPopup } from '../../utils/common';
-import { postToMetaPos, postToPos } from '../../store/order';
+import { initOrderList, postToMetaPos, postToPos } from '../../store/order';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
 import { servicePayment } from '../../utils/smartro';
@@ -21,7 +22,9 @@ import LogWriter from '../../utils/logWriter';
 import { setErrorData } from '../../store/error';
 import { checkTableOrder, getOrderByTable, posMenuState } from '../../utils/apis';
 import { posErrorHandler } from '../../utils/errorHandler/ErrorHandler';
-import { getMenuState } from '../../store/menu';
+import { getMenuState, initMenu } from '../../store/menu';
+import { getMenuUpdateState } from '../../utils/api/metaApis';
+import moment from 'moment';
 
 const CartView = () =>{
     const lw = new LogWriter();
@@ -63,7 +66,40 @@ const CartView = () =>{
     const doPayment = async () =>{
         // 업데이트 메뉴가 있는지 체크
         //dispatch(getMenuState());
-        dispatch(postToMetaPos());
+        const resultData = await getMenuUpdateState(dispatch).catch(err=>{return []});
+        if(!resultData) {
+            
+        }else {
+            const isUpdated = resultData?.ERROR_CD == "E0000" ;
+            const updateDateTime = resultData?.UPD_DT;
+            const msg = resultData?.ERROR_MSG;
+            if(isUpdated) {
+                
+                // 날짜 기준 메뉴 업트가 있으면 새로 받아 온다.
+                const lastUpdateDate = await AsyncStorage.getItem("lastUpdate");      
+                const currentDate = moment(lastUpdateDate).format("x");
+                const updateDate = moment(updateDateTime).format("x");
+                if(updateDate>currentDate) {
+                    Alert.alert(
+                        "업데이트",
+                        "메뉴 업데이트가 되었습니다. 업데이트 후 주문하실 수 있습니다.",
+                        [{
+                            text:'확인',
+                        }]
+                    );
+                    dispatch(initMenu());
+                    const saveDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                    AsyncStorage.setItem("lastUpdate",saveDate);
+                    dispatch(setCartView(false));
+                    dispatch(initOrderList());
+                }else {
+                    dispatch(postToMetaPos());
+                }
+    
+            }else {
+                dispatch(postToMetaPos());
+            }
+        } 
 
     }
     useEffect(()=>{

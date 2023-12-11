@@ -10,13 +10,21 @@ import { getAdminMenuItems, setMenuCategories, setMenuExtra, setOptionExtra } fr
 import { CALL_SERVICE_GROUP_CODE } from '../resources/apiResources';
 import { setCallServerList } from './callServer';
 import { DEFAULT_CATEGORY_ALL_CODE } from '../resources/defaults';
-import { getPosItemsAll, getPosItemsWithCategory, getPosMainCategory, getPosMidCategory, getPosSetGroup, getPosSetGroupItem } from '../utils/api/metaApis';
+import { getMenuUpdateState, getPosItemsAll, getPosItemsWithCategory, getPosMainCategory, getPosMidCategory, getPosSetGroup, getPosSetGroupItem } from '../utils/api/metaApis';
 import { scanFile } from 'react-native-fs';
 import { setMenuOptionGroupCode } from './menuDetail';
+import { displayErrorPopup } from '../utils/errorHandler/metaErrorHandler';
+import { openPopup } from '../utils/common';
+import { Alert } from 'react-native';
+import moment from 'moment';
+import 'moment/locale/ko';
+import { setCartView } from './cart';
+import { initOrderList } from './order';
 
 export const initMenu = createAsyncThunk("menu/initMenu", async(_,{dispatch,getState}) =>{
     // 포스 메인 카테고리
-    const mainCategories = await getPosMainCategory(dispatch).catch(err=>{return []});
+    EventRegister.emit("showSpinner",{isSpinnerShow:true, msg:"메뉴 업데이트 중입니다. "})
+    const mainCategories = await getPosMainCategory(dispatch).catch(err=>{EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""}); return [];});
     let allCategories = Object.assign([],mainCategories);
     if(allCategories?.length > 0 ) {
         // 메인 카테고리 하위 메뉴 받기
@@ -34,6 +42,8 @@ export const initMenu = createAsyncThunk("menu/initMenu", async(_,{dispatch,getS
     // 전체 메뉴 받아오기
     await dispatch(getAllItems());
     dispatch(setSelectedMainCategory(allCategories[0]?.PROD_L1_CD));
+    dispatch(getDisplayMenu());
+    EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""});
     return [];
 })
 
@@ -96,21 +106,39 @@ export const getAllItems = createAsyncThunk("menu/getAllItems",async(_,{dispatch
     }
     return {allItems:result,allSets:setGroupData};
 })
-
+// 메뉴 상태 받아오기
 export const getMenuState = createAsyncThunk("menu/menuState", async(_,{dispatch}) =>{
-    const resultData = await posMenuState(dispatch);
+    const resultData = await getMenuUpdateState(dispatch).catch(err=>{return []});
     if(!resultData) {
         return
     }else {
-        const isUpdated = resultData?.OBJ.UPDATE_YN;
-        const updateDateTime = resultData?.OBJ.UPDATE_DTIME.slice(0,14);
-
-        if(isUpdated=="Y") {
+        const isUpdated = resultData?.ERROR_CD == "E0000" ;
+        const updateDateTime = resultData?.UPD_DT;
+        const msg = resultData?.ERROR_MSG;
+        if(isUpdated) {
+            
             // 날짜 기준 메뉴 업트가 있으면 새로 받아 온다.
-            AsyncStorage.setItem("lastUpdate",updateDateTime);
-         
+            const lastUpdateDate = await AsyncStorage.getItem("lastUpdate");      
+            const currentDate = moment(lastUpdateDate).format("x");
+            const updateDate = moment(updateDateTime).format("x");
+            if(updateDate>currentDate) {
+                dispatch(initMenu());
+                const saveDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                AsyncStorage.setItem("lastUpdate",saveDate);
+                dispatch(setCartView(false));
+                dispatch(initOrderList());
+            }else {
+                /* Alert.alert(
+                    "업데이트",
+                    msg,
+                    [{
+                        text:'확인',
+                    }]
+                ) */
+            }
+
         }
-    }
+    } 
 })
 // Slice
 export const menuSlice = createSlice({
