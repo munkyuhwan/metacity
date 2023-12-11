@@ -248,7 +248,7 @@ const ItemDetail = (props) => {
                                 </DetailInfoWrapper>
                             }
                             {menuDetailID!=null &&
-                            <ScrollView style={{marginTop:83}} >
+                            <ScrollView style={{marginTop:83}} showsVerticalScrollIndicator={false} >
 
                                 <OptRecommendWrapper>
                                     <OptListWrapper>
