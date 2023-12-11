@@ -124,10 +124,11 @@ export const setMenuOptionSelected = createAsyncThunk("menuDetail/setMenuOptionS
             newOptSelect = newOptSelect.filter(el=>el.PROD_I_CD != data.PROD_I_CD);
         }
     }else {
-        newOptSelect = newOptSelect.filter(el=>el.PROD_I_CD != data.PROD_I_CD);
-        if(data?.QTY>0) {
-            newOptSelect.push(data)
-        }
+        
+            newOptSelect = newOptSelect.filter(el=>el.PROD_I_CD != data.PROD_I_CD);
+            if(data?.QTY>0) {
+                newOptSelect.push(data)
+            }
         
     }
     if(isAdd) {

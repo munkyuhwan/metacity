@@ -98,7 +98,7 @@ const ItemDetail = (props) => {
             }
 
         }
-        dispatch(setMenuOptionSelected({data:setItem,isAdd:optionGroupQty>itemCheckCnt, isAmt:false  }));
+        dispatch(setMenuOptionSelected({data:setItem,isAdd:optionGroupQty>itemCheckCnt||optionGroupQty==0, isAmt:false  }));
     }
     const addToCart = () => {
         //dispatch(addToOrderList({menuDetail, menuDetailID, selectedOptions,selectedRecommend}))
@@ -256,7 +256,7 @@ const ItemDetail = (props) => {
                                         {
                                             (menuOptionList && menuOptionList?.length>0) &&
                                             menuOptionList.map((el,groupIdx)=>{
-                                                if(el.QTY>0){
+                                                
                                                     return(
                                                         <>
                                                             <OptTitleText>{el.GROUP_NM} {el.QTY>0?`(최대 ${el.QTY}개 선택)`:''}</OptTitleText>
@@ -273,9 +273,7 @@ const ItemDetail = (props) => {
                                                             </OptList> 
                                                         </>
                                                     )
-                                                }else {
-                                                    return(<></>)
-                                                }
+                                                
                                             })
                                         }
                                         
