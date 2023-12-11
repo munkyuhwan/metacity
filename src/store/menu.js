@@ -74,6 +74,7 @@ export const getDisplayMenu = createAsyncThunk("menu/getDisplayMenu", async(_, {
             selectedItems = allItems.filter(el=>el.PROD_L1_CD == selectedMainCategory && el.PROD_L2_CD == selectedSubCategory ); 
         }
     }
+    selectedItems = selectedItems.filter(el=>el.PROD_NM != "공란");
     
     return selectedItems;
 })

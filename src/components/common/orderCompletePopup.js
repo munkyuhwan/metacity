@@ -5,15 +5,15 @@ import { ErrorTitle, ErrorWrapper } from "../../styles/common/errorStyle";
 import { OrderCompleteIcon, OrderCompleteItemWrapper, OrderCompleteText, OrderCompleteWrapper } from "../../styles/common/popup";
 
 const OrderCompletePopup = () => {
-
+    let to = null;
     const dispatch = useDispatch();
-    const {popupMsg, param} = useSelector(state=>state.popup);
+    const {popupMsg, param,innerTransView} = useSelector(state=>state.popup);
     useState(()=>{
          
-        const to = setInterval(() => {
+        to = setInterval(() => {
             clearInterval(to);
             openTransperentPopup(dispatch,{innerView:"", isPopupVisible:false});
-        }, 3000);
+        }, 1500);
  
     },[])
 

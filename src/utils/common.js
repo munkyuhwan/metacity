@@ -19,11 +19,11 @@ export function openPopup (dispatch, {innerView, isPopupVisible, param}) {
 export function openTransperentPopup (dispatch, {innerView, isPopupVisible, param}) {
     if(isPopupVisible) {
         dispatch(setTransPopupContent({innerView:innerView,param:param})); 
-        dispatch(setTransPopupVisibility({isPopupVisible:isPopupVisible}));    
+        dispatch(setTransPopupVisibility({isPopupVisible:isPopupVisible,param:param}));    
     }else {
-        dispatch(setTransPopupVisibility({isPopupVisible:isPopupVisible}));    
+        dispatch(setTransPopupVisibility({isPopupVisible:isPopupVisible,param:param}));    
         const disapearTimeout = setInterval(()=>{
-            dispatch(setTransPopupContent({innerView:innerView})); 
+            dispatch(setTransPopupContent({innerView:innerView,param:param})); 
             clearInterval(disapearTimeout);
         },500)
     } 
