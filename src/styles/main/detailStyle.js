@@ -72,8 +72,9 @@ export const DetailItemInfoTitleEtc = styled.Image`
     
 `
 export const DetailItemInfoSource = styled.Text`
-    fontSize:22px;
+    fontSize:32px;
     color:${colorRed};
+    
 `
 export const DetailPriceMoreWrapper = styled.View`
     flexDirection:column;
@@ -84,7 +85,7 @@ export const DetailItemInfoPriceWrapper = styled.View`
     flex:1;
 `
 export const DetailItemInfoPrice = styled.Text`
-    fontSize:38px;
+    fontSize:50px;
     color:${colorRed};
     ${(props)=>props.isBold?"fontWeight:bold;":""}
     marginTop:auto;
