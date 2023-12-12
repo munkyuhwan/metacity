@@ -110,7 +110,7 @@ export const CartItemTitlePriceWrapper = styled.View`
     flexDirection:column;
 `
 export const CartItemTitle = styled.Text`
-    fontSize:24px;
+    fontSize:16px;
     fontWeight:bold;
     color:${mainTheme};
     flex:1;
@@ -120,9 +120,10 @@ export const CartItemOpts = styled.Text`
     fontSize:12px;
     color:${mainTheme};
     flex:1;
+    minHeight:30px;
 `
 export const CartItemPrice = styled.Text`
-    fontSize:20px;
+    fontSize:34px;
     fontWeight:normal;
     color:${colorRed};
     flex:1;

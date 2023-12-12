@@ -57,7 +57,6 @@ const TopMenu = () =>{
         if(bulletinToShow){
             setBulletinCode(bulletinToShow[0]?.cate_code);
             setBulletinText(bulletinToShow[0]?.subject);
-        
         }
     },[selectedMainCategory])
 

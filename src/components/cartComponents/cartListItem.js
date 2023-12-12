@@ -97,8 +97,8 @@ const CartListItem = (props) => {
                 </CartItemImageTogoWrapper>
                 
                 <CartItemTitlePriceWrapper>
-                    <CartItemTitle>{ItemTitle()||order.ITEM_NM}</CartItemTitle>
-                    <CartItemOpts>
+                    <CartItemTitle numberOfLines={1} ellipsizeMode="tail" >{ItemTitle()||order.ITEM_NM}</CartItemTitle>
+                    <CartItemOpts  numberOfLines={2} ellipsizeMode="tail" >
                         {additiveItemList.length>0 &&
                             additiveItemList.map((el,index)=>{
                                 return `${ItemOptionTitle(el.PROD_I_CD,index)||el.PROD_I_NM}`+`${el.QTY}개`+`${index<(additiveItemList.length-1)?", ":""}`;

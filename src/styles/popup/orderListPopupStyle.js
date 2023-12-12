@@ -81,7 +81,7 @@ export const OrderListTableItemImage=styled.Image`
 `
 export const OrderListTableItemName = styled.Text`
     color:${colorBlack};
-    fontSize:19px;
+    fontSize:34px;
     fontWeight:bold;
     marginTop:auto;
     marginBottom:auto;
@@ -90,7 +90,7 @@ export const OrderListTableItemName = styled.Text`
 export const OrderListTableItemAmt = styled.Text`
     color:${colorBlack};
     flex:${props=>props?.flex};
-    fontSize:19px;
+    fontSize:34px;
     fontWeight:bold;
     marginTop:auto;
     marginBottom:auto;
@@ -101,7 +101,7 @@ export const OrderListTableItemAmt = styled.Text`
 export const OrderListTableItemPrice = styled.Text`
     color:${colorBlack};
     flex:${props=>props?.flex};
-    fontSize:19px;
+    fontSize:34px;
     fontWeight:bold;
     marginTop:auto;
     marginBottom:auto;
@@ -112,7 +112,7 @@ export const OrderListTableItemPrice = styled.Text`
 export const OrderListTableItemOperander = styled.Text`
     color:${colorGrey};
     flex:${props=>props?.flex};
-    fontSize:19px;
+    fontSize:34px;
     fontWeight:bold;
     marginTop:auto;
     marginBottom:auto;
@@ -122,7 +122,7 @@ export const OrderListTableItemOperander = styled.Text`
 export const OrderListTableItemTotal = styled.Text`
     color:${colorRed};
     flex:${props=>props?.flex};
-    fontSize:19px;
+    fontSize:34px;
     fontWeight:bold;
     marginTop:auto;
     marginBottom:auto;
@@ -147,14 +147,14 @@ export const OrderListTalbleGrandTotalWrapper = styled.View`
 `
 export const OrderListTotalTitle = styled.Text`
     flex:1;
-    fontSize:21px;
+    fontSize:34px;
     color:${colorBlack};
     fontWeight:bold;
     textAlign:center;
 `
 export const OrderListTotalAmount = styled.Text`
     flex:1;
-    fontSize:21px;
+    fontSize:34px;
     color:${colorRed};
     fontWeight:bold;
     textAlign:right;

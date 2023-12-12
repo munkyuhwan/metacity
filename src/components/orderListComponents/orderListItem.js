@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { OrderListTableItemAmt, OrderListTableItemImage, OrderListTableItemImageNameWrapper, OrderListTableItemName, OrderListTableItemOperander, OrderListTableItemPrice, OrderListTableItemTotal, OrderListTableItemWrapper } from '../../styles/popup/orderListPopupStyle';
+import { numberWithCommas } from '../../utils/common';
 
 const OrderListItem = (props) => {
     const item = props?.order.item;
@@ -37,9 +38,9 @@ const OrderListItem = (props) => {
                 </OrderListTableItemImageNameWrapper>
                 <OrderListTableItemAmt flex={0.1}>{item?.ITEM_QTY}ea</OrderListTableItemAmt>
                 <OrderListTableItemOperander flex={0.01} >X</OrderListTableItemOperander>
-                <OrderListTableItemPrice flex={0.15} >{item?.ITEM_AMT}원</OrderListTableItemPrice>
+                <OrderListTableItemPrice flex={0.25} >{numberWithCommas(item?.ITEM_AMT/item?.ITEM_QTY)}원</OrderListTableItemPrice>
                 <OrderListTableItemOperander flex={0.01} >=</OrderListTableItemOperander>
-                <OrderListTableItemTotal flex={0.25} >{item?.ITEM_QTY*item?.ITEM_AMT}원</OrderListTableItemTotal>
+                <OrderListTableItemTotal flex={0.25} >{numberWithCommas(item?.ITEM_AMT)}원</OrderListTableItemTotal>
             </OrderListTableItemWrapper>
         </>
     )
