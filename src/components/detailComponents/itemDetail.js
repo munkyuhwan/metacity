@@ -17,6 +17,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import { RADIUS, RADIUS_DOUBLE } from '../../styles/values';
 import {isEmpty} from "lodash";
+import { posErrorHandler } from '../../utils/errorHandler/ErrorHandler';
 /* 메뉴 상세 */
 const ItemDetail = (props) => {
     const language = props.language;
@@ -96,12 +97,37 @@ const ItemDetail = (props) => {
                 }
             }
         }
+        //GroupNO
+        //console.log("setItem: ",setItem)
         dispatch(setMenuOptionSelected({data:setItem,isAdd:optionGroupQty>itemCheckCnt||optionGroupQty==0, isAmt:false  }));
     }
     const addToCart = () => {
-        //dispatch(addToOrderList({menuDetail, menuDetailID, selectedOptions,selectedRecommend}))
-        dispatch(addToOrderList({item:menuDetail,menuOptionSelected:menuOptionSelected}));
-        closeDetail();
+        let booleanArr = true;
+        for(var i=0;i<menuOptionList.length;i++) {
+            let optItems = menuOptionList[i].OPT_ITEMS;
+            if(menuOptionList[i].QTY == 0) {
+                booleanArr = booleanArr && true;
+            }else {
+                let cnt = 0;
+                for(var j=0;j<menuOptionSelected.length;j++) {
+                    // 해당 중분류의 아이템이 몇개가 선택 되었는지 체크;
+                    let filter = optItems.filter(el=>el.PROD_I_CD == menuOptionSelected[j].PROD_I_CD);
+                    if(filter.length > 0) {
+                        cnt = cnt+menuOptionSelected[j]?.QTY;
+                    } 
+                }
+                //console.log(menuOptionList[i].GROUP_NM,menuOptionList[i].QTY," cnt: ",cnt)
+                booleanArr = booleanArr && menuOptionList[i]?.QTY==cnt;
+            }
+        }
+        //console.log("is pass: ",booleanArr);
+        if(!booleanArr) {
+            posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:`옵션 필수 수량을 확인 해 주세요.`,MSG2:""})
+        }else { 
+            dispatch(addToOrderList({item:menuDetail,menuOptionSelected:menuOptionSelected}));
+            closeDetail();
+        }
+
     }
 
     const closeDetail = () =>{
@@ -253,16 +279,15 @@ const ItemDetail = (props) => {
                                         {menuDetail?.PROD_GB != "00" &&
                                             (menuOptionList && menuOptionList?.length>0) &&
                                             menuOptionList.map((el,groupIdx)=>{
-                                                
                                                     return(
                                                         <>
-                                                            <OptTitleText>{el.GROUP_NM} {el.QTY>0?`(최대 ${el.QTY}개 선택)`:''}</OptTitleText>
+                                                            <OptTitleText>{el.GROUP_NM} {el.QTY>0?`(필수 수량 ${el.QTY}개 선택)`:''}</OptTitleText>
                                                             <OptList horizontal showsHorizontalScrollIndicator={false} >
                                                             {
                                                                 el?.OPT_ITEMS &&
                                                                 el?.OPT_ITEMS?.map((itemEl,index)=>{
                                                                     return(
-                                                                        <OptItem key={"optItem_"+index} isSelected={menuOptionSelected.filter(menuEl=>menuEl.PROD_I_CD ==itemEl.PROD_I_CD).length>0 } optionData={itemEl} menuData={menuDetail} onPress={(itemSel)=>{onOptionSelect(el.GROUP_NO, itemSel);} } />    
+                                                                        <OptItem key={"optItem_"+index} maxQty={el.QTY} isSelected={menuOptionSelected.filter(menuEl=>menuEl.PROD_I_CD ==itemEl.PROD_I_CD).length>0 } optionData={itemEl} menuData={menuDetail} onPress={(itemSel)=>{onOptionSelect(el.GROUP_NO, itemSel);} } />    
                                                                     );
                                                                     
                                                                 })
