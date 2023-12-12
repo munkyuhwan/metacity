@@ -55,7 +55,7 @@ export function grandTotalCalculate(data) {
     let itemCnt = 0;
     if(data) {
         data?.map(el=>{
-            amt += el.ITEM_AMT*el.ITEM_QTY;
+            amt += el.ITEM_AMT;
             itemCnt += el.ITEM_QTY;
         })
     }

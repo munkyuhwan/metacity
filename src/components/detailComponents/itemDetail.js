@@ -195,7 +195,6 @@ const ItemDetail = (props) => {
     }
     {/*  <DetailItemInfoFastImage source={{uri:"https:"+itemExtra[0]?.gimg_chg,headers: { Authorization: 'AuthToken' },priority: FastImage.priority.normal}} />
   */}
-
     return(
         <>
             <Animated.View  style={[{...PopStyle.animatedPop, ...boxWidthStyle,...{zIndex:detailZIndex} } ]} >
@@ -252,7 +251,7 @@ const ItemDetail = (props) => {
                                 <OptRecommendWrapper>
                                     <OptListWrapper>
                                         {/* <OptTitleText>{LANGUAGE[language]?.detailView.selectOpt}</OptTitleText> */}
-                                        {
+                                        {menuDetail?.PROD_GB == "02" &&
                                             (menuOptionList && menuOptionList?.length>0) &&
                                             menuOptionList.map((el,groupIdx)=>{
                                                 

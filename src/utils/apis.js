@@ -425,10 +425,11 @@ export const getOrderByTable = async(dispatch, data) => {
 // 관리자 메뉴 받기
 export const adminMenuEdit = async(dispatch) => {
     //let data = '{"STORE_ID":12312001}'
+    const {STORE_IDX} = await getStoreID()
     return await new Promise(function(resolve, reject){
         axios.post(
             `${ADMIN_BASE_URL}${ADMIN_GOODS}`,
-            {},
+            {STORE_ID:STORE_IDX},
             adminOrderHeader,
         ) 
         .then((response => {
