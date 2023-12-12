@@ -9,6 +9,7 @@ import { getCallServerItems, getServiceList, postAdminSerivceList, sendToPos } f
 import { getStoreID, openFullSizePopup, openPopup, openTransperentPopup } from '../../utils/common';
 import { getAdminServices } from '../../utils/apis';
 import { posErrorHandler } from '../../utils/errorHandler/ErrorHandler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 //import { STORE_ID } from '../../resources/apiResources';
 
 const CallServerPopup = () => {
@@ -53,15 +54,19 @@ const CallServerPopup = () => {
                         indexData.push(`"${el}"`);
                     }
                 })
-                const {STORE_ID, SERVICE_ID} = await getStoreID()
+                const {STORE_ID} = await getStoreID()
                 .catch(err=>{
                     posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'STORE_ID, SERVICE_ID를 입력 해 주세요.',MSG2:""})
                 });;
-                const postCallData = {"STORE_ID":STORE_ID,"t_name":tableInfo.TBL_NAME, "t_id":tableInfo.TBL_CODE, midx:selectedService, subject:subjectData};
+                const tableNm = await AsyncStorage.getItem("TABLE_NM").catch(err=>{return ""});
+                const tableInfo =  await AsyncStorage.getItem("TABLE_INFO");   
+                const postCallData = {"STORE_ID":STORE_ID,"t_name":tableNm, "t_id":tableInfo, midx:selectedService, subject:subjectData};
                 dispatch(postAdminSerivceList(postCallData));
                 openFullSizePopup(dispatch, {innerView:"", isPopupVisible:false});
                 openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"직원호출을 완료했습니다."}});
+             
             }else {
+
                 
             }
         }

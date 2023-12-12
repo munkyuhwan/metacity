@@ -96,7 +96,7 @@ export const ADMIN_GOODS = "/goods2.php";
 export const ADMIN_OPTION = "/option.php";
 export const ADMIN_CATEGORIES= "/category.php";
 export const ADMIN_CALL_SERVICE = "/call.php";
-export const ADMIN_POST_CALL_SERVICE = "/call_ok.php";
+export const ADMIN_POST_CALL_SERVICE = "/call2.php";
 export const ADMIN_BANNER = "/banner.php";
 export const ADMIN_TABLE_STATUS = "/store_table.php";
 
