@@ -19,20 +19,25 @@ const RecommendItem = (props) => {
     const [itemDetail, setItemDetail] = useState();
     const dispatch = useDispatch();
 
-    //console.log("menu:",allItems);
+    //console.log("itemExtra:",itemExtra);
     //const recItem = allItems.filter(item => item.ITEM_ID == recommentItemID);
     //const recommendData = props?.recommendData;
     //const menuData = props?.menuData;
     // 메뉴 추가정보 찾기
     //console.log(menuExtra); 
     const itemExtra = menuExtra.filter(el=>el.pos_code == recommentItemID);
-    //console.log("itemExtra: ",itemExtra);
+    //console.log("itemExtra:",itemExtra);
     
     useEffect(()=>{
-        getPosItemsWithCategory(dispatch, {selectedMainCategory,selectedSubCategory,menuDetailID:recommentItemID})
+        const filtered = allItems.filter(el=>el.PROD_CD == recommentItemID);
+        setItemDetail(filtered[0]);
+
+        /* getPosItemsWithCategory(dispatch, {selectedMainCategory,selectedSubCategory,menuDetailID:recommentItemID})
+        //getPosItemsWithCategory(dispatch, {selectedMainCategory,selectedSubCategory,menuDetailID:"900050"})
         .then(result=>{
             setItemDetail(result);
         })
+        .catch */
     },[])
     
     if(isEmpty(itemDetail)) return(<></>)
@@ -56,7 +61,7 @@ const RecommendItem = (props) => {
 
     return(
         <>
-            <TouchableWithoutFeedback onPress={()=>{dispatch(addToOrderList({item:itemDetail[0],menuOptionSelected:[]})); /* dispatch(setMenuDetail(recommentItemID)); */ }}>
+            <TouchableWithoutFeedback onPress={()=>{dispatch(addToOrderList({item:itemDetail,menuOptionSelected:[]})); /* dispatch(setMenuDetail(recommentItemID)); */ }}>
                 <RecommendItemWrapper>
                     <RecommendItemImageWrapper>
                         <RecommendItemImage  source={{uri:(`${images.filter(el=>el.name==recommentItemID)[0]?.imgData}`),priority: FastImage.priority.high }} />
@@ -67,8 +72,8 @@ const RecommendItem = (props) => {
                         }
                     </RecommendItemImageWrapper>
                     <RecommendItemInfoWrapper>
-                        <RecommendItemInfoTitle>{ItemTitle()||itemDetail[0]?.PROD_NM}</RecommendItemInfoTitle>
-                        <RecommendItemInfoPrice>{itemDetail[0]?.SAL_TOT_AMT==null?"":Number(itemDetail[0]?.SAL_TOT_AMT ).toLocaleString(undefined,{maximumFractionDigits:0}) } 원</RecommendItemInfoPrice>
+                        <RecommendItemInfoTitle>{ItemTitle()||itemDetail?.PROD_NM}</RecommendItemInfoTitle>
+                        <RecommendItemInfoPrice>{itemDetail?.SAL_TOT_AMT==null?"":Number(itemDetail?.SAL_TOT_AMT ).toLocaleString(undefined,{maximumFractionDigits:0}) } 원</RecommendItemInfoPrice>
                     </RecommendItemInfoWrapper>
                 </RecommendItemWrapper>
             </TouchableWithoutFeedback>

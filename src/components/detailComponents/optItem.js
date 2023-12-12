@@ -5,6 +5,7 @@ import { OptItemDim, OptItemFastImage, OptItemImage, OptItemInfoChecked, OptItem
 import { getSetItems, setMenuOptionSelected } from '../../store/menuDetail';
 import FastImage from 'react-native-fast-image';
 import { DetailItemAmtController, DetailItemAmtText,DetailItemAmtWrapper, DetailOperandorText, OperandorText } from '../../styles/main/cartStyle';
+import { posErrorHandler } from '../../utils/errorHandler/ErrorHandler';
 
 
 const OptItem = (props)=>{
@@ -44,13 +45,24 @@ const OptItem = (props)=>{
     const plusCnt = () =>{
         let tmpOptions = Object.assign([],menuOptionSelected);
         let filteredTmpOptions = tmpOptions.filter(el=>el.PROD_I_CD ==optionData?.PROD_I_CD )
+
         let tmpOptionPut = filteredTmpOptions[0];
         let qty = 1;
         if(filteredTmpOptions.length > 0) {
             qty = filteredTmpOptions[0].QTY+1
         }
-        tmpOptionPut = {...tmpOptionPut,...{QTY:qty}}
-        dispatch(setMenuOptionSelected({data:tmpOptionPut,isAdd:true, isAmt:true}));
+        const maxQty = filteredTmpOptions[0]?.QTY;
+        if(maxQty==0) {
+            tmpOptionPut = {...tmpOptionPut,...{QTY:qty}}
+            dispatch(setMenuOptionSelected({data:tmpOptionPut,isAdd:true, isAmt:true}));
+        }else {
+            if(qty>maxQty) {
+                posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:`${maxQty}개 이상 추가하실 수 없습니다.`,MSG2:""})
+            }else {
+                tmpOptionPut = {...tmpOptionPut,...{QTY:qty}}
+                dispatch(setMenuOptionSelected({data:tmpOptionPut,isAdd:true, isAmt:true}));
+            }
+        }
     }
     const minusCnt = () => {
         let tmpOptions = Object.assign([],menuOptionSelected);

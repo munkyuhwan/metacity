@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-
+export const initImageStorage = createAsyncThunk("cartView/initImageStorage", async() =>{
+    return [];
+})
 export const addImageStorage = createAsyncThunk("cartView/setImageStorage", async(data) =>{
     return data;
 })
@@ -16,6 +18,10 @@ export const imageStorageSlice = createSlice({
             let currentImages = Object.assign([],state.images);
             currentImages.push(action.payload)
             state.images = currentImages;
+        })
+        // 이미지 배열 초기화
+        builder.addCase(initImageStorage.fulfilled,(state, action)=>{
+            state.images = [];
         })
         
     }

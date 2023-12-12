@@ -30,7 +30,6 @@ const ItemDetail = (props) => {
     const itemExtra = menuExtra?.filter(el=>el.pos_code == menuDetailID);
     const {images} = useSelector(state=>state.imageStorage);
 
-
     // animation set
     const [widthAnimation, setWidthAnimation] = useState(new Animated.Value(0));
     // width interpolation
@@ -251,7 +250,7 @@ const ItemDetail = (props) => {
                                 <OptRecommendWrapper>
                                     <OptListWrapper>
                                         {/* <OptTitleText>{LANGUAGE[language]?.detailView.selectOpt}</OptTitleText> */}
-                                        {menuDetail?.PROD_GB == "02" &&
+                                        {menuDetail?.PROD_GB != "00" &&
                                             (menuOptionList && menuOptionList?.length>0) &&
                                             menuOptionList.map((el,groupIdx)=>{
                                                 

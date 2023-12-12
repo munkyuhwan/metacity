@@ -39,7 +39,6 @@ export default function Navigation() {
     const {tableStatus} = useSelector(state=>state.tableInfo);
     const {allItems} = useSelector(state=>state.menu);
 
-
     const navigate = useRef();
     const handleEventListener = () => {
         //리스너 중복방지를 위해 한번 삭제

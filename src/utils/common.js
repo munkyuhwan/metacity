@@ -179,23 +179,41 @@ export function orderListDuplicateCheck (currentOrderList, orderData) {
 export async function fileDownloader(dispatch, name,url) {
     const ext = url.split(".");
     const extensionType = ext[ext.length-1]
-    RNFetchBlob.config({
-        fileCache: true
+    return await new Promise(function(resolve, reject){
+        RNFetchBlob.config({
+            fileCache: true
+        })
+        .fetch("GET", url)
+        // the image is now dowloaded to device's storage
+        
+        .then( (resp) => {
+          // the image path you can use it directly with Image component
+            imagePath = resp.path();
+            //console.log("create path=======",name);
+            //console.log("create and read file")
+            return resp.readFile("base64");
+        })
+        .then( async (base64Data) => {
+            // here's base64 encoded image
+            dispatch(addImageStorage({name:name,imgData:`data:image/${extensionType};base64,`+base64Data}));
+            //console.log("add to store=======",base64Data);
+            // remove the file from storage
+            //console.log("get base 64");
+            //console.log("====================================")
+            resolve({name:name,data:base64Data});
+            fs.unlink(imagePath);
+            //return fs.unlink(imagePath);
+        
+        })
+        .catch(ee=>{
+            reject()
+        })
+
+
     })
-    .fetch("GET", url)
-    // the image is now dowloaded to device's storage
-    .then(resp => {
-      // the image path you can use it directly with Image component
-      imagePath = resp.path();
-      return resp.readFile("base64");
-    })
-    .then(base64Data => {
-      // here's base64 encoded image
-      dispatch(addImageStorage({name:name,imgData:`data:image/${extensionType};base64,`+base64Data}));
-      // remove the file from storage
-      return fs.unlink(imagePath);
-    });
-      
+
+    
+    
     /* 
     const ext = url.split(".");
     await deleteImageFile(`${RNFetchBlob.fs.dirs.DownloadDir}/wooriorder/${name}.${ext[ext.length-1]}`);
