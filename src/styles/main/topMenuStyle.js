@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled, {css} from 'styled-components/native';
 import { RADIUS, RADIUS_DOUBLE } from '../values';
 import { colorBrown, colorRed, tabBaseColor, textColorWhite } from '../../assets/colors/color';
+import { ScrollView } from 'react-native';
 
 export const TopMenuWrapper = styled.View`
     flexDirection:row;
@@ -11,6 +12,17 @@ export const TopMenuWrapper = styled.View`
     paddingLeft:30px;
     zIndex:99999;
 `
+// 공지사항 텍스트
+export const BulletinWrapper = styled(ScrollView)`
+    width:600px;
+
+`
+export const BulletinText = styled.Text`
+    fontSize:52px;
+    color:${colorRed};
+    fontWeight:bold;
+`
+
 export const CategoryWrapper = styled.View` 
     flexDirection:row;
     height: 80px;

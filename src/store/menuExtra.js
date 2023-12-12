@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux';
 import { MENU_DATA } from '../resources/menuData';
 import axios from 'axios';
-import { adminMenuEdit, posMenuEdit, posMenuState, posOrderNew } from '../utils/apis';
+import { adminMenuEdit, posMenuEdit, posMenuState, posOrderNew, postAdminBulletin } from '../utils/apis';
 import { setMainCategories } from './categories';
 import { EventRegister } from 'react-native-event-listeners';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -32,6 +32,11 @@ export const getAdminMenuItems = createAsyncThunk("menu/getAdminMenuItems", asyn
         return [];
     }
 })
+// 관리자 공지사항 받기
+export const getAdminBulletin = createAsyncThunk("menu/getAdminBulletin", async(data,{dispatch}) =>{
+    const adminBulletin = await postAdminBulletin(dispatch).catch(err=>[]);
+    return adminBulletin;
+})
 
 // Slice
 export const menuExtraSlice = createSlice({
@@ -41,8 +46,13 @@ export const menuExtraSlice = createSlice({
         optionCategoryExtra:[],
         optionExtra:[],
         menuCategories:[],
+        bulletin:[],
     },
     extraReducers:(builder)=>{
+        // 관리자 공지사항
+        builder.addCase(getAdminBulletin.fulfilled,(state, action)=>{
+            state.bulletin = action.payload;
+        })
         // 메뉴 기타 초기화 받기
         builder.addCase(initMenuExtra.fulfilled,(state, action)=>{
             state.menuExtra = action.payload;

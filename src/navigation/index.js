@@ -23,7 +23,7 @@ import {isEmpty} from 'lodash';
 import StatusScreen from '../screens/StatusScreen'
 import { initOrderList } from '../store/order'
 import { DEFAULT_CATEGORY_ALL_CODE, DEFAULT_TABLE_STATUS_UPDATE_TIME } from '../resources/defaults'
-import { getAdminMenuItems } from '../store/menuExtra'
+import { getAdminBulletin, getAdminMenuItems } from '../store/menuExtra'
 import { getStoreInfo } from '../utils/api/metaApis'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { fileDownloader, openTransperentPopup } from '../utils/common'
@@ -38,6 +38,7 @@ export default function Navigation() {
     
     const {tableStatus} = useSelector(state=>state.tableInfo);
     const {allItems} = useSelector(state=>state.menu);
+
 
     const navigate = useRef();
     const handleEventListener = () => {
@@ -100,7 +101,7 @@ export default function Navigation() {
                 dispatch(getTableStatus());
             }, DEFAULT_TABLE_STATUS_UPDATE_TIME);
         //}
-
+        dispatch(getAdminBulletin());
     },[])
 
     useEffect(()=>{

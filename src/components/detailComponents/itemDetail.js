@@ -96,7 +96,6 @@ const ItemDetail = (props) => {
                     itemCheckCnt = itemCheckCnt+1;
                 }
             }
-
         }
         dispatch(setMenuOptionSelected({data:setItem,isAdd:optionGroupQty>itemCheckCnt||optionGroupQty==0, isAmt:false  }));
     }
