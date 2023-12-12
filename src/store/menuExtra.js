@@ -29,8 +29,8 @@ export const getAdminMenuItems = createAsyncThunk("menu/getAdminMenuItems", asyn
         order.map(async(el)=>{
             const basesix = await fileDownloader(dispatch, `${el.pos_code}`,`https:${el.gimg_chg}`).catch("");
             //console.log("basexis: ",basesix)
-            const ext = el?.gimg_chg?.split(".");
-            const extensionType = ext[ext.length-1]
+            //const ext = el?.gimg_chg?.split(".");
+            //const extensionType = ext[ext.length-1]
             //console.log("code: ",el.pos_code);
             //await dispatch(addImageStorage({name: `${el.pos_code}`,imgData:`data:image/${extensionType};base64,`+basesix.data}));
             //fileDownloader(dispatch, `${el.pos_code}`,`https://wooriorder.co.kr/metacity/upload_file/goods/1702298033-cyyxh.jpg`);
