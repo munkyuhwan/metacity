@@ -38,13 +38,21 @@ const MenuListView = () => {
 
 
     const toNextCaterogy = () =>{
+        console.log("scroll bottom: ",scrollDownReached, "up: ",scrollUpReached);
         const selectedCat = allCategories.filter(e => e.PROD_L1_CD==selectedMainCategory);
         const selectedIndex = allCategories.indexOf(selectedCat[0]);
         var nextPage = 0;
         nextPage = selectedIndex+1;
         if(nextPage>allCategories.length-1) nextPage=allCategories.length-1;
-        dispatch(setSelectedMainCategory(allCategories[nextPage].PROD_L1_CD)); 
-        dispatch(setSelectedSubCategory("0000"))
+        if(allCategories[nextPage]?.PROD_L1_NM == "주문X"){
+            if(nextPage<allCategories.length-1){
+                dispatch(setSelectedMainCategory(allCategories[nextPage+1].PROD_L1_CD)); 
+                dispatch(setSelectedSubCategory("0000"))
+            }
+        }else {
+            dispatch(setSelectedMainCategory(allCategories[nextPage].PROD_L1_CD)); 
+            dispatch(setSelectedSubCategory("0000"))
+        }
     }
     const toPrevCaterogy = () =>{
         const selectedCat = allCategories.filter(e => e.PROD_L1_CD==selectedMainCategory);
@@ -53,8 +61,15 @@ const MenuListView = () => {
         nextPage = selectedIndex-1;
         if(nextPage<0) nextPage=0;
         if(nextPage>allCategories.length-1) nextPage=allCategories.length-1;
-        dispatch(setSelectedMainCategory(allCategories[nextPage].PROD_L1_CD)); 
-        dispatch(setSelectedSubCategory("0000"))
+        if(allCategories[nextPage]?.PROD_L1_NM == "주문X"){
+            if(nextPage>0){
+                dispatch(setSelectedMainCategory(allCategories[nextPage-1].PROD_L1_CD)); 
+                dispatch(setSelectedSubCategory("0000"))
+            }
+        }else {
+            dispatch(setSelectedMainCategory(allCategories[nextPage].PROD_L1_CD)); 
+            dispatch(setSelectedSubCategory("0000"))
+        }
     }
     useEffect(()=>{
         if(isOn) {
@@ -72,10 +87,13 @@ const MenuListView = () => {
     },[selectedMainCategory,selectedSubCategory])
 
     useEffect(()=>{
-        if(displayMenu.length<=0) {
+        if(displayMenu.length>0) {
             //dispatch(getDisplayMenu());
+            //listRef?.current?.scrollTo({x:0,animated: false});
+            //if(listRef)listRef?.current?.scrollTo({y:0,animated: false});
+            listRef.current.scrollToOffset({ animated: false, offset: 0 });
         }
-    },[displayMenu, menu])
+    },[displayMenu])
     const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
         const paddingToBottom = 2;
         return layoutMeasurement.height + contentOffset.y >=

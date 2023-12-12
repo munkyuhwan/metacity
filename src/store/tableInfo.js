@@ -26,7 +26,7 @@ export const changeTableInfo = createAsyncThunk("tableInfo/changeTableInfo", asy
     return data;    
 })
 export const getTableList = createAsyncThunk("tableInfo/getTableList", async(data,{dispatch}) =>{
-    const result = await getTableListInfo(dispatch,{floor:1}).catch(err=>[]);
+    const result = await getTableListInfo(dispatch,{floor:data?.floor}).catch(err=>[]);
     return result
 })
 // 관리자 테이블 상테 받아오기

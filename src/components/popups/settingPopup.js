@@ -42,6 +42,7 @@ const SettingPopup = () =>{
     const [lastPayData, setLastPayData] = useState("");
     // store id, service id
     const [ipText, setIpText] = useState("");
+    const [floor, setFloor] = useState(0);
     const [tableNo, setTableNo] = useState("");
     const [storeIdx, setStoreIdx] = useState("");
 
@@ -257,6 +258,7 @@ const SettingPopup = () =>{
     const setTableInfo = (itemValue, itemNM) =>{
         AsyncStorage.setItem("TABLE_INFO", itemValue);   
         AsyncStorage.setItem("TABLE_NM", itemNM);   
+        AsyncStorage.setItem("TABLE_FLOOR",floor);
         dispatch(changeTableInfo({tableNo:itemValue}))
         displayOnAlert("테이블이 설정되었습니다.",{});
     }
@@ -269,13 +271,14 @@ const SettingPopup = () =>{
                     key={"tablePicker"}
                     mode='dialog'
                     onValueChange = {(itemValue, itemIndex) => {
-                        const filteredItem = tableList.filter(el=>el.TBL_NO == itemValue);
-                        const itemNM = filteredItem[0]?.TBL_NM;;
-                        setTableInfo(itemValue, itemNM)
-                        dispatch(initOrderList());
-                        dispatch(setCartView(false));
-                        displayOnAlert("수정되었습니다.",[]);
-
+                        
+                            const filteredItem = tableList.filter(el=>el.TBL_NO == itemValue);
+                            const itemNM = filteredItem[0]?.TBL_NM;
+                            setTableInfo(itemValue, itemNM)
+                            dispatch(initOrderList());
+                            dispatch(setCartView(false));
+                            displayOnAlert("수정되었습니다.",[]);
+                        
                     }}
                     selectedValue={tableInfo}
                     style = {{
@@ -284,8 +287,7 @@ const SettingPopup = () =>{
                         flex:1
                     }}>
                         <Picker.Item key={"none"} label = {"미선택"} value ={{}} />
-                    {tableList.map(el=>{
-                        //console.log("tableList: ",el)
+                    {tableList?.map(el=>{
                          
                         return(
                             <Picker.Item key={"_"+el.TBL_NO}  label = {el.FLOOR_NM+" "+el.TBL_NM} value ={el.TBL_NO} />
@@ -378,8 +380,12 @@ const SettingPopup = () =>{
         .then(value=>{
             setStoreIdx(value);
         })
-        dispatch(getTableList());
     },[])
+    useEffect(()=>{
+        dispatch(getTableList({floor:floor}));
+
+    },[floor])
+
 
     const setStoreInfo = () =>{
         AsyncStorage.setItem("POS_IP", ipText);   
@@ -455,6 +461,9 @@ const SettingPopup = () =>{
                                 <TouchableWithoutFeedback onPress={()=>{ }} >
                                     <SettingButtonText isMargin={false} >테이블 세팅</SettingButtonText>
                                 </TouchableWithoutFeedback> 
+                                <SelectWrapper>
+                                    <StoreIDTextLabel>층 입력:</StoreIDTextLabel><StoreIDTextInput keyboardType='numeric'  defaultValue={floor} onChangeText={(val)=>{ setFloor(val); }} />
+                                </SelectWrapper>
                                     <Dropdown/>
                                     {/* 
                                 <SelectWrapper style={{marginRight:'auto', marginLeft:'auto', paddingBottom:20}} >
@@ -522,7 +531,7 @@ const SettingPopup = () =>{
                                 <SettingButtonText isMargin={true} >화면 업데이트</SettingButtonText>
                             </TouchableWithoutFeedback>
                             <TouchableWithoutFeedback onPress={()=>{checkUpdate();}} >
-                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.12</SettingButtonText>
+                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.13</SettingButtonText>
                             </TouchableWithoutFeedback> 
                         </SettingButtonWrapper>
                     </SettingScrollView>

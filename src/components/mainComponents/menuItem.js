@@ -98,7 +98,7 @@ const MenuItem = ({item,index,setDetailShow}) => {
                                     <MenuItemButton source={require('../../assets/icons/more.png')}/>
                                 </MenuItemButtonInnerWrapperRight>
                             </TouchableWithoutFeedback>
-                            <TouchableWithoutFeedback onPress={()=>{ if(item?.PROD_GB=="02"){setDetailShow(true);  dispatch(setMenuDetail({itemID,item}));} else { dispatch(addToOrderList({item:item,menuOptionSelected:[]}));} }} >
+                            <TouchableWithoutFeedback onPress={()=>{ if(item?.PROD_GB!="00"){setDetailShow(true);  dispatch(setMenuDetail({itemID,item}));} else { dispatch(addToOrderList({item:item,menuOptionSelected:[]}));} }} >
                                 <MenuItemButtonInnerWrapperLeft>
                                     <MenuItemButton source={require('../../assets/icons/add.png')}/>
                                 </MenuItemButtonInnerWrapperLeft>
