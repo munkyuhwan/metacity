@@ -54,7 +54,7 @@ export const CartItemWrapper = styled.View`
 export const CartItemImageTogoWrapper = styled.View`
     flexDirection:column;
 `
-export const CartItemImage = styled.Image`
+export const CartItemImage = styled(FastImage)`
     width:120px;
     height:106px;
     backgroundColor:brown;

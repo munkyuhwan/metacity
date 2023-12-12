@@ -90,7 +90,7 @@ const OptItem = (props)=>{
                         <OptItemInfoWrapper>
                             <OptItemInfoTitle>{ItemTitle()||itemDetail[0]?.PROD_NM }</OptItemInfoTitle>
                             <OptItemInfoPrice>{itemDetail[0]?.SAL_TOT_AMT?"+"+Number(itemDetail[0]?.SAL_TOT_AMT*qty).toLocaleString(undefined,{maximumFractionDigits:0})+"원":""}</OptItemInfoPrice>
-                            <OptItemInfoChecked isSelected={props.isSelected} source={require("../../assets/icons/check_red.png")}/>
+                            {/* <OptItemInfoChecked isSelected={props.isSelected} source={require("../../assets/icons/check_red.png")}/> */}
                         </OptItemInfoWrapper>
                     </OptItemWrapper>
                     {/* 옵션 수량 조절 */}

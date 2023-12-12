@@ -153,6 +153,9 @@ export const OptItemInfoPrice = styled.Text`
     fontSize:27px;
     color:${colorYellow};
     fontWeight:bold;
+    position:absolute;
+    bottom:2px;
+    left:12px;
 `
 export const OptItemInfoChecked = styled.Image`
     width:22px;

@@ -11,6 +11,7 @@ import { colorWhite } from '../../assets/colors/color';
 import {isEmpty} from 'lodash'
 import RNFetchBlob from 'rn-fetch-blob';
 import RNFS from 'react-native-fs';
+import { numberWithCommas } from '../../utils/common';
 
 /* 메인메뉴 메뉴 아이템 */
 const MenuItem = ({item,index,setDetailShow}) => {
@@ -115,7 +116,7 @@ const MenuItem = ({item,index,setDetailShow}) => {
                 </MenuItemTopWrapper>
                 <MenuItemBottomWRapper>
                     <MenuItemName>{itemTitle()||item.PROD_NM}</MenuItemName>
-                    <MenuItemPrice>{itemPrice}원</MenuItemPrice>
+                    <MenuItemPrice>{numberWithCommas(itemPrice)}원</MenuItemPrice>
                 </MenuItemBottomWRapper>
             </MenuItemWrapper>
 
