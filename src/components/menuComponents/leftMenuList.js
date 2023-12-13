@@ -47,7 +47,7 @@ const LeftMenuList = (props) => {
      return(
         <>
             {data?.map((item, index)=>{    
-                if(item?.PROD_L1_NM=="주문X") {
+                if(item?.PROD_L1_NM=="주문X" || item?.PROD_L1_NM=="스넥" ) {
                     return(<></>)
                 }else {
                     if(item?.USE_YN == 'Y') { 

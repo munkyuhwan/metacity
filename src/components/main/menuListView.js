@@ -44,7 +44,10 @@ const MenuListView = () => {
         var nextPage = 0;
         nextPage = selectedIndex+1;
         if(nextPage>allCategories.length-1) nextPage=allCategories.length-1;
-        if(allCategories[nextPage]?.PROD_L1_NM == "주문X"){
+        if(allCategories[nextPage]?.PROD_L1_NM == "주문X" || allCategories[nextPage]?.PROD_L1_NM == "스넥" ){
+            return;
+        }
+        if(allCategories[nextPage]?.PROD_L1_NM == "주문X" || allCategories[nextPage]?.PROD_L1_NM == "스넥" ){
             if(nextPage<allCategories.length-1){
                 dispatch(setSelectedMainCategory(allCategories[nextPage+1].PROD_L1_CD)); 
                 dispatch(setSelectedSubCategory("0000"))
@@ -61,7 +64,7 @@ const MenuListView = () => {
         nextPage = selectedIndex-1;
         if(nextPage<0) nextPage=0;
         if(nextPage>allCategories.length-1) nextPage=allCategories.length-1;
-        if(allCategories[nextPage]?.PROD_L1_NM == "주문X"){
+        if(allCategories[nextPage]?.PROD_L1_NM == "주문X" || allCategories[nextPage]?.PROD_L1_NM == "스넥" ){
             if(nextPage>0){
                 dispatch(setSelectedMainCategory(allCategories[nextPage-1].PROD_L1_CD)); 
                 dispatch(setSelectedSubCategory("0000"))
