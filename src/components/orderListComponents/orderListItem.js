@@ -7,7 +7,6 @@ const OrderListItem = (props) => {
     const item = props?.order.item;
     const {language} = useSelector(state=>state.languages);
     const {menuExtra} = useSelector(state=>state.menuExtra);
-  
     // 이미지 찾기
     const itemExtra = menuExtra.filter(el=>el.pos_code == item.ITEM_CD);
     const imgUrl = "https:"+itemExtra[0]?.gimg_chg;
@@ -29,6 +28,15 @@ const OrderListItem = (props) => {
 
         return selTitleLanguage;
     }
+
+    const individualItem = () =>{
+        let setItemPrice = 0;
+        for(var i=0;i<item.SETITEM_INFO.length;i++) {
+            setItemPrice += item.SETITEM_INFO[i].AMT
+        }
+        return setItemPrice+item?.ITEM_AMT;
+    }
+
     return(
         <>
             <OrderListTableItemWrapper>
@@ -38,9 +46,9 @@ const OrderListItem = (props) => {
                 </OrderListTableItemImageNameWrapper>
                 <OrderListTableItemAmt flex={0.1}>{item?.ITEM_QTY}ea</OrderListTableItemAmt>
                 <OrderListTableItemOperander flex={0.01} >X</OrderListTableItemOperander>
-                <OrderListTableItemPrice flex={0.25} >{numberWithCommas(item?.ITEM_AMT/item?.ITEM_QTY)}원</OrderListTableItemPrice>
+                <OrderListTableItemPrice flex={0.25} >{numberWithCommas(individualItem()/item?.ITEM_QTY)}원</OrderListTableItemPrice>
                 <OrderListTableItemOperander flex={0.01} >=</OrderListTableItemOperander>
-                <OrderListTableItemTotal flex={0.25} >{numberWithCommas(item?.ITEM_AMT)}원</OrderListTableItemTotal>
+                <OrderListTableItemTotal flex={0.25} >{numberWithCommas(individualItem())}원</OrderListTableItemTotal>
             </OrderListTableItemWrapper>
         </>
     )

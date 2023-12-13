@@ -363,6 +363,11 @@ export const getOrderStatus = createAsyncThunk("order/getOrderStatus", async(_,{
     const result = await getTableOrderList();
     return result;
 })
+// 테이블 주문 히스토리 지우기
+export const clearOrderStatus = createAsyncThunk("order/clearOrderStatus", async(_,{dispatch, getState,extra}) =>{
+    return [];
+})
+
 /* 
 export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,{getState,extra}) =>{
     console.log("menuDetail: ",_.menuDetail);
@@ -478,6 +483,12 @@ export const orderSlice = createSlice({
                 state.orderStatus = action.payload;
             }
         })
+        // 주문 목록 클리어
+        builder.addCase(clearOrderStatus.fulfilled,(state, action)=>{
+                state.orderStatus = [];
+        })
 
+
+        
     }
 });

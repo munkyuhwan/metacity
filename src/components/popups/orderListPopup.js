@@ -8,7 +8,7 @@ import { BottomButton, BottomButtonIcon, BottomButtonText, BottomButtonWrapper }
 import { colorBlack, colorRed } from '../../assets/colors/color';
 import { openTransperentPopup } from '../../utils/common';
 import OrderListItem from '../orderListComponents/orderListItem';
-import { getOrderStatus } from '../../store/order';
+import { clearOrderStatus, getOrderStatus } from '../../store/order';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { checkTableOrder } from '../../utils/apis';
 import {isEmpty} from 'lodash';
@@ -45,6 +45,9 @@ const OrderListPopup = () =>{
             let tmpPrice = 0;
             orderStatus.map(el=>{
                 tmpPrice += Number(el.ITEM_AMT);
+                for(var i=0;i<el.SETITEM_INFO.length; i++) {
+                    tmpPrice += Number(el.SETITEM_INFO[i].AMT)
+                }
             })
             setOrderTotalAmt(tmpPrice);
         }
@@ -87,7 +90,7 @@ const OrderListPopup = () =>{
                             <BottomButtonIcon source={require("../../assets/icons/card.png")} />
                         </BottomButton>
                     */}
-                    <TouchableWithoutFeedback onPress={()=>{clearInterval(to);to=null; openTransperentPopup(dispatch, {innerView:"", isPopupVisible:false}); }} >
+                    <TouchableWithoutFeedback onPress={()=>{clearInterval(to);to=null; dispatch(clearOrderStatus()); openTransperentPopup(dispatch, {innerView:"", isPopupVisible:false}); }} >
                         <BottomButton backgroundColor={colorBlack} >
                             <BottomButtonText>{LANGUAGE[language]?.orderListPopup.orderListOK}</BottomButtonText>
                             <BottomButtonIcon source={require("../../assets/icons/cancel.png")} />
