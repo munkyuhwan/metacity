@@ -197,11 +197,13 @@ export const postMetaPosOrder = async(dispatch, data) =>{
         ) 
         .then((response => {
             if(metaErrorHandler(dispatch, response?.data)) {
+                console.log("true");
                 //openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true});
                 //openPopup(dispatch,{innerView:"OrderComplete", isPopupVisible:true});
                 resolve()
             } else {
-                reject();
+                console.log("false");
+                //reject({});
             }
         })) 
         .catch(error=>{
@@ -356,7 +358,7 @@ export const  getMenuUpdateState = async (dispatch) =>{
                 const data = response.data;
                 resolve(data); 
             }else {
-                reject();
+                //reject();
             } 
         }))
         .catch(error=>{
