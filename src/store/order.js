@@ -9,6 +9,7 @@ import { setCartView } from './cart';
 import LogWriter from '../utils/logWriter';
 import { POS_VERSION_CODE, POS_WORK_CD_POSTPAY_ORDER, POS_WORK_CD_VERSION } from '../resources/apiResources';
 import { getTableOrderList, postMetaPosOrder } from '../utils/api/metaApis';
+import { META_SET_MENU_SEPARATE_CODE_LIST } from '../resources/defaults';
 
 export const initOrderList = createAsyncThunk("order/initOrderList", async() =>{
     return  {
@@ -41,6 +42,8 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
     const {grandTotal, orderList} = getState().order;
     const {amt, index, operand} = _;
     const {tableInfo} = getState().tableInfo;
+    const {allItems} = getState().menu;
+
     const {STORE_ID, SERVICE_ID} = await getStoreID()
     .catch(err=>{
         posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'STORE_ID, SERVICE_ID를 입력 해 주세요.',MSG2:""})
@@ -48,170 +51,163 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
 
     let tmpOrderList = Object.assign([],orderList);
     const selectedMenu = tmpOrderList[index];
-    let itemCnt = selectedMenu?.ITEM_QTY;
-    let singleItemAmt = selectedMenu?.ITEM_AMT/itemCnt;
-    if(operand=="plus") {
-        itemCnt +=1;
-    }else if(operand=="minus")  {
-        itemCnt -=1;
-    }else {
-        itemCnt = 0;
-    }
-     
-    if(itemCnt<=0) {
-        tmpOrderList.splice(index,1);
-        if(tmpOrderList.length <= 0) {
-            dispatch(setCartView(false));
+    // 포스 메뉴 정보
+    const menuPosDetail = allItems.filter(el=>el.PROD_CD == selectedMenu?.ITEM_CD);
+    if( META_SET_MENU_SEPARATE_CODE_LIST.indexOf(menuPosDetail[0]?.PROD_GB)>=0) {
+        // 선택하부금액
+        // 선택하부금액은 메인 금액일아 하부 메뉴 금액이랑 같이 올려줘야함
+        let itemCnt = selectedMenu?.ITEM_QTY;
+        let singleItemAmt = selectedMenu?.ITEM_AMT/itemCnt;
+        if(operand=="plus") {
+            itemCnt +=1;
+        }else if(operand=="minus")  {
+            itemCnt -=1;
+        }else {
+            itemCnt = 0;
         }
+         
+        if(itemCnt<=0) {
+            tmpOrderList.splice(index,1);
+            if(tmpOrderList.length <= 0) {
+                dispatch(setCartView(false));
+            }
+            const totalResult = grandTotalCalculate(tmpOrderList)
+            //console.log("tmpOrderList:",tmpOrderList);
+            return {orderList:tmpOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
+            //return {orderList:tmpOrderList}
+        }
+        // 하부메뉴금액 수량 수정
+        let subSetItems = Object.assign([],selectedMenu?.SETITEM_INFO);
+        
+        console.log("selectedMenu: ",selectedMenu);
+        let newSubSetItems = [];
+        for(var i=0;i<subSetItems.length;i++) {
+            const calculatedData = {
+                "AMT": (subSetItems[i].AMT/subSetItems[i].QTY+subSetItems[i].VAT/subSetItems[i].QTY)*itemCnt, 
+                "ITEM_SEQ": subSetItems[i].ITEM_SEQ, 
+                "PROD_I_CD": subSetItems[i].PROD_I_CD, 
+                "PROD_I_NM": subSetItems[i].PROD_I_NM, 
+                "QTY": itemCnt, 
+                "SET_SEQ": subSetItems[i].SET_SEQ,
+                "VAT": (subSetItems[i].VAT/subSetItems[i].QTY)*itemCnt,
+            }
+            newSubSetItems.push(calculatedData);
+        }
+        console.log("newSubSetItems: ",newSubSetItems);
+        
+        tmpOrderList[index] = Object.assign({},selectedMenu,{ITEM_AMT:singleItemAmt*itemCnt, ITEM_QTY:itemCnt,SETITEM_INFO:newSubSetItems});
         const totalResult = grandTotalCalculate(tmpOrderList)
-        //console.log("tmpOrderList:",tmpOrderList);
        
         return {orderList:tmpOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
-        //return {orderList:tmpOrderList}
+         
+    }else {
+
+        let itemCnt = selectedMenu?.ITEM_QTY;
+        let singleItemAmt = selectedMenu?.ITEM_AMT/itemCnt;
+        if(operand=="plus") {
+            itemCnt +=1;
+        }else if(operand=="minus")  {
+            itemCnt -=1;
+        }else {
+            itemCnt = 0;
+        }
+         
+        if(itemCnt<=0) {
+            tmpOrderList.splice(index,1);
+            if(tmpOrderList.length <= 0) {
+                dispatch(setCartView(false));
+            }
+            const totalResult = grandTotalCalculate(tmpOrderList)
+            //console.log("tmpOrderList:",tmpOrderList);
+           
+            return {orderList:tmpOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
+            //return {orderList:tmpOrderList}
+        }
+        tmpOrderList[index] = Object.assign({},selectedMenu,{ITEM_AMT:singleItemAmt*itemCnt, ITEM_QTY:itemCnt});
+        const totalResult = grandTotalCalculate(tmpOrderList)
+       
+        return {orderList:tmpOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
+         
     }
-    tmpOrderList[index] = Object.assign({},selectedMenu,{ITEM_AMT:singleItemAmt*itemCnt, ITEM_QTY:itemCnt});
-    const totalResult = grandTotalCalculate(tmpOrderList)
-   
-    return {orderList:tmpOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
-     
+
 })
 
 export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,{dispatch, getState,extra}) =>{
 
     const {item,menuOptionSelected} = _;
     const {orderList} = getState().order;
+    const {menuDetail} = getState().menuDetail;
     let currentOrderList = Object.assign([],orderList);
-    
-    // 메뉴 데이터 주문데이터에 맞게 변경
     let orderData = setOrderData(item, orderList);
-    let optionTrim = [];
-    let optionPrice = 0;
-    for(var i=0;i<menuOptionSelected.length;i++) {
-        optionPrice = optionPrice+(menuOptionSelected[i].AMT+menuOptionSelected[i].VAT)*menuOptionSelected[i].QTY
-        optionTrim.push({...menuOptionSelected[i],...{ITEM_SEQ:orderData.ITEM_SEQ,AMT:menuOptionSelected[i].AMT*menuOptionSelected[i].QTY,VAT:menuOptionSelected[i].VAT*menuOptionSelected[i].QTY}});
-    }
-    // 세트 메뉴 추가
-    orderData["SETITEM_INFO"] = optionTrim;
-    orderData["SETITEM_CNT"] = optionTrim.length;
-    orderData["ITEM_AMT"] = orderData["ITEM_AMT"]+optionPrice;
 
-    // 중복 체크 후 수량 변경
-    let newOrderList = orderListDuplicateCheck(currentOrderList, orderData);
-    //newOrderList.reverse();
- 
-    if(newOrderList.length <= 0) {
-        dispatch(setCartView(false));
-    }else {
-        dispatch(setCartView(true));
-    }
-    // 금액계산
-    const totalResult = grandTotalCalculate(newOrderList)
-    //openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
-    openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
+    if(META_SET_MENU_SEPARATE_CODE_LIST.indexOf(menuDetail?.PROD_GB) >= 0) {
+        // 메뉴 선택하부금액 
+        // 선택한 옵션의 가격이 들어감
+        // 세트 메인 품목의 가격은 그대로 하위 품목들의 가격이 들어가고 그에따라 수량이 늘아날떄 가격과 수량이 같이 올라가야함
+        console.log("선택하부금액 품목");
+        // 메뉴 데이터 주문데이터에 맞게 변경
+        let optionTrim = [];
+        let optionPrice = 0;
+        for(var i=0;i<menuOptionSelected.length;i++) {
+            optionPrice = optionPrice+(menuOptionSelected[i].AMT+menuOptionSelected[i].VAT)*menuOptionSelected[i].QTY
+            optionTrim.push({...menuOptionSelected[i],...{ITEM_SEQ:orderData.ITEM_SEQ,AMT:menuOptionSelected[i].AMT*menuOptionSelected[i].QTY,VAT:menuOptionSelected[i].VAT*menuOptionSelected[i].QTY}});
+        }
+        // 세트 메뉴 추가
+        orderData["SETITEM_INFO"] = optionTrim;
+        orderData["SETITEM_CNT"] = optionTrim.length;
+        orderData["ITEM_AMT"] = orderData["ITEM_AMT"];
+        // 중복 체크 후 수량 변경
+        let newOrderList = orderListDuplicateCheck(currentOrderList, orderData);
+        //newOrderList.reverse();
     
-    return {orderList:newOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
-  
-    /* 
-    const {STORE_ID, SERVICE_ID} = await getStoreID()
-    .catch(err=>{
-        posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'STORE_ID, SERVICE_ID를 입력 해 주세요.',MSG2:""})
-    });
-
-    // 선택된 아이템 정보 받기
-    const {displayMenu, allItems} = getState().menu;
-    const {orderList} = getState().order;
-    const {menuOptionSelected} = _;
-    const {tableInfo} = getState().tableInfo;
-
-    if(isEmpty(tableInfo)) {
-        posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'테이블 지정 후 이용하실 수 있습니다.',MSG2:"직원호출을 해 주세요."})
-        return
-    }
-
-    const menuDetail = allItems.filter(el=>el.ITEM_ID == _.itemID);
-    // 기존 주문에 같은 메뉴 있는지 확인
-    // 옵션필드 추가
-    let additiveList = [];
-    if(menuOptionSelected) {
-        if(menuOptionSelected.length>0) additiveList=menuOptionSelected;
-    }
-    var selectedMenuDetail = Object.assign({},menuDetail[0],{"ADDITIVE_ITEM_LIST":additiveList});
-    var newOrderList = []; // 새 오더 정렬;
-   // 중복메뉴
-    let duplicatedItem = orderList.filter(el=> (
-        el.ITEM_NAME == selectedMenuDetail.ITEM_NAME && 
-        el.ITEM_ID==selectedMenuDetail.ITEM_ID && 
-        el.SALE_PRICE==selectedMenuDetail.ITEM_AMT &&
-        el.SALE_AMT==selectedMenuDetail.ITEM_AMT &&
-        el.ITEM_MENO==selectedMenuDetail.ITEM_MENO &&
-        el.ITEM_SET_GBN==selectedMenuDetail.ITEM_SET_GBN &&
-        el.ITEM_USE_FLA==selectedMenuDetail.ITEM_USE_FLA &&
-        isEqual(el.ADDITIVE_ITEM_LIST,selectedMenuDetail.ADDITIVE_ITEM_LIST)
-    ));    
-    var addedOrder = {};
-    if(duplicatedItem.length>0) {
-        //newOrderList = orderList
-        addedOrder = Object.assign({},duplicatedItem[0],{"ITEM_CNT":(Number(duplicatedItem[0].ITEM_CNT)+1),"ADDITIVE_ITEM_LIST":additiveList});       
-        newOrderList = Object.assign([],orderList);
-        let additivePrice = 0;
-        if(additiveList.length > 0 ) {
-            additiveList?.map(el=>{
-                additivePrice = additivePrice+el?.menuOptionSelected.ADDITIVE_PRICE
-            })
+        if(newOrderList.length <= 0) {
+            dispatch(setCartView(false));
+        }else {
+            dispatch(setCartView(true));
         }
-        addedOrder["SALE_PRICE"] = `${Number(addedOrder["ITEM_AMT"])+additivePrice}`;
-        addedOrder["SALE_AMT"] = `${Number(addedOrder["ITEM_AMT"])+additivePrice}`;
-        addedOrder["ITEM_MEMO"] = ``;
-        addedOrder["ITEM_SEQ"] = `${newOrderList.length}`;
+        // 금액계산
+        const totalResult = grandTotalCalculate(newOrderList)
+        //openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
+        openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
         
-        newOrderList[orderList.indexOf(duplicatedItem[0])] = addedOrder;
+        return {orderList:newOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
+  
+
+
     }else {
-        //addedOrder = Object.assign({},selectedMenuDetail,{"ITEM_CNT":(Number(selectedMenuDetail.ITEM_CNT)+1),"ADDITIVE_ITEM_LIST":[]});
-        addedOrder = Object.assign({},selectedMenuDetail,{"ITEM_CNT":1,"ADDITIVE_ITEM_LIST":additiveList});
-        let additivePrice = 0;
-        if(additiveList.length > 0 ) {
-            additiveList?.map(el=>{
-                additivePrice = additivePrice+el?.menuOptionSelected.ADDITIVE_PRICE
-            })
+        // 다른 메뉴들
+        // 세트메뉴 경우 그냥 세트 품목들 0원 세트 메인 상품의 가격에 세트메뉴 가격을 추가함
+                 
+        // 메뉴 데이터 주문데이터에 맞게 변경
+        let optionTrim = [];
+        let optionPrice = 0;
+        for(var i=0;i<menuOptionSelected.length;i++) {
+            optionPrice = optionPrice+(menuOptionSelected[i].AMT+menuOptionSelected[i].VAT)*menuOptionSelected[i].QTY
+            optionTrim.push({...menuOptionSelected[i],...{ITEM_SEQ:orderData.ITEM_SEQ,AMT:menuOptionSelected[i].AMT*menuOptionSelected[i].QTY,VAT:menuOptionSelected[i].VAT*menuOptionSelected[i].QTY}});
         }
-        addedOrder["SALE_PRICE"] = `${Number(addedOrder["ITEM_AMT"])+additivePrice}`;
-        addedOrder["SALE_AMT"] = `${Number(addedOrder["ITEM_AMT"])+additivePrice}`;
-        addedOrder["ITEM_MEMO"] = ``;
-        addedOrder["ITEM_SEQ"] = `${newOrderList.length}`;
+        // 세트 메뉴 추가
+        orderData["SETITEM_INFO"] = optionTrim;
+        orderData["SETITEM_CNT"] = optionTrim.length;
+        orderData["ITEM_AMT"] = orderData["ITEM_AMT"]+optionPrice;
+        // 중복 체크 후 수량 변경
+        let newOrderList = orderListDuplicateCheck(currentOrderList, orderData);
+        //newOrderList.reverse();
+    
+        if(newOrderList.length <= 0) {
+            dispatch(setCartView(false));
+        }else {
+            dispatch(setCartView(true));
+        }
+        // 금액계산
+        const totalResult = grandTotalCalculate(newOrderList)
+        //openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
+        openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
+        
+        return {orderList:newOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
+    }
 
-        newOrderList = Object.assign([],orderList);;
-        newOrderList.push(addedOrder);    
-    }
-    // 카트 여닫기
-    if(newOrderList.length <= 0) {
-        dispatch(setCartView(false));
-    }else {
-        dispatch(setCartView(true));
-    }
-    const totalResult = grandTotalCalculate(newOrderList)
-
-    let orderPayData = {
-        "STORE_ID": STORE_ID,
-        "SERVICE_ID": SERVICE_ID,
-        "MCHT_ORDERNO": "130",
-        "MEMB_TEL": "0215664551",
-        "ORDER_MEMO": " ",
-        "OEG_ORDER_PAY_AMT": `${totalResult.grandTotal}`,
-        "ORDER_PAY_AMT": `${totalResult.grandTotal}`,
-        "DISC_AMT": "0",
-        "PREPAY_FLAG": "N",
-        "OS_GBN": "AND",
-        "FLR_CODE": tableInfo.FLR_CODE,
-        "TBL_CODE": tableInfo.TBL_CODE,
-        "REPT_PRT_FLAG": "Y",
-        "ORDER_PRT_FLAG": "Y",
-        "ORD_PAY_LIST":[],
-        "ITEM_LIST":newOrderList,
-    }
-    openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
-    newOrderList.reverse();
-    return {orderList:newOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:orderPayData };
- */
+    
+    
 })
 // metacity 주문
 export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispatch, getState,extra}) =>{

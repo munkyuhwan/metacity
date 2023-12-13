@@ -17,7 +17,7 @@ const OptItem = (props)=>{
     const maxQty = props.maxQty;
     
     const {allItems} = useSelector((state)=>state.menu);
-    const {menuDetailID, menuOptionGroupCode, menuOptionSelected, menuOptionList, setGroupItem} = useSelector((state)=>state.menuDetail);
+    const {menuDetailID,  menuOptionGroupCode, menuOptionSelected, menuOptionList, setGroupItem} = useSelector((state)=>state.menuDetail);
     const [isSelected, setSelected] = useState(false);
     const [addtivePrice, setAdditivePrice] = useState();
     const [qty,setQty] = useState(1);
@@ -68,6 +68,7 @@ const OptItem = (props)=>{
             return booleanArr;
         }
     }
+
     const plusCnt = () =>{
         if(maxQty == 0) {
             let tmpOptions = Object.assign([],menuOptionSelected);

@@ -286,6 +286,7 @@ const ItemDetail = (props) => {
                                                             {
                                                                 el?.OPT_ITEMS &&
                                                                 el?.OPT_ITEMS?.map((itemEl,index)=>{
+                                                                    
                                                                     return(
                                                                         <OptItem key={"optItem_"+index} maxQty={el.QTY} isSelected={menuOptionSelected.filter(menuEl=>menuEl.PROD_I_CD ==itemEl.PROD_I_CD).length>0 } optionData={itemEl} menuData={menuDetail} onPress={(itemSel)=>{onOptionSelect(el.GROUP_NO, itemSel);} } />    
                                                                     );
