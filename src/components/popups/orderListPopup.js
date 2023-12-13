@@ -66,9 +66,9 @@ const OrderListPopup = () =>{
                 <OrderListWrapper>
                     <OrderListTableWrapper>
                         <OrderListTableColumnNameWrapper>
-                            <OrderListTableColumnName flex={0.8} >{LANGUAGE[language]?.orderListPopup.tableColName}</OrderListTableColumnName>
+                            <OrderListTableColumnName flex={0.9} >{LANGUAGE[language]?.orderListPopup.tableColName}</OrderListTableColumnName>
                             <OrderListTableColumnName flex={0.2} >{LANGUAGE[language]?.orderListPopup.tableColAmt}</OrderListTableColumnName>
-                            <OrderListTableColumnName flex={0.2} >{LANGUAGE[language]?.orderListPopup.tableColPrice}</OrderListTableColumnName>
+                            <OrderListTableColumnName flex={0.4} >{LANGUAGE[language]?.orderListPopup.tableColPrice}</OrderListTableColumnName>
                             <OrderListTableColumnName flex={0.3} >{LANGUAGE[language]?.orderListPopup.tableColTotal}</OrderListTableColumnName>
                         </OrderListTableColumnNameWrapper>
                        {orderStatus &&
