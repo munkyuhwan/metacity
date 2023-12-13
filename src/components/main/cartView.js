@@ -32,10 +32,11 @@ const CartView = () =>{
 
     const dispatch = useDispatch();
     const {isOn} = useSelector((state)=>state.cartView);
-    const {orderList, grandTotal, totalItemCnt} = useSelector((state)=>state.order);
+    const {orderList} = useSelector((state)=>state.order);
     const { tableInfo, tableStatus } = useSelector(state=>state.tableInfo);
     //console.log("orderList: ",orderList);
-
+    const [totalAmt, setTotalAmt] = useState();
+    const [totalCnt, setTotalCnt] = useState();
     const [slideAnimation, setSlideAnimation] = useState(new Animated.Value(0));
 
     const slideInterpolate = slideAnimation.interpolate({
@@ -105,6 +106,24 @@ const CartView = () =>{
     useEffect(()=>{
         drawerController(isOn); 
     },[isOn])
+
+    useEffect(()=>{
+        let totalAmt = 0;
+        let totalCnt = 0
+        if(orderList) {
+            if(orderList?.length>0) {
+                orderList?.map((el)=>{
+                    totalAmt += Number(el.ITEM_AMT);
+                    totalCnt++;
+                    for(var i=0;i<el.SETITEM_INFO.length;i++) {
+                        totalAmt += el.SETITEM_INFO[i].AMT
+                    }
+                })
+                setTotalAmt(totalAmt);
+                setTotalCnt(totalCnt);
+            }
+        }
+    },[orderList])
   
     return(
         <>  
@@ -141,14 +160,14 @@ const CartView = () =>{
                     <PayWrapper>
                         <PayAmtWrapper isBordered={true}>
                             <PayAmtTitle>{LANGUAGE[language]?.cartView?.orderAmt}</PayAmtTitle>
-                            <PayAmtNumber>{totalItemCnt}</PayAmtNumber>
+                            <PayAmtNumber>{totalCnt}</PayAmtNumber>
                             <PayAmtUnit> {LANGUAGE[language]?.cartView?.orderAmtUnit}</PayAmtUnit>
                         </PayAmtWrapper>
                     </PayWrapper>
                     <PayWrapper>
                         <PayAmtWrapper >
                             <PayAmtTitle>{LANGUAGE[language]?.cartView.totalAmt}</PayAmtTitle>
-                            <PayAmtNumber>{grandTotal}</PayAmtNumber>
+                            <PayAmtNumber>{totalAmt}</PayAmtNumber>
                             <PayAmtUnit> {LANGUAGE[language]?.cartView.totalAmtUnit}</PayAmtUnit>
                         </PayAmtWrapper>
                     </PayWrapper>

@@ -12,6 +12,7 @@ import { MENU_DATA } from '../../resources/menuData';
 import { LANGUAGE } from '../../resources/strings';
 import { resetAmtOrderList, setOrderList } from '../../store/order';
 import FastImage from 'react-native-fast-image';
+import { META_SET_MENU_SEPARATE_CODE_LIST } from '../../resources/defaults';
 
 const CartListItem = (props) => {
     const dispatch = useDispatch();
@@ -19,12 +20,14 @@ const CartListItem = (props) => {
     const {menuExtra} = useSelector(state=>state.menuExtra);
     const {orderList} = useSelector(state=>state.order);
     const {images} = useSelector(state=>state.imageStorage);
+    const {allItems} = useSelector(state=>state.menu);
     // 메뉴 옵션 추가 정보
 
     const index = props?.index;
     const order = props?.item;
     const additiveItemList = order?.SETITEM_INFO;
-    
+    const itemDetail = allItems?.filter(el=>el.PROD_CD == order?.ITEM_CD);
+    const prodGb = itemDetail[0]?.PROD_GB; // 세트하부금액 구분용
     // 이미지 찾기
     const itemExtra = menuExtra.filter(el=>el.pos_code == order?.ITEM_CD);
     const ItemTitle = () => {
@@ -81,6 +84,24 @@ const CartListItem = (props) => {
         }
         
     }
+    //console.log("cart order item: ",order);
+
+    const itemTotalPrice = () => {
+        if(META_SET_MENU_SEPARATE_CODE_LIST.indexOf(prodGb)>=0) {
+            // 선택하부금액 
+            
+            let additivePrice = 0;
+            for(var i=0;i<additiveItemList.length;i++) {
+                //console.log("additive item: ",additiveItemList[i]);
+                additivePrice = additivePrice+(additiveItemList[i]?.AMT)
+                //additivePrice = additivePrice+additi
+            }
+                        
+            return Number(order?.ITEM_AMT)+Number(additivePrice);
+        }else {
+            return order?.ITEM_AMT||0;
+        }
+    }
 
     return(
         <>
@@ -106,7 +127,7 @@ const CartListItem = (props) => {
                             })
                         }
                     </CartItemOpts>
-                    <CartItemPrice>{numberWithCommas(order?.ITEM_AMT||0)}원</CartItemPrice>
+                    <CartItemPrice>{numberWithCommas(itemTotalPrice())}원</CartItemPrice>
                     <CartItemAmtWrapper>
                         <TouchableWithoutFeedback  onPress={()=>{calculateAmt("minus",1)}} >
                             <CartItemAmtController>

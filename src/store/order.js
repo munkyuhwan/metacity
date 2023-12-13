@@ -79,11 +79,11 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
         // 하부메뉴금액 수량 수정
         let subSetItems = Object.assign([],selectedMenu?.SETITEM_INFO);
         
-        console.log("selectedMenu: ",selectedMenu);
         let newSubSetItems = [];
+        let subItemTotal = 0;
         for(var i=0;i<subSetItems.length;i++) {
             const calculatedData = {
-                "AMT": (subSetItems[i].AMT/subSetItems[i].QTY+subSetItems[i].VAT/subSetItems[i].QTY)*itemCnt, 
+                "AMT": (subSetItems[i].AMT/subSetItems[i].QTY)*itemCnt, 
                 "ITEM_SEQ": subSetItems[i].ITEM_SEQ, 
                 "PROD_I_CD": subSetItems[i].PROD_I_CD, 
                 "PROD_I_NM": subSetItems[i].PROD_I_NM, 
@@ -91,14 +91,14 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
                 "SET_SEQ": subSetItems[i].SET_SEQ,
                 "VAT": (subSetItems[i].VAT/subSetItems[i].QTY)*itemCnt,
             }
+            subItemTotal += (subSetItems[i].AMT/subSetItems[i].QTY)*itemCnt
             newSubSetItems.push(calculatedData);
         }
-        console.log("newSubSetItems: ",newSubSetItems);
         
         tmpOrderList[index] = Object.assign({},selectedMenu,{ITEM_AMT:singleItemAmt*itemCnt, ITEM_QTY:itemCnt,SETITEM_INFO:newSubSetItems});
         const totalResult = grandTotalCalculate(tmpOrderList)
        
-        return {orderList:tmpOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
+        return {orderList:tmpOrderList,grandTotal:totalResult.grandTotal+subItemTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
          
     }else {
 
@@ -144,13 +144,12 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
         // 메뉴 선택하부금액 
         // 선택한 옵션의 가격이 들어감
         // 세트 메인 품목의 가격은 그대로 하위 품목들의 가격이 들어가고 그에따라 수량이 늘아날떄 가격과 수량이 같이 올라가야함
-        console.log("선택하부금액 품목");
         // 메뉴 데이터 주문데이터에 맞게 변경
         let optionTrim = [];
         let optionPrice = 0;
         for(var i=0;i<menuOptionSelected.length;i++) {
             optionPrice = optionPrice+(menuOptionSelected[i].AMT+menuOptionSelected[i].VAT)*menuOptionSelected[i].QTY
-            optionTrim.push({...menuOptionSelected[i],...{ITEM_SEQ:orderData.ITEM_SEQ,AMT:menuOptionSelected[i].AMT*menuOptionSelected[i].QTY,VAT:menuOptionSelected[i].VAT*menuOptionSelected[i].QTY}});
+            optionTrim.push({...menuOptionSelected[i],...{ITEM_SEQ:orderData.ITEM_SEQ,AMT:menuOptionSelected[i].AMT*menuOptionSelected[i].QTY+menuOptionSelected[i].VAT*menuOptionSelected[i].QTY, VAT:menuOptionSelected[i].VAT*menuOptionSelected[i].QTY}});
         }
         // 세트 메뉴 추가
         orderData["SETITEM_INFO"] = optionTrim;
@@ -166,11 +165,11 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
             dispatch(setCartView(true));
         }
         // 금액계산
-        const totalResult = grandTotalCalculate(newOrderList)
+        const totalResult = grandTotalCalculate(newOrderList);
         //openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
         openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
         
-        return {orderList:newOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
+        return {orderList:newOrderList,grandTotal:totalResult.grandTotal+optionPrice,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
   
 
 
