@@ -119,9 +119,13 @@ const CartView = () =>{
                         totalAmt += el.SETITEM_INFO[i].AMT
                     }
                 })
-                setTotalAmt(totalAmt);
-                setTotalCnt(totalCnt);
             }
+            setTotalAmt(totalAmt);
+            setTotalCnt(totalCnt);
+            
+        }else {
+            setTotalAmt(totalAmt);
+            setTotalCnt(totalCnt);
         }
     },[orderList])
   
