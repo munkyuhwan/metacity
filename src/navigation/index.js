@@ -28,6 +28,7 @@ import { getStoreInfo } from '../utils/api/metaApis'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { fileDownloader, openTransperentPopup } from '../utils/common'
 import { getDisplay } from 'react-native-device-info'
+import { getAD } from '../store/ad'
 
 const Stack = createStackNavigator()
 
@@ -97,6 +98,8 @@ export default function Navigation() {
             // 주석 나중에 빼자
             statusInterval = setInterval(() => {
                 //console.log("status interval")
+                // 광고 받기
+                dispatch(getAD()); 
                 dispatch(getTableStatus());
             }, DEFAULT_TABLE_STATUS_UPDATE_TIME);
         //}
@@ -105,6 +108,7 @@ export default function Navigation() {
 
     useEffect(()=>{
         // 초기 세팅
+        dispatch(getAD()); 
         handleEventListener();
         dispatch(initMenu());
 

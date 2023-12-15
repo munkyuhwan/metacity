@@ -208,48 +208,34 @@ export async function fileDownloader(dispatch, name,url) {
         .catch(ee=>{
             reject()
         })
-
-
     })
-
-    
-    
-    /* 
-    const ext = url.split(".");
-    await deleteImageFile(`${RNFetchBlob.fs.dirs.DownloadDir}/wooriorder/${name}.${ext[ext.length-1]}`);
-    await RNFetchBlob.config({
-        overwrite:true,
-        addAndroidDownloads: {
-            useDownloadManager: true,
-            notification: true,
-            path: `${RNFetchBlob.fs.dirs.DownloadDir}/wooriorder/${name}.jpg`,
-        },
-      }).fetch('GET', url);
- */
 }
-async function deleteImageFile(dir) {
 
-    const filepath = `${dir}`;
-
-    RNFS.exists(filepath)
-    .then( (result) => {
-
-        if(result){
-          return RNFS.unlink(filepath)
-            .then(() => {
-            })
-            // `unlink` will throw an error, if the item to unlink does not exist
-            .catch((err) => {
-              console.log(err.message);
-            });
-        }
-
-      })
-      .catch((err) => {
-        //console.log(err.message);
-      });
-  }
-
-
-/* 
- */
+// 파일 다운로드
+export async function adFileDownloader(dispatch, name,url) {
+    const ext = url.split(".");
+    const extensionType = ext[ext.length-1]
+    return await new Promise(function(resolve, reject){
+        RNFetchBlob.config({
+            fileCache: true
+        })
+        .fetch("GET", url)
+        // the image is now dowloaded to device's storage
+        .then( (resp) => {
+          // the image path you can use it directly with Image component
+            imagePath = resp.path();
+            return resp.readFile("base64");
+        })
+        .then( async (base64Data) => {
+            //dispatch(addImageStorage({name:name,imgData:`data:image/${extensionType};base64,`+base64Data}));
+            //dispatch(addImageStorage({name:name,imgData:`data:image/${extensionType};base64,`+base64Data}));
+            dispatch(setAdImgs({name:name,imgData:`data:image/${extensionType};base64,`+base64Data}))
+            resolve({name:name,data:base64Data});
+            return fs.unlink(imagePath);
+            
+        })
+        .catch(ee=>{
+            reject()
+        })
+    })
+}

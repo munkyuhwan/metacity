@@ -18,7 +18,7 @@ const ADScreen = () =>{
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const {language} = useSelector(state=>state.languages);
-    const {adList} = useSelector(state=>state.ads);
+    const {adList,adImgs} = useSelector(state=>state.ads);
     const {tableInfo} = useSelector(state=>state.tableInfo);
     // 영상 플레이, 스톱
     const [videoIndex, setVideoIndex] = useState(0);
@@ -31,14 +31,13 @@ const ADScreen = () =>{
     }
 
     useEffect(()=>{
-        if(isEmpty(adList)) {
-            dispatch(getAD()); 
-        }
-    },[adList])
-
+        //if(isEmpty(adList)) {
+           // dispatch(getAD()); 
+        //}
+    },[])
+    let swipeTimeOut;
     useFocusEffect(useCallback(()=>{
-        setTimeout(()=>{
-            console.log("settimeout!!!!!!");
+        swipeTimeOut=setTimeout(()=>{
             let tmpIndex = adIndex;
             if(!tmpIndex) tmpIndex=0;
             let indexToSet = tmpIndex +1;
@@ -46,42 +45,13 @@ const ADScreen = () =>{
                 indexToSet = 0;
             }
             setAdIndex(indexToSet);
-            console.log("indexToSet: ",indexToSet," adlist: ",adList[tmpIndex]);
             if(adList[tmpIndex]?.img_chg){
-                console.log("img: ",ADMIN_BANNER_DIR+adList[tmpIndex].img_chg);
-                setDisplayUrl(ADMIN_BANNER_DIR+adList[tmpIndex].img_chg)
+                const imgToSet = adImgs.filter(el=>el.name ==adList[tmpIndex]?.img_chg );
+                setDisplayUrl(imgToSet[0]?.imgData)
             }
         },10000)
     },[adIndex]))
-
-    /* 
-    const AdLayer  = (index) =>{
-        const uri = ADMIN_BANNER_DIR+adList[index].img_chg;
-        console.log("AdLayer: ",uri)
-         
-        if (uri.includes(".mp4")) {
-            return(
-                <>
-                    <SwiperVideo
-                        key={index}
-                        source={{uri: uri}} 
-                        paused={videoIndex!=index}
-                        repeat={true}
-                    />
-                </>
-            )
-        }else {
-            return(
-                <>
-                    <SwiperImage
-                        key={index}
-                        source={{ uri: uri }}
-                    />
-                </>
-            )
-        }
-    }
-    */
+    
     return(
         <>
             <ADWrapper>
@@ -90,7 +60,7 @@ const ADScreen = () =>{
                         <TableNameBig>{tableInfo?.TBL_NAME}</TableNameBig>
                     </TableName>
                 </View>
-                {displayUrl.includes('mp4') &&
+                {displayUrl?.split(";")[0]?.split("/")[1]?.includes('mp4') &&
                     <SwiperVideo
                         key={"aa"}
                         source={{uri: displayUrl}} 
@@ -98,70 +68,16 @@ const ADScreen = () =>{
                         repeat={true}
                     />
                 }
-                {!displayUrl.includes('mp4') &&
+                {!displayUrl?.split(";")[0]?.split("/")[1]?.includes('mp4') &&
                     <>
-                    <SwiperImage
-                        key={"imageswipe"}
-                        source={{ uri: displayUrl }}
-                    />
-                </>
+                        <SwiperImage
+                            key={"imageswipe"}
+                            source={{ uri: displayUrl }}
+                        />
+                    </>
                 }
-                 {/*    <SwiperVideo
-                        key={"aa"}
-                        source={{uri: "https://wooriorder.co.kr/smartro/upload_file/banner/1690442236-ehwgi.mp4"}} 
-                        paused={false}
-                        repeat={true}
-                    /> */}
-                {/*
-                    adList.map((el,index)=>{
-                        const uri = ADMIN_BANNER_DIR+el.img_chg;
-      
-                    })
-
-                *?}
-                {/* <Swiper  
-                    ref={swiperRef}
-                    showsButtons={false}
-                    autoplay={true}
-                    autoplayTimeout={5}
-                    loop={true}
-                    scrollEnabled={false}
-                    activeDot={<></>}
-                    dot={<></>}
-                    onIndexChanged={(index)=>{ onSwipe(index); }}
-                >
-                    {!isEmpty(adList) &&
-                        adList.map((el,index)=>{
-                            const uri = ADMIN_BANNER_DIR+el.img_chg;
-                            //const uri = el.img_chg;
-                            console.log(uri)
-                            
-                            if(uri.includes(".mp4")) {
-                                return(
-                                    <>
-                                        <SwiperVideo
-                                            key={index}
-                                            source={{uri: uri}} 
-                                            paused={videoIndex!=index}
-                                            repeat={true}
-                                        />
-                                    </>
-                                )
-                            }else {
-                                return(
-                                    <>
-                                        <SwiperImage
-                                            key={index}
-                                            source={{ uri: uri }}
-                                        />
-                                    </>
-                                )
-                            }
-                            
-                            
-                        })
-                    }
-                </Swiper> */}
+                
+                
                 <TouchableWithoutFeedback onPress={()=>{navigation.navigate("main")}}>
                     <ADOrderBtnWrapper>
                         <ADOrderBtnText>주문하기</ADOrderBtnText>
