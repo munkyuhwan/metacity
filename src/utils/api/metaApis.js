@@ -8,6 +8,7 @@ import { EventRegister } from "react-native-event-listeners";
 import {isEmpty} from 'lodash';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
+import { postOrderLog } from "./adminApi";
 
 const posOrderHeader = {Accept: 'application/json','Content-Type': 'application/json'}
 const adminOrderHeader = {'Content-Type' : "text/plain"};
@@ -189,6 +190,9 @@ export const postMetaPosOrder = async(dispatch, data) =>{
         posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'포스 IP를 입력 해 주세요.',MSG2:""})
         return;
     }
+    const tableNo = await getTableInfo().catch({TABLE_INFO:""});
+    const storID = await AsyncStorage.getItem("STORE_IDX").catch("");
+
     return await new Promise(function(resolve, reject){
         axios.post(
             `${POS_BASE_URL(POS_IP)}`,
@@ -202,7 +206,12 @@ export const postMetaPosOrder = async(dispatch, data) =>{
                 //openPopup(dispatch,{innerView:"OrderComplete", isPopupVisible:true});
                 resolve()
             } else {
-                console.log("false");
+                if(response?.data){
+                    const ERROR_CD = response?.data?.ERROR_CD;
+                    const ERROR_MSG = response?.data?.ERROR_MSG;
+                    const postData = {"storeID":storID,"tableNo":tableNo?.TABLE_INFO,"ERROR_CD":ERROR_CD,"ERROR_MSG":ERROR_MSG, "orderData":JSON.stringify(data),"time":moment().format("YYYY-MM-DD HH:mm:ss")};
+                    postOrderLog(postData);
+                }
                 //reject({});
             }
         })) 

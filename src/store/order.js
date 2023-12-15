@@ -226,7 +226,7 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
         "TBL_NO" : `${tableNo.TABLE_INFO}`, 
         "PRINT_YN" : "Y",
         "USER_PRINT_YN" : "Y",
-        "PRINT_ORDER_NO" : "101", 
+        "PRINT_ORDER_NO" : orderNo, 
         "TOT_INWON" : 4,
         "ITEM_CNT" : orderList.length,
         "ITEM_INFO" :orderList
