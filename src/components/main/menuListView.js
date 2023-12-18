@@ -16,7 +16,9 @@ var touchStartOffset = 0;
 var touchEndOffset = 0;
 var currentOffset = 0;
 var scrollDownReached = false;
+var scrollDownCnt = 0;
 var scrollUpReached = false;
+var scrollUpCnt = 0;
 var isScrolling = false;
 let direction = "";
 
@@ -123,7 +125,7 @@ const MenuListView = () => {
                         touchStartOffset = event.nativeEvent.pageY;
                     }}
                     onTouchEnd={(event)=>{   
-                        // 스크롤 잇을떄는 호출 안됨
+                        // 스크롤 없을 때 호출
                         touchEndOffset = event.nativeEvent.pageY;
                         const touchSize = touchStartOffset - touchEndOffset;
                         
@@ -148,25 +150,38 @@ const MenuListView = () => {
                         
                         scrollDownReached = false;
                         scrollUpReached = false;
+                        scrollDownCnt = 0;
+                        scrollUpCnt = 0;
 
                         if (isCloseToBottom(event.nativeEvent)) {
+                            scrollDownCnt = scrollDownCnt+1;
                             if(direction == "down") scrollDownReached = true; scrollUpReached = false;
                         }
                         if (isCloseToTop(event.nativeEvent)) {
+                            scrollUpCnt = scrollUpCnt+1;
                             if(direction == 'up') scrollUpReached = true; scrollDownReached = false;
                         }
                     }}
                     onScrollBeginDrag={(ev)=>{
-                        // 스크롤 없을떄는 호출 안됨
+                        // 스크롤 있을떄 호출됨
                         isScrolling=true;
                     }}
                     onScrollEndDrag={(ev)=>{
                        
                         if(scrollDownReached ) {
-                            toNextCaterogy();
+                            if(scrollDownCnt>=1) {
+                                toNextCaterogy();
+                            }else {
+                                scrollDownCnt = scrollDownCnt+1;
+                            }
+
                         }
                         if(scrollUpReached) {
-                            toPrevCaterogy();
+                            if(scrollUpCnt>=1) {
+                                toPrevCaterogy();
+                            }else {
+                                scrollUpCnt = scrollUpCnt+1;
+                            }
                         }
                     }}
                 />
