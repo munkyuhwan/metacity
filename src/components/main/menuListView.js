@@ -40,7 +40,6 @@ const MenuListView = () => {
 
 
     const toNextCaterogy = () =>{
-        console.log("scroll bottom: ",scrollDownReached, "up: ",scrollUpReached);
         const selectedCat = allCategories.filter(e => e.PROD_L1_CD==selectedMainCategory);
         const selectedIndex = allCategories.indexOf(selectedCat[0]);
         var nextPage = 0;
