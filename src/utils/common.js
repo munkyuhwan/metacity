@@ -6,6 +6,7 @@ import {isEqual} from 'lodash';
 import RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
 import { addImageStorage } from '../store/imageStorage';
+import { setAdImgs } from '../store/ad';
 
 export function openPopup (dispatch, {innerView, isPopupVisible, param}) {
     if(isPopupVisible) {

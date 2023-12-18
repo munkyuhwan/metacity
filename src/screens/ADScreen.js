@@ -30,11 +30,18 @@ const ADScreen = () =>{
         setVideoIndex(index)
     }
 
-    useEffect(()=>{
-        //if(isEmpty(adList)) {
-           // dispatch(getAD()); 
-        //}
-    },[])
+    useFocusEffect(useCallback(()=>{
+        dispatch(getAD()); 
+    },[]))
+    
+    useFocusEffect(useCallback(()=>{
+        if( adList?.length > 0) {
+            const imgToSet = adImgs.filter(el=>el.name ==adList[0]?.img_chg );
+            setDisplayUrl(imgToSet[0]?.imgData)
+            setAdIndex(0)
+        }
+    },[adList]))
+    
     let swipeTimeOut;
     useFocusEffect(useCallback(()=>{
         swipeTimeOut=setTimeout(()=>{
@@ -51,7 +58,6 @@ const ADScreen = () =>{
             }
         },10000)
     },[adIndex]))
-    
     return(
         <>
             <ADWrapper>

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { getAdminBanners } from '../utils/apis';
 import { adFileDownloader } from '../utils/common';
+import { ADMIN_BANNER_DIR } from '../resources/apiResources';
 
 export const getAD = createAsyncThunk("ads/getAD", async(_,{dispatch}) =>{
     const result = await getAdminBanners(dispatch).catch(err=> {return []});
