@@ -14,10 +14,8 @@ export const getAD = createAsyncThunk("ads/getAD", async(_,{dispatch}) =>{
 export const setAdImgs = createAsyncThunk("ads/setAdImgs", async(data,{dispatch, getState}) =>{
     const {adImgs} = getState().ads;
     let prevImgs = Object.assign([],adImgs)
-    console.log("prevImgs: ",prevImgs)
     prevImgs = prevImgs.filter(el=>el.name!=data.name);
     prevImgs.push(data); 
-    console.log("prevImgs: ",prevImgs.length);
     return prevImgs;
 })
 

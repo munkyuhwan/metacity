@@ -601,7 +601,7 @@ export const getAdminBanners = async(dispatch) => {
     return await new Promise(function(resolve, reject){
         axios.post(
             `${ADMIN_BASE_URL}${ADMIN_BANNER}`,
-            {"STORE_ID":STORE_ID},
+            {"store_id":STORE_ID},
             adminOrderHeader,
         ) 
         .then((response => {

@@ -164,15 +164,16 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
         }else {
             dispatch(setCartView(true));
         }
+
+        for(var i=0;i<newOrderList.length;i++) {
+            newOrderList[i] = Object.assign({},{...newOrderList[i],...{ITEM_SEQ:i+1}});
+        }
         // 금액계산
         const totalResult = grandTotalCalculate(newOrderList);
         //openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
         openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
         
         return {orderList:newOrderList,grandTotal:totalResult.grandTotal+optionPrice,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
-  
-
-
     }else {
         // 다른 메뉴들
         // 세트메뉴 경우 그냥 세트 품목들 0원 세트 메인 상품의 가격에 세트메뉴 가격을 추가함
@@ -196,6 +197,10 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
             dispatch(setCartView(false));
         }else {
             dispatch(setCartView(true));
+        }
+
+        for(var i=0;i<newOrderList.length;i++) {
+            newOrderList[i] = Object.assign({},{...newOrderList[i],...{ITEM_SEQ:i+1}});
         }
         // 금액계산
         const totalResult = grandTotalCalculate(newOrderList)
@@ -231,6 +236,7 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
         "ITEM_CNT" : orderList.length,
         "ITEM_INFO" :orderList
     }    
+    console.log("orderList: ",orderList);
     const result = await postMetaPosOrder(dispatch, orderData).catch(err=>{posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"주문오류",MSG2:"주문을 진행할 수 없습니다."}); return; });
     dispatch(setCartView(false));
     dispatch(initOrderList());
