@@ -29,7 +29,7 @@ const ADScreenPopup = () =>{
             setAdIndex(0)
         }else {
             clearTimeout(swipeTimeOut); 
-            dispatch(setAdScreen({isShow:false}));
+            dispatch(setAdScreen({isShow:false,isMain:false}));
         }
     },[adList])
     
@@ -46,6 +46,8 @@ const ADScreenPopup = () =>{
                 const imgToSet = adImgs.filter(el=>el.name ==adList[tmpIndex]?.img_chg );
                 setDisplayUrl(imgToSet[0]?.imgData)
             }
+            clearTimeout(swipeTimeOut); 
+            swipeTimeOut=null;
         },10000)
     },[adIndex])
 
@@ -59,7 +61,7 @@ const ADScreenPopup = () =>{
                         </TableName>
                     </View>
                     <StatusText style={{color:'#000000'}} >광고 준비중</StatusText>                    
-                    <TouchableWithoutFeedback onPress={()=>{ clearTimeout(swipeTimeOut); dispatch(setAdScreen({isShow:false})) /* navigation.navigate("main") */}}>
+                    <TouchableWithoutFeedback onPress={()=>{ clearTimeout(swipeTimeOut); swipeTimeOut=null; dispatch(setAdScreen({isShow:false,isMain:false})) /* navigation.navigate("main") */}}>
                         <ADOrderBtnWrapper>
                             <ADOrderBtnText>주문하기</ADOrderBtnText>
                             <ADOrderBtnIcon source={require("../../assets/icons/folk_nife.png")} />
@@ -95,7 +97,7 @@ const ADScreenPopup = () =>{
                     }
                     
                     
-                    <TouchableWithoutFeedback onPress={()=>{ clearTimeout(swipeTimeOut); dispatch(setAdScreen({isShow:false})) /* navigation.navigate("main") */}}>
+                    <TouchableWithoutFeedback onPress={()=>{ clearTimeout(swipeTimeOut); dispatch(setAdScreen({isShow:false,isMain:false})) /* navigation.navigate("main") */}}>
                         <ADOrderBtnWrapper>
                             <ADOrderBtnText>주문하기</ADOrderBtnText>
                             <ADOrderBtnIcon source={require("../../assets/icons/folk_nife.png")} />

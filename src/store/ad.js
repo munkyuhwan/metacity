@@ -5,7 +5,8 @@ import { ADMIN_BANNER_DIR } from '../resources/apiResources';
 
 export const getAD = createAsyncThunk("ads/getAD", async(_,{dispatch}) =>{
     const result = await getAdminBanners(dispatch).catch(err=> {return []});
-    const payload = result?.data;
+    let payload = result?.data;
+    payload = payload?.filter(el=>el.isuse=='Y');
     for(var i=0;i<payload.length;i++) {
         await adFileDownloader(dispatch, `${payload[i].img_chg}`,ADMIN_BANNER_DIR+payload[i].img_chg).catch("");
     }
@@ -20,7 +21,17 @@ export const setAdImgs = createAsyncThunk("ads/setAdImgs", async(data,{dispatch,
     return prevImgs;
 })
 export const setAdScreen = createAsyncThunk("ads/setAdScreen", async(data,{dispatch}) =>{
-    return data?.isShow;
+    const {isMain, isShow} = data;
+    if(isMain) {
+        // 메인에서 넘어갈 경우 배너 길이 확인해서 1보다 크면 넘김
+        const result = await getAdminBanners(dispatch).catch(err=> {return []});
+        const payload = result?.data;
+        if(payload?.length>0) {
+           await dispatch(getAD());
+        }
+        return payload?.length>0    
+    }
+    return isShow;
 })
 
 
