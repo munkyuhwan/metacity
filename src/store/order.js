@@ -10,6 +10,7 @@ import LogWriter from '../utils/logWriter';
 import { POS_VERSION_CODE, POS_WORK_CD_POSTPAY_ORDER, POS_WORK_CD_VERSION } from '../resources/apiResources';
 import { getTableOrderList, postMetaPosOrder } from '../utils/api/metaApis';
 import { META_SET_MENU_SEPARATE_CODE_LIST } from '../resources/defaults';
+import moment from 'moment';
 
 export const initOrderList = createAsyncThunk("order/initOrderList", async() =>{
     return  {
@@ -220,10 +221,10 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
     const tableNo = await getTableInfo().catch(err=>{posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"테이블 설정",MSG2:"테이블 번호를 설정 해 주세요."});});
     if(isEmpty(tableNo)) {
         posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"테이블 설정",MSG2:"테이블 번호를 설정 해 주세요."});
-
         return 
     }
-    const orderNo = `${date.getFullYear()}${numberPad(date.getMonth()+1,2)}${numberPad(date.getDate(),2)}${date.getMilliseconds()}`;
+    
+    const orderNo = `${date.getFullYear()}${numberPad(date.getMonth()+1,2)}${numberPad(date.getDate(),2)}${moment().valueOf().toString().substring(0,10)}`;
     let orderData = {
         "VERSION" : POS_VERSION_CODE,
         "WORK_CD" : POS_WORK_CD_POSTPAY_ORDER,
@@ -236,12 +237,12 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
         "ITEM_CNT" : orderList.length,
         "ITEM_INFO" :orderList
     }    
-
+  
     const result = await postMetaPosOrder(dispatch, orderData).catch(err=>{posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"주문오류",MSG2:"주문을 진행할 수 없습니다."}); return; });
     dispatch(setCartView(false));
     dispatch(initOrderList());
-    //openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"주문을 완료했습니다."}});
     openTransperentPopup(dispatch, {innerView:"OrderList", isPopupVisible:true, param:{timeOut:10000} });
+    
     return result;
 })
 
