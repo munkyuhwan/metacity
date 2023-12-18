@@ -223,8 +223,13 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
         posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"테이블 설정",MSG2:"테이블 번호를 설정 해 주세요."});
         return 
     }
-    
-    const orderNo = `${date.getFullYear()}${numberPad(date.getMonth()+1,2)}${numberPad(date.getDate(),2)}${moment().valueOf().toString().substring(0,10)}`;
+
+    if(orderList?.length<=0) {
+        posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"",MSG2:"메뉴를 선택 해 주세요."});
+        return 
+    }
+
+    const orderNo = `${date.getFullYear().toString().substring(2,4)}${numberPad(date.getMonth()+1,2)}${numberPad(date.getDate(),2)}${moment().valueOf()}`;
     let orderData = {
         "VERSION" : POS_VERSION_CODE,
         "WORK_CD" : POS_WORK_CD_POSTPAY_ORDER,
