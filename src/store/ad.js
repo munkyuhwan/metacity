@@ -25,7 +25,8 @@ export const setAdScreen = createAsyncThunk("ads/setAdScreen", async(data,{dispa
     if(isMain) {
         // 메인에서 넘어갈 경우 배너 길이 확인해서 1보다 크면 넘김
         const result = await getAdminBanners(dispatch).catch(err=> {return []});
-        const payload = result?.data;
+        let payload = result?.data;
+        payload = payload?.filter(el=>el.isuse=='Y');
         if(payload?.length>0) {
            await dispatch(getAD());
         }

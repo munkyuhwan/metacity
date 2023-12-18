@@ -31,7 +31,7 @@ const ADScreen = () =>{
     }
 
     useFocusEffect(useCallback(()=>{
-        dispatch(getAD()); 
+        //dispatch(getAD()); 
     },[]))
     
     useFocusEffect(useCallback(()=>{
