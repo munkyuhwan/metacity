@@ -29,6 +29,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { fileDownloader, openTransperentPopup } from '../utils/common'
 import { getDisplay } from 'react-native-device-info'
 import { getAD } from '../store/ad'
+import ADScreenPopup from '../components/popups/adPopup'
 
 const Stack = createStackNavigator()
 
@@ -39,6 +40,7 @@ export default function Navigation() {
     
     const {tableStatus} = useSelector(state=>state.tableInfo);
     const {allItems} = useSelector(state=>state.menu);
+    const {isShow} = useSelector(state=>state.ads);
 
     const navigate = useRef();
     const handleEventListener = () => {
@@ -184,6 +186,9 @@ export default function Navigation() {
             <PopUp/>
             <TransparentPopUp/>
             <FullSizePopup/>
+            {isShow &&
+                <ADScreenPopup/>
+            }
             {(spinnerText!="")&&
                 <PopupIndicator text={spinnerText} />
             }

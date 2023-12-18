@@ -19,6 +19,10 @@ export const setAdImgs = createAsyncThunk("ads/setAdImgs", async(data,{dispatch,
     prevImgs.push(data); 
     return prevImgs;
 })
+export const setAdScreen = createAsyncThunk("ads/setAdScreen", async(data,{dispatch}) =>{
+    return data?.isShow;
+})
+
 
 // Slice
 export const adSlice = createSlice({
@@ -26,7 +30,7 @@ export const adSlice = createSlice({
     initialState: {
         adList:[],
         adImgs:[],
-
+        isShow:false,
     },
     extraReducers:(builder)=>{
         // 고ㅏㅇ고  받기
@@ -36,6 +40,10 @@ export const adSlice = createSlice({
         builder.addCase(setAdImgs.fulfilled,(state, action)=>{
             state.adImgs = action.payload;
         })
+        builder.addCase(setAdScreen.fulfilled,(state, action)=>{
+            state.isShow = action.payload;
+        })
+
     }
 });
 
