@@ -31,63 +31,51 @@ export const POS_WORK_CD_MID_CAT_RES = "2001";
 // 소분류 정보조회 요청 
 export const POS_WORK_CD_SUB_CAT = "3000";
 export const POS_WORK_CD_SUB_CAT_RES = "3001";
-
 // 테이블 정보 조회
 export const POS_WORK_CD_TABLE_INFO = "4000";
-
 // 상품 정보 조회
 export const POS_WORK_CD_MENU_ITEMS = "5000";
-
 // 선불제 주문 조회/요청/취소
 export const POS_WORK_CD_PREPAY_ORDER_LIST = "6000";
 export const POS_WORK_CD_PREPAY_ORDER_REQUEST = "6010";
 export const POS_WORK_CD_PREPAY_ORDER_CANCEL = "6020";
-
 // 상품 변경 여부 확인
 export const POS_WORK_CD_IS_MENU_CHANGE = "7000";
 // 상품 주문 가능 여부 확인
 export const POS_WORK_CD_CAN_MENU_ORDER = "7010";
-
 // 세트 그룹 정보조회
 export const POS_WORK_CD_SET_GROUP_INFO = "8000";
 // 세트 상품 정보조회
 export const POS_WORK_CD_SET_GROUP_ITEM_INFO = "8010";
- 
-
 // 후불제 주문 요청
 export const POS_WORK_CD_POSTPAY_ORDER = "8020";
 // 후불제 주문 취소
 export const POS_WORK_CD_POSTPAY_ORDER_CANCEL = "8030";
-
 // 테이블 LOCK 요청
 export const POS_WORK_CD_TABLE_LOCK = "8040";
 // 테이블 작업 가능 여부 조회
 export const POS_WORK_CD_TABLE_CAN_LOCK = "8050";
 // 테이블 주문내역
 export const POS_WORK_CD_TABLE_ORDER_LIST = "8060";
-
 // 버전정보조회
 export const POS_WORK_CD_VERSION = "8070";
-
 // 결제금액 조회
 export const POS_WORK_CD_PAID_AMT = "8080";
-
 // 주문 결제 요청 (후불제)
 export const POS_WORK_CD_REQ_PAY = "8090";
-
 // 매장 정보 
 export const POS_WORK_CD_REQ_STORE_INFO = "1100";
-
 // 테이블 이동요청
 export const POS_WORK_CD_REQ_TABLE_MOVE = "1110";
-
 // 테이블 합석 요청
 export const POS_WORK_CD_REQ_TABLE_MERGE = "1120";
-
 // 에러 코드
 export const POS_SUCCESS_CD = "E0000";
 
-
+// kocess
+export const TID = "0710000900";
+export const BSN_ID = "2148631917";
+export const SN = "1000000007";
 
 // ADMIN API URL
 export const ADMIN_BASE_URL = "https://wooriorder.co.kr/metacity";

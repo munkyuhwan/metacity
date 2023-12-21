@@ -1,5 +1,6 @@
 package com.metacity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
@@ -116,6 +117,6 @@ public class MainActivity extends ReactActivity {
       }
     });
     timeThread.start();
-
   }
+
 }

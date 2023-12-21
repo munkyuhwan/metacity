@@ -18,7 +18,7 @@ export const  posOrderNew = async (resolve,reject) =>{
 
     return await new Promise(function(resolve, reject){
         axios.post(
-            `${POS_BASE_URL_TEST}${POS_ORDER_NEW}`,
+            `${POS_BASE_URL_REAL}${POS_ORDER_NEW}`,
             {"STORE_ID":STORE_ID,"SERVICE_ID":SERVICE_ID},
             posOrderHeadr, 
         ) 
@@ -45,7 +45,7 @@ export const  posMenuState = async (dispatch) =>{
     }
     return await new Promise(function(resolve, reject){
         axios.post(
-            `${POS_BASE_URL_TEST}${POS_POST_MENU_STATE}`,
+            `${POS_BASE_URL_REAL}${POS_POST_MENU_STATE}`,
             {"STORE_ID":STORE_ID,"SERVICE_ID":SERVICE_ID, "UPDATE_CHECK_DTIME":lastUpdate},
             posOrderHeadr,  
         ) 
@@ -73,7 +73,7 @@ export const  posMenuEdit = async(dispatch) =>{
     }
     return await new Promise(function(resolve, reject){
         axios.post(
-            `${POS_BASE_URL_TEST}${POS_POST_MENU_EDIT}`,
+            `${POS_BASE_URL_REAL}${POS_POST_MENU_EDIT}`,
             {"STORE_ID":STORE_ID},
             posOrderHeadr,
         ) 
@@ -97,7 +97,7 @@ export const posTableList = async(dispatch) =>{
     });
     return await new Promise(function(resolve, reject){
         axios.post(
-            `${POS_BASE_URL_TEST}${POS_POST_TABLE_LIST}`,
+            `${POS_BASE_URL_REAL}${POS_POST_TABLE_LIST}`,
             {"STORE_ID":STORE_ID,"SERVICE_ID":SERVICE_ID},
             posOrderHeadr,
         )  
@@ -160,7 +160,7 @@ export const postOrderToPos = async(dispatch, data) =>{
         postData.ITEM_LIST = newItemList;
         //console.log("post dta: ",postData);
         axios.post(
-            `${POS_BASE_URL_TEST}${POS_ORDER_NEW}`,
+            `${POS_BASE_URL_REAL}${POS_ORDER_NEW}`,
             {
                 "STORE_ID":STORE_ID,
                 "SERVICE_ID":SERVICE_ID,
@@ -245,7 +245,7 @@ export const addOrderToPos = async(dispatch, data) =>{
         postData.ITEM_LIST = newItemList;
  
         axios.post(
-            `${POS_BASE_URL_TEST}${POS_ORDER_ADD}`,
+            `${POS_BASE_URL_REAL}${POS_ORDER_ADD}`,
             {
                 "STORE_ID":STORE_ID,
                 "SERVICE_ID":SERVICE_ID,
@@ -287,7 +287,7 @@ export const checkTableOrder = async(dispatch, data ) => {
             return;
         }
         axios.post(
-            `${POS_BASE_URL_TEST}${POS_POST_ORDER}`,
+            `${POS_BASE_URL_REAL}${POS_POST_ORDER}`,
             {
                 "STORE_ID":STORE_ID,
                 "SERVICE_ID":SERVICE_ID,
@@ -344,7 +344,7 @@ export const cancelOrder = async(dispatch, data) => {
         console.log("============================================================================");
         console.log("tableINfo: ",data.tableInfo);
         axios.post(
-            `${POS_BASE_URL_TEST}${POS_POST_ORDER_CANCEL}`,
+            `${POS_BASE_URL_REAL}${POS_POST_ORDER_CANCEL}`,
             {
                 "STORE_ID":STORE_ID,
                 "SERVICE_ID":SERVICE_ID,
@@ -382,7 +382,7 @@ export const getOrderByTable = async(dispatch, data) => {
         }
         
         axios.post(
-            `${POS_BASE_URL_TEST}${POS_POST_ORDER}`,
+            `${POS_BASE_URL_REAL}${POS_POST_ORDER}`,
             {
                 "STORE_ID":STORE_ID,
                 "SERVICE_ID":SERVICE_ID,

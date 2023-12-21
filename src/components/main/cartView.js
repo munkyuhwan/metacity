@@ -25,7 +25,7 @@ import { posErrorHandler } from '../../utils/errorHandler/ErrorHandler';
 import { getMenuState, initMenu } from '../../store/menu';
 import { getMenuUpdateState } from '../../utils/api/metaApis';
 import moment from 'moment';
-//import { prepareKocesPay } from '../../utils/payment/kocesPay';
+import { prepareKocesPay } from '../../utils/payment/kocesPay';
 
 const CartView = () =>{
     const lw = new LogWriter();
@@ -69,9 +69,9 @@ const CartView = () =>{
         // 업데이트 메뉴가 있는지 체크
         //dispatch(getMenuState());
         // 결제모듈 연동
-        //prepareKocesPay();
+        prepareKocesPay();
 
-         
+         /* 
         const resultData = await getMenuUpdateState(dispatch).catch(err=>{return []});
         if(!resultData) {
             
@@ -105,8 +105,8 @@ const CartView = () =>{
             }else {
                 dispatch(postToMetaPos());
             }
-        } 
-  
+        }  */
+        
     }
     useEffect(()=>{
         drawerController(isOn); 
