@@ -25,7 +25,7 @@ import { posErrorHandler } from '../../utils/errorHandler/ErrorHandler';
 import { getMenuState, initMenu } from '../../store/menu';
 import { getMenuUpdateState } from '../../utils/api/metaApis';
 import moment from 'moment';
-import { prepareKocesPay } from '../../utils/payment/kocesPay';
+//import { prepareKocesPay } from '../../utils/payment/kocesPay';
 
 const CartView = () =>{
     const lw = new LogWriter();
@@ -106,7 +106,7 @@ const CartView = () =>{
                 dispatch(postToMetaPos());
             }
         } 
- 
+  
     }
     useEffect(()=>{
         drawerController(isOn); 

@@ -190,7 +190,7 @@ export default function Navigation() {
                 <ADScreenPopup/>
             }
             {(spinnerText!="")&&
-                <PopupIndicator text={spinnerText} />
+                <PopupIndicator text={spinnerText} setText={setSpinnerText} />
             }
         </>
     )
