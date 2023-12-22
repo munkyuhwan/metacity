@@ -25,7 +25,7 @@ import { posErrorHandler } from '../../utils/errorHandler/ErrorHandler';
 import { getMenuState, initMenu } from '../../store/menu';
 import { getMenuUpdateState } from '../../utils/api/metaApis';
 import moment from 'moment';
-import { prepareKocesPay } from '../../utils/payment/kocesPay';
+import { KocesAppPay, prepareKocesPay } from '../../utils/payment/kocesPay';
 
 const CartView = () =>{
     const lw = new LogWriter();
@@ -69,9 +69,19 @@ const CartView = () =>{
         // 업데이트 메뉴가 있는지 체크
         //dispatch(getMenuState());
         // 결제모듈 연동
-        prepareKocesPay();
+        //prepareKocesPay();
 
-         /* 
+        var kocessAppPay = new KocesAppPay();
+        kocessAppPay.storeDownload();
+        kocessAppPay.requestKoces()
+        .then(result=>{
+            console.log("request result: ", result?.ShpNm);
+        })
+        .catch((err)=>{
+            console.log("error: ",err)
+        })
+        
+        /* 
         const resultData = await getMenuUpdateState(dispatch).catch(err=>{return []});
         if(!resultData) {
             

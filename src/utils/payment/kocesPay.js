@@ -1,6 +1,38 @@
 import { NativeModules } from "react-native"
-import { TID } from "../../resources/apiResources";
+import { BSN_ID, KOCES_CODE_STORE_DOWNLOAD, SN, TID } from "../../resources/apiResources";
 import moment from "moment";
+
+export function KocesAppPay () {
+    this.data = {};
+}
+// 초기화
+KocesAppPay.prototype.init = function () {
+    console.log("initialize koces");
+    this.data = {};
+} 
+// 가맹점 다운로드
+KocesAppPay.prototype.storeDownload = function () {
+    this.data = {TrdType:KOCES_CODE_STORE_DOWNLOAD,TermID:TID, BsnNo:BSN_ID, Serial:SN, MchData:""};
+} 
+// 결제 등등 요청
+KocesAppPay.prototype.requestKoces = async function () {
+    const {KocesPay} = NativeModules;
+    return await new Promise((resolve, reject)=>{
+        KocesPay.prepareKocesPay(
+            this.data,
+            (error)=>{
+                //console.log("error msg: ",error);
+                reject(JSON.parse(error));
+            },
+            (msg)=>{
+                //console.log("success msg: ",msg);
+                resolve(JSON.parse(msg));
+            }
+        );
+    });
+
+}
+
 
 export const prepareKocesPay = () =>{
     const {KocesPay} = NativeModules;
