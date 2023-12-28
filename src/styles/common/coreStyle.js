@@ -1,5 +1,5 @@
 import styled, {css} from 'styled-components/native';
-import { colorBlack, colorWhite } from '../../assets/colors/color';
+import { colorBlack, colorRed, colorWhite } from '../../assets/colors/color';
 import { RADIUS_SMALL } from '../values';
 
 // 상단 타이틀
@@ -27,6 +27,15 @@ export const PopupBottomButtonWrapper = styled.View`
 `
 export const PopupBottomButtonBlack = styled.View`
     backgroundColor:${colorBlack};
+    paddingTop:7px;
+    paddingBottom:7px;
+    paddingLeft:10px;
+    paddingRight:10px;
+    alignSelf:center;
+    borderRadius:${RADIUS_SMALL};
+`
+export const PopupBottomButtonRed = styled.View`
+    backgroundColor:${colorRed};
     paddingTop:7px;
     paddingBottom:7px;
     paddingLeft:10px;

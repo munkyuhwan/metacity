@@ -26,6 +26,9 @@ import { getMenuState, initMenu } from '../../store/menu';
 import { getMenuUpdateState } from '../../utils/api/metaApis';
 import moment from 'moment';
 import { KocesAppPay, prepareKocesPay } from '../../utils/payment/kocesPay';
+import { displayErrorPopup } from '../../utils/errorHandler/metaErrorHandler';
+import { PAY_SEPRATE_AMT_LIMIT } from '../../resources/defaults';
+import { setMonthPopup, setSelectedMonth } from '../../store/monthPopup';
 
 const CartView = () =>{
     const lw = new LogWriter();
@@ -33,8 +36,9 @@ const CartView = () =>{
 
     const dispatch = useDispatch();
     const {isOn} = useSelector((state)=>state.cartView);
-    const {orderList} = useSelector((state)=>state.order);
+    const {orderList,vatTotal} = useSelector((state)=>state.order);
     const { tableInfo, tableStatus } = useSelector(state=>state.tableInfo);
+    const {isMonthSelectShow, monthSelected} = useSelector(state=>state.monthSelect)
     //console.log("orderList: ",orderList);
     const [totalAmt, setTotalAmt] = useState();
     const [totalCnt, setTotalCnt] = useState();
@@ -65,23 +69,44 @@ const CartView = () =>{
         //lw.writeLog("Teset test test")
     } 
 
-    const doPayment = async () =>{
-        // 업데이트 메뉴가 있는지 체크
-        //dispatch(getMenuState());
-        // 결제모듈 연동
-        //prepareKocesPay();
+    useEffect(()=>{
+        if(!isMonthSelectShow) {
+            if(totalAmt>0) {
+                if(monthSelected!="") {
+                    makePayment();
+                    dispatch(setSelectedMonth(""));
+                }
+            }
+        }
 
-        var kocessAppPay = new KocesAppPay();
-        kocessAppPay.storeDownload();
-        kocessAppPay.requestKoces()
-        .then(result=>{
-            console.log("request result: ", result?.ShpNm);
-        })
-        .catch((err)=>{
-            console.log("error: ",err)
-        })
-        
-        /* 
+    },[isMonthSelectShow,monthSelected])
+
+    const makePayment = () =>{
+        if( tableStatus?.now_later == "선불") {
+            //dispatch(postToMetaPos({payData:SAMPLE_PAY_RESULT_DATA}));
+            let payAmt = totalAmt - vatTotal;
+            var kocessAppPay = new KocesAppPay();
+            //kocessAppPay.storeDownload();
+            kocessAppPay.makePayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected});
+            //kocessAppPay.cancelPayment({amt:1004, taxAmt:0,auDate:"231227",auNo:"02173730",tradeNo:"000000800951"});
+            kocessAppPay.requestKoces()
+            .then(result=>{
+                console.log("request result: ", result);
+                dispatch(postToMetaPos({payData:SAMPLE_PAY_RESULT_DATA}));
+            })
+            .catch((err)=>{
+                displayErrorPopup(dispatch, "XXXX", err?.Message)
+                console.log("error: ",err)
+            })
+            
+        }else {
+            dispatch(postToMetaPos());
+        }
+
+    }
+
+    const doPayment = async () =>{
+
         const resultData = await getMenuUpdateState(dispatch).catch(err=>{return []});
         if(!resultData) {
             
@@ -109,13 +134,23 @@ const CartView = () =>{
                     dispatch(setCartView(false));
                     dispatch(initOrderList());
                 }else {
-                    dispatch(postToMetaPos());
+                    if(totalAmt >= PAY_SEPRATE_AMT_LIMIT) {
+                        dispatch(setMonthPopup({isMonthSelectShow:true}))
+                    }else {
+                        makePayment();
+                    }
+                    //dispatch(postToMetaPos());
                 }
     
             }else {
-                dispatch(postToMetaPos());
+                if(totalAmt >= PAY_SEPRATE_AMT_LIMIT) {
+                    dispatch(setMonthPopup({isMonthSelectShow:true}))
+                }else {
+                    makePayment();
+                }
+                //dispatch(postToMetaPos());
             }
-        }  */
+        } 
         
     }
     useEffect(()=>{
@@ -209,4 +244,45 @@ const CartView = () =>{
         </>
     )
 }
+
+const SAMPLE_PAY_RESULT_DATA = {
+    "AnsCode": "0000",
+    "AnswerTrdNo": null, 
+    "AuNo": "02761105", 
+    "AuthType": null, 
+    "BillNo": "", 
+    "CardKind": "1", 
+    "CardNo": "94119400", 
+    "ChargeAmt": null, 
+    "DDCYn": "1", 
+    "DisAmt": null, 
+    "EDCYn": "0",
+    "GiftAmt": "", 
+    "InpCd": "1107", 
+    "InpNm": "신한카드", 
+    "Keydate": "", 
+    "MchData": 
+    "wooriorder", 
+    "MchNo": "22101257", 
+    "Message":"000001105687", 
+    "Month": "00", 
+    "OrdCd": "1107", 
+    "OrdNm": "개인신용", 
+    "PcCard": null, 
+    "PcCoupon": null, 
+    "PcKind": null, 
+    "PcPoint": null, 
+    "QrKind": null, 
+    "RefundAmt": null, 
+    "SvcAmt": "0", 
+    "TaxAmt": "0", 
+    "TaxFreeAmt": "0", 
+    "TermID": "0710000900", 
+    "TradeNo": "000001105687", 
+    "TrdAmt": "50004", 
+    "TrdDate": "231227113649",
+    "TrdType": "A15"
+}
+
+
 export default CartView;

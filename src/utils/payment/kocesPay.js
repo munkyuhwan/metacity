@@ -14,6 +14,62 @@ KocesAppPay.prototype.init = function () {
 KocesAppPay.prototype.storeDownload = function () {
     this.data = {TrdType:KOCES_CODE_STORE_DOWNLOAD,TermID:TID, BsnNo:BSN_ID, Serial:SN, MchData:""};
 } 
+// 결제 요청
+KocesAppPay.prototype.makePayment = function ({amt,taxAmt,months}) {
+    this.data = {
+        TrdType:'A10',
+        TermID: TID, 
+        Audate:`${moment().format("YYMMDD")}`,
+        AuNo:'',
+        KeyYn:'I',
+        TrdAmt:`${amt}`,
+        TaxAmt:`${taxAmt}`,
+        SvcAmt:"0",
+        TaxFreeAmt:"0",
+        Month:`${months}`,
+        MchData:"wooriorder",
+        TrdCode:"",
+        TradeNo:"",
+        CompCode:"",
+        DscYn:"1",
+        DscData:"",
+        FBYn:"0",
+        InsYn:"1",
+        CancelReason:"",
+        CashNum:"",
+        BillNo:"",
+    };
+} 
+
+// 취소 요청
+KocesAppPay.prototype.cancelPayment = function ({amt,taxAmt,auDate,auNo,tradeNo}) {
+    this.data = {
+        TrdType:'A20',
+        TermID: TID, 
+        Audate:`${auDate}`,
+        AuNo:`${auNo}`,
+        KeyYn:'I',
+        TrdAmt:`${amt}`,
+        TaxAmt:`${taxAmt}`,
+        SvcAmt:"0",
+        TaxFreeAmt:"0",
+        Month:"00",
+        MchData:"wooriorder",
+        TrdCode:`T`,
+        TradeNo:`${tradeNo}`,
+        CompCode:"",
+        DscYn:1,
+        DscData:"",
+        FBYn:0,
+        InsYn:1,
+        CancelReason:"1",
+        CashNum:"",
+        BillNo:"",
+    };
+
+
+} 
+
 // 결제 등등 요청
 KocesAppPay.prototype.requestKoces = async function () {
     const {KocesPay} = NativeModules;

@@ -54,13 +54,15 @@ export function numberWithCommas(x) {
 export function grandTotalCalculate(data) {
     let amt = 0;
     let itemCnt = 0;
+    let vatTotal = 0;
     if(data) {
         data?.map(el=>{
+            vatTotal += el?.ITEM_VAT;
             amt += el.ITEM_AMT;
             itemCnt += el.ITEM_QTY;
         })
     }
-    return {grandTotal:amt, itemCnt:itemCnt};
+    return {grandTotal:amt, itemCnt:itemCnt, vatTotal:vatTotal};
 }
 
 export function numberPad(n, width) {

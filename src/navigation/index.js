@@ -30,6 +30,7 @@ import { fileDownloader, openTransperentPopup } from '../utils/common'
 import { getDisplay } from 'react-native-device-info'
 import { getAD } from '../store/ad'
 import ADScreenPopup from '../components/popups/adPopup'
+import MonthSelectPopup from '../components/popups/monthSelectPopup'
 
 const Stack = createStackNavigator()
 
@@ -41,6 +42,7 @@ export default function Navigation() {
     const {tableStatus} = useSelector(state=>state.tableInfo);
     const {allItems} = useSelector(state=>state.menu);
     const {isShow} = useSelector(state=>state.ads);
+    const {isMonthSelectShow} = useSelector(state=>state.monthSelect);
 
     const navigate = useRef();
     const handleEventListener = () => {
@@ -191,6 +193,9 @@ export default function Navigation() {
             }
             {(spinnerText!="")&&
                 <PopupIndicator text={spinnerText} setText={setSpinnerText} />
+            }
+            {isMonthSelectShow &&
+                <MonthSelectPopup/>
             }
         </>
     )
