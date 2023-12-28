@@ -63,8 +63,8 @@ export const MenuItemButtonInnerWrapperLeft = styled.View`
     justifyContent:flex-end;
 `
 export const MenuItemButton = styled.Image`
-    width:46px;
-    height:46px;
+    width:56px;
+    height:56px;
     resizeMode:contain;
 `
 export const MenuItemHotnessWrapper = styled.View`
