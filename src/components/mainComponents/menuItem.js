@@ -12,6 +12,7 @@ import {isEmpty} from 'lodash'
 import RNFetchBlob from 'rn-fetch-blob';
 import RNFS from 'react-native-fs';
 import { numberWithCommas } from '../../utils/common';
+import { styled } from 'styled-components';
 
 /* 메인메뉴 메뉴 아이템 */
 const MenuItem = ({item,index,setDetailShow}) => {
@@ -67,7 +68,7 @@ const MenuItem = ({item,index,setDetailShow}) => {
                             <TouchableWithoutFeedback onPress={()=>{setDetailShow(true); dispatch(setMenuDetail({itemID,item})); }} >
                                 {/* <FastImage style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:imgUrl,headers: { Authorization: 'AuthToken' },priority: FastImage.priority.normal}}/> */}
                                 {/*<FastImage style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:(`file://${RNFetchBlob.fs.dirs.DownloadDir}/wooriorder/${itemID}.${ext[ext.length-1]}`)}}/>*/}
-                                <FastImage style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:(`${images.filter(el=>el.name==itemID)[0]?.imgData}`)}} resizeMode={FastImage.resizeMode.contain} />
+                                <FastImage style={{ width:'100%',height:183, borderRadius:RADIUS_DOUBLE}} source={{uri:(`${images.filter(el=>el.name==itemID)[0]?.imgData}`)}} height={183} resizeMode={FastImage.resizeMode.cover} />
                                 {/* <Image style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:(`${images.filter(el=>el.name==itemID)[0]?.imgData}`)}}/> */}
                                 {/* <Image style={{ width:'100%',height:183,resizeMode:"background",borderRadius:RADIUS_DOUBLE}} source={{uri:imgUrl}} /> */}
                             </TouchableWithoutFeedback>
@@ -123,5 +124,6 @@ const MenuItem = ({item,index,setDetailShow}) => {
         </>
     );
 }
+
 
 export default MenuItem;

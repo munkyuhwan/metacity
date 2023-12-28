@@ -92,7 +92,7 @@ const CartView = () =>{
             kocessAppPay.requestKoces()
             .then(result=>{
                 console.log("request result: ", result);
-                dispatch(postToMetaPos({payData:SAMPLE_PAY_RESULT_DATA}));
+                dispatch(postToMetaPos({payData:result}));
             })
             .catch((err)=>{
                 displayErrorPopup(dispatch, "XXXX", err?.Message)
@@ -100,7 +100,7 @@ const CartView = () =>{
             })
             
         }else {
-            dispatch(postToMetaPos());
+            dispatch(postToMetaPos({payData:{}}));
         }
 
     }

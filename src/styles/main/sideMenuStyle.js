@@ -5,7 +5,7 @@ import { colorRed, colorWhite, sideMenuColor } from '../../assets/colors/color';
 
 export const SideMenuWrapper = styled.View`
     height:100%;
-    width:180px;
+    width:15.9%;
     backgroundColor:${sideMenuColor};
     borderTopRightRadius:${RADIUS};
     borderBottomRightRadius:${RADIUS};
@@ -27,18 +27,17 @@ export const LogoTop = styled.Image`
 
 // 사이드메뉴 뤱퍼
 export const SideMenuScrollView = styled.ScrollView`
-    width:190px;
+    width:105%;
     height:490px; 
 `
 export const SideMenuItemWrapper = styled.View`
     display:flex;
-    width:180px;
+    width:100%;
 `
 // 사에드 메뉴 아이템 터쳐블
 export const SideMenuItemOff = styled.View`
     backgroundColor:#404040;
-    width:190px;
-    marginLeft:-10px;
+    width:95%;
     marginTop:5px;
 `
 export const SideMenuItem = styled.View`
@@ -49,7 +48,7 @@ export const SideMenuItem = styled.View`
 `
 export const SideMenuItemOn = styled.View`
     backgroundColor:#ed3810;
-    width:105%;
+    width:100%;
     borderTopRightRadius:${RADIUS};
     borderBottomRightRadius:${RADIUS};
     marginTop:5px;

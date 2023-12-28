@@ -106,7 +106,7 @@ export const SelectCancelWrapper = styled.View`
     paddingBottom:5px;
     paddingRight:7px;
     paddingLeft:7px;
-    height:30px;
+    height:38px;
     flex:0.3;
     alignItems:center;
 `

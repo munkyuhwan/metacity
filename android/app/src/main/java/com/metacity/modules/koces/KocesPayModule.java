@@ -72,6 +72,7 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
 
                         }
                     } catch (JSONException e) {
+                        errorCallback.invoke(e);
                         throw new RuntimeException(e);
                     }
 
