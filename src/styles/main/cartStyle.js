@@ -8,7 +8,7 @@ import FastImage from 'react-native-fast-image';
 export const CartViewWrapper = styled(Animated.View)`
     backgroundColor:#ffffff; 
     height:100%; 
-    width:314px;
+    width:33%;
     paddingTop:94px;
     position:absolute;
     zIndex:99;
@@ -103,7 +103,7 @@ export const CartItemTogoIcon = styled.Image`
 `
 // cart 이름, 가격, 수량
 export const CartItemTitlePriceWrapper = styled.View`
-    width:130px;
+    width:46%;
     paddingLeft:8px;
     paddingRight:2px;
     paddingTop:2px;
@@ -130,7 +130,7 @@ export const CartItemPrice = styled.Text`
 `
 // 수량 조절 
 export const CartItemAmtWrapper = styled.View`
-    width:160px;
+    width:130%;
     height: 60px;
     backgroundColor:${colorGrey};
     borderRadius:${RADIUS};
@@ -207,20 +207,20 @@ export const DetailOperandorText = styled.Text`
 
 // 취소 버튼
 export const CartItemCancelWrapper = styled.View`
-    width:100%;
-    height:40px;
+    width:30%;
+    height:24%;
     flex:1;
 `
 export const CartItemCancelBtn = styled.Image`
-    width:42px;
-    height:42px;
+    width:100%;
+    height:100%;
     resizeMode:contain;
 `
 // 주문하기
 export const OrderWrapper = styled.View`
     backgroundColor:${colorRed};
     width:100%;
-    height:173px;
+    height:30%;
     paddingRight:23px;
     paddingLeft:23px;
     paddingBottom:23px;
@@ -259,7 +259,7 @@ export const PayAmtUnit = styled.Text`
 `
 export const PayBtn = styled.View`
     width:100%;
-    height:60px;
+    height:40%;
     backgroundColor:${mainTheme};
     flexDirection:row;
     textAlign:center;

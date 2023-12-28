@@ -6,7 +6,7 @@ import { colorBlack, colorWhite } from '../../assets/colors/color';
 export const MenuListWrapper = styled.View`
     width:100%;
     height:100%;
-    paddingTop:31px;
+    paddingTop:10px;
     paddingLeft:31px;
     paddingRight:36px;
     paddingBottom:80px;

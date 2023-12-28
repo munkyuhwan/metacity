@@ -33,7 +33,6 @@ export const CategoryScrollView = styled.ScrollView`
     width:602px;
     flex:1;
     flowDirection:column;
-
 `
 export const CategoryDefault = styled.View`
     backgroundColor: ${tabBaseColor};
@@ -80,6 +79,8 @@ export const TableName = styled.View`
     zIndex:99999;
     flexDirection:column;
     marginLeft:4px;
+    position:absolute;
+    right:20%;
 `
 // talbe name smallTitle
 export const TableNameSmall = styled.Text`

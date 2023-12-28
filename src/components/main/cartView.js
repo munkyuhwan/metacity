@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { 
     Alert,
     Animated,
+    Dimensions,
     Text,
     TouchableWithoutFeedback,
     View
@@ -30,6 +31,7 @@ import { displayErrorPopup } from '../../utils/errorHandler/metaErrorHandler';
 import { PAY_SEPRATE_AMT_LIMIT } from '../../resources/defaults';
 import { setMonthPopup, setSelectedMonth } from '../../store/monthPopup';
 
+const windowWidth = Dimensions.get('window').width;
 const CartView = () =>{
     const lw = new LogWriter();
     const {language} = useSelector(state=>state.languages);
@@ -43,10 +45,10 @@ const CartView = () =>{
     const [totalAmt, setTotalAmt] = useState();
     const [totalCnt, setTotalCnt] = useState();
     const [slideAnimation, setSlideAnimation] = useState(new Animated.Value(0));
-
     const slideInterpolate = slideAnimation.interpolate({
         inputRange:[0,1],
-        outputRange:[314,5]
+        outputRange:[(windowWidth*0.278),(windowWidth*0.004)]
+        //outputRange:[314,5]
     })
     const boxStyle = {
         transform: [{translateX:slideInterpolate},],
