@@ -169,7 +169,7 @@ export function orderListDuplicateCheck (currentOrderList, orderData) {
             tmpOrderList[duplicatedIndex] = Object.assign({},{...tmpOrderList[duplicatedIndex],...{ITEM_QTY:addedQty,ITEM_AMT:addedPrice}})
      
         }else {
-            tmpOrderList.push(orderData);
+            tmpOrderList.unshift(orderData);
         }
         return tmpOrderList;
     }else {

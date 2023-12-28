@@ -108,19 +108,11 @@ const CartListItem = (props) => {
             <CartItemWrapper>
                 <CartItemImageTogoWrapper>
                     <CartItemImage source={ {uri:(`${images.filter(el=>el.name==order?.ITEM_CD)[0]?.imgData}`),priority: FastImage.priority.high } } />
-                   {/*  <CartItemImage source={{uri:"https:"+itemExtra[0]?.gimg_chg}} /> */}
-                    {/*
-                    <TouchableWithoutFeedback onPress={()=>{ onTogoTouch(); }} >
-                        <CartItemTogoWrapper>
-                            <CartItemTogoText>{order?.ITEM_GB == "T"?LANGUAGE[language]?.cartView.togoCancel:LANGUAGE[language]?.cartView.togo}</CartItemTogoText>
-                            <CartItemTogoIcon source={require("../../assets/icons/togo.png")}  />
-                        </CartItemTogoWrapper>
-                    </TouchableWithoutFeedback>  */}
                 </CartItemImageTogoWrapper>
                 
                 <CartItemTitlePriceWrapper>
                     <CartItemTitle numberOfLines={1} ellipsizeMode="tail" >{ItemTitle()||order.ITEM_NM}</CartItemTitle>
-                    <CartItemOpts  numberOfLines={2} ellipsizeMode="tail" >
+                    <CartItemOpts numberOfLines={2} ellipsizeMode="tail" >
                         {additiveItemList.length>0 &&
                             additiveItemList.map((el,index)=>{
                                 return `${ItemOptionTitle(el.PROD_I_CD,index)||el.PROD_I_NM}`+`${el.QTY}개`+`${index<(additiveItemList.length-1)?", ":""}`;

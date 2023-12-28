@@ -42,6 +42,7 @@ export const ArrowImage = styled.Image`
 // cart list item
 export const CartItemWrapper = styled.View`
     width:100%;
+    height:210px;
     paddingBottom:17px;
     paddingTop:17px; 
     paddingLeft:13px;
@@ -120,13 +121,14 @@ export const CartItemOpts = styled.Text`
     fontSize:12px;
     color:${mainTheme};
     flex:1;
-    minHeight:30px;
+    height:20px;
 `
 export const CartItemPrice = styled.Text`
     fontSize:34px;
     fontWeight:normal;
     color:${colorRed};
     flex:1;
+    minHeight:5px;
 `
 // 수량 조절 
 export const CartItemAmtWrapper = styled.View`

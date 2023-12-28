@@ -14,19 +14,15 @@ import { LANGUAGE } from '../../resources/strings';
 import { setCartView, setIconClick } from '../../store/cart';
 import { IconWrapper } from '../../styles/main/topMenuStyle';
 import TopButton from '../menuComponents/topButton';
-import { openPopup, openTransperentPopup } from '../../utils/common';
+import {  openTransperentPopup } from '../../utils/common';
 import { initOrderList, postToMetaPos, postToPos } from '../../store/order';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
-import { servicePayment } from '../../utils/smartro';
 import LogWriter from '../../utils/logWriter';
-import { setErrorData } from '../../store/error';
-import { checkTableOrder, getOrderByTable, posMenuState } from '../../utils/apis';
-import { posErrorHandler } from '../../utils/errorHandler/ErrorHandler';
-import { getMenuState, initMenu } from '../../store/menu';
+import {  initMenu } from '../../store/menu';
 import { getMenuUpdateState } from '../../utils/api/metaApis';
 import moment from 'moment';
-import { KocesAppPay, prepareKocesPay } from '../../utils/payment/kocesPay';
+import { KocesAppPay } from '../../utils/payment/kocesPay';
 import { displayErrorPopup } from '../../utils/errorHandler/metaErrorHandler';
 import { PAY_SEPRATE_AMT_LIMIT } from '../../resources/defaults';
 import { setMonthPopup, setSelectedMonth } from '../../store/monthPopup';
@@ -86,9 +82,13 @@ const CartView = () =>{
     const makePayment = () =>{
         if( tableStatus?.now_later == "선불") {
             //dispatch(postToMetaPos({payData:SAMPLE_PAY_RESULT_DATA}));
+            
             let payAmt = totalAmt - vatTotal;
+            
             var kocessAppPay = new KocesAppPay();
             //kocessAppPay.storeDownload();
+            //console.log({amt:payAmt, taxAmt:vatTotal, months:monthSelected});
+            
             kocessAppPay.makePayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected});
             //kocessAppPay.cancelPayment({amt:1004, taxAmt:0,auDate:"231227",auNo:"02173730",tradeNo:"000000800951"});
             kocessAppPay.requestKoces()
@@ -211,7 +211,7 @@ const CartView = () =>{
                         }}
                     >
                     </CartFlatList>
-                }
+                } 
                 <OrderWrapper>
                     <PayWrapper>
                         <PayAmtWrapper isBordered={true}>
@@ -227,7 +227,7 @@ const CartView = () =>{
                             <PayAmtUnit> {LANGUAGE[language]?.cartView.totalAmtUnit}</PayAmtUnit>
                         </PayAmtWrapper>
                     </PayWrapper>
-                    <TouchableWithoutFeedback onPress={()=>{ doPayment();  /* addToPos(); */  }} >
+                    <TouchableWithoutFeedback onPress={()=>{ doPayment();  }} >
                         <PayBtn>
                             {
                                 !isPrepay&&
@@ -245,45 +245,6 @@ const CartView = () =>{
            
         </>
     )
-}
-
-const SAMPLE_PAY_RESULT_DATA = {
-    "AnsCode": "0000",
-    "AnswerTrdNo": null, 
-    "AuNo": "02761105", 
-    "AuthType": null, 
-    "BillNo": "", 
-    "CardKind": "1", 
-    "CardNo": "94119400", 
-    "ChargeAmt": null, 
-    "DDCYn": "1", 
-    "DisAmt": null, 
-    "EDCYn": "0",
-    "GiftAmt": "", 
-    "InpCd": "1107", 
-    "InpNm": "신한카드", 
-    "Keydate": "", 
-    "MchData": 
-    "wooriorder", 
-    "MchNo": "22101257", 
-    "Message":"000001105687", 
-    "Month": "00", 
-    "OrdCd": "1107", 
-    "OrdNm": "개인신용", 
-    "PcCard": null, 
-    "PcCoupon": null, 
-    "PcKind": null, 
-    "PcPoint": null, 
-    "QrKind": null, 
-    "RefundAmt": null, 
-    "SvcAmt": "0", 
-    "TaxAmt": "0", 
-    "TaxFreeAmt": "0", 
-    "TermID": "0710000900", 
-    "TradeNo": "000001105687", 
-    "TrdAmt": "50004", 
-    "TrdDate": "231227113649",
-    "TrdType": "A15"
 }
 
 

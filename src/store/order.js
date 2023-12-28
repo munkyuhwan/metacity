@@ -102,7 +102,8 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
         
         tmpOrderList[index] = Object.assign({},selectedMenu,{ITEM_AMT:singleItemAmt*itemCnt, ITEM_QTY:itemCnt,SETITEM_INFO:newSubSetItems});
         const totalResult = grandTotalCalculate(tmpOrderList)
-       
+        //tmpOrderList.reverse();
+
         return {orderList:tmpOrderList, vatTotal:totalResult?.vatTotal+subVatTotal, grandTotal:totalResult.grandTotal+subItemTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
          
     }else {
@@ -130,7 +131,8 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
         }
         tmpOrderList[index] = Object.assign({},selectedMenu,{ITEM_AMT:singleItemAmt*itemCnt, ITEM_QTY:itemCnt});
         const totalResult = grandTotalCalculate(tmpOrderList)
-       
+        //tmpOrderList.reverse();
+   
         return {orderList:tmpOrderList, vatTotal:totalResult?.vatTotal, grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
          
     }
@@ -179,8 +181,8 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
         const totalResult = grandTotalCalculate(newOrderList);
         
         //openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
-        openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
-        
+        //openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
+        //newOrderList.reverse();
         return {orderList:newOrderList, vatTotal:optionVat+totalResult?.vatTotal, grandTotal:totalResult.grandTotal+optionPrice,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
     }else {
         // 다른 메뉴들
@@ -213,8 +215,9 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
         // 금액계산
         const totalResult = grandTotalCalculate(newOrderList)
         //openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
-        openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
-        
+        //openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
+        //newOrderList.reverse();
+  
         return {orderList:newOrderList,vatTotal:totalResult?.vatTotal, grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
     }
 
@@ -224,9 +227,7 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
 // metacity 주문
 export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispatch, getState,extra}) =>{
     const {orderList} = getState().order;
-    console.log("_ get data");
     const {payData} = _;
-    console.log("paydata: ",payData);
     const date = new Date();
     const tableNo = await getTableInfo().catch(err=>{posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"테이블 설정",MSG2:"테이블 번호를 설정 해 주세요."});});
     if(isEmpty(tableNo)) {
