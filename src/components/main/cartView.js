@@ -137,8 +137,12 @@ const CartView = () =>{
                     dispatch(setCartView(false));
                     dispatch(initOrderList());
                 }else {
-                    if(totalAmt >= PAY_SEPRATE_AMT_LIMIT) {
-                        dispatch(setMonthPopup({isMonthSelectShow:true}))
+                    if( tableStatus?.now_later == "선불") {
+                        if(totalAmt >= PAY_SEPRATE_AMT_LIMIT) {
+                            dispatch(setMonthPopup({isMonthSelectShow:true}))
+                        }else {
+                            makePayment();
+                        }
                     }else {
                         makePayment();
                     }
@@ -146,8 +150,12 @@ const CartView = () =>{
                 }
     
             }else {
-                if(totalAmt >= PAY_SEPRATE_AMT_LIMIT) {
-                    dispatch(setMonthPopup({isMonthSelectShow:true}))
+                if( tableStatus?.now_later == "선불") {
+                    if(totalAmt >= PAY_SEPRATE_AMT_LIMIT) {
+                        dispatch(setMonthPopup({isMonthSelectShow:true}))
+                    }else {
+                        makePayment();
+                    }
                 }else {
                     makePayment();
                 }
