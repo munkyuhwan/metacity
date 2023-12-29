@@ -128,7 +128,8 @@ export const CartItemPrice = styled.Text`
     fontWeight:normal;
     color:${colorRed};
     flex:1;
-    minHeight:5px;
+    minHeight:17px;
+    textAlignVertical:bottom;
 `
 // 수량 조절 
 export const CartItemAmtWrapper = styled.View`

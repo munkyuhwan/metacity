@@ -7,7 +7,7 @@ import { isEqual, isEmpty } from 'lodash'
 import { posErrorHandler } from '../utils/errorHandler/ErrorHandler';
 import { setCartView } from './cart';
 import LogWriter from '../utils/logWriter';
-import { POS_VERSION_CODE, POS_WORK_CD_POSTPAY_ORDER, POS_WORK_CD_VERSION } from '../resources/apiResources';
+import { POS_VERSION_CODE, POS_WORK_CD_POSTPAY_ORDER, POS_WORK_CD_PREPAY_ORDER_REQUEST, POS_WORK_CD_VERSION } from '../resources/apiResources';
 import { getTableOrderList, postMetaPosOrder } from '../utils/api/metaApis';
 import { META_SET_MENU_SEPARATE_CODE_LIST } from '../resources/defaults';
 import moment from 'moment';
@@ -239,11 +239,10 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
         posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"",MSG2:"메뉴를 선택 해 주세요."});
         return 
     }
-    
-    const orderNo = `${date.getFullYear().toString().substring(2,4)}${numberPad(date.getMonth()+1,2)}${numberPad(date.getDate(),2)}${moment().valueOf()}`;
+    const orderNo = `${date.getFullYear().toString().substring(2,4)}${numberPad(date.getMonth()+1,2)}${numberPad(date.getDate(),2)}${moment().format("HHMMSSs")}`;
     let orderData = {
         "VERSION" : POS_VERSION_CODE,
-        "WORK_CD" : POS_WORK_CD_POSTPAY_ORDER,
+        "WORK_CD" : !isEmpty(payData)?POS_WORK_CD_PREPAY_ORDER_REQUEST:POS_WORK_CD_POSTPAY_ORDER, //선불 후불에 따라 코드 다름
         "ORDER_NO" : orderNo,
         "TBL_NO" : `${tableNo.TABLE_INFO}`, 
         "PRINT_YN" : "Y",
@@ -257,35 +256,93 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
     let addOrderData = {};
     if(!isEmpty(payData)) {
         addOrderData = {
-            TOTAL_AMT:`${payData?.TrdAmt}`,
-            TOTAL_VAT:`${payData?.TaxAmt}`,
-            TOTAL_DC:`${payData?.SvcAmt}`,
-            ORDER_STATUS:"3",
+            TOTAL_AMT:Number(payData?.TrdAmt),
+            TOTAL_VAT:Number(payData?.TaxAmt),
+            TOTAL_DC:Number(payData?.SvcAmt),
+            ORDER_STATUS:"2",
             CANCEL_YN:"N",
             PREPAYMENT_YN:"Y",
             CUST_CARD_NO:`${payData?.CardNo}`,
             CUST_NM:``,
             PAYMENT_CNT:1,
-            PAYMENT_INFO:{
+            PAYMENT_INFO:[{
                 PAY_SEQ:1,
                 PAY_KIND:"2",
-                PAY_AMT:`${payData?.TrdAmt}`,
-                PAY_VAT:`${payData?.TaxAmt}`,
+                PAY_AMT:Number(payData?.TrdAmt),
+                PAY_VAT:Number(payData?.TaxAmt),
                 PAY_APV_NO:`${payData?.AuNo}`,
-                PAY_APV_DATE:`${payData?.TrdDate}`,
-                PAY_CART_NO:`${payData?.CardNo}`,
-                PAY_UPD_DT:`${payData?.TrdDate}`,
+                PAY_APV_DATE:`20${payData?.TrdDate?.substr(0,6)}`,
+                PAY_CARD_NO:`${payData?.CardNo}********`,
+                PAY_UPD_DT:`20${payData?.TrdDate}`,
                 PAY_CANCEL_YN:"N",
-                PAY_CART_TYPE:`${payData?.InpNm}`,
+                PAY_CARD_TYPE:`${payData?.InpNm}`,
                 PAY_CARD_MONTH:`${payData?.Month}`
-            }
+            }]
         };
         orderData = {...orderData,...addOrderData};
     }
+
+    /*
+    orderData = {
+        "VERSION" : "0010",
+        "WORK_CD" : "6010",
+        "ORDER_NO" : "2018082100005",
+        "TBL_NO" : "001",
+        "TOTAL_AMT" : 1004,
+        "TOTAL_VAT" : 0,
+        "TOTAL_DC" : 0,
+        "ORDER_STATUS" : "2",
+        "CANCEL_YN" : "N",
+        "PRINT_YN" : "Y",
+        "USER_PRINT_YN" : "Y",
+        "PRINT_ORDER_NO" : "101",
+        "TOT_INWON" : 4,
+        "PREPAYMENT_YN" : "Y",
+        "CUST_CARD_NO" : "123456",
+        "CUST_NM" : "테스트",
+        "PAYMENT_CNT" : 1,
+        "ITEM_CNT" : 1,
+        "PAYMENT_INFO" :
+        [
+          {
+            "PAY_SEQ" : 1,
+            "PAY_KIND" : "2",
+            "PAY_AMT" : 1004,
+            "PAY_VAT" : 0,
+            "PAY_APV_NO" : "180821145701",
+            "PAY_APV_DATE" : "20180821",
+            "PAY_CARD_NO" : "123400**********",
+            "PAY_UPD_DT" : "20180821145700",
+            "PAY_CANCEL_YN" : "N",
+            "PAY_CARD_TYPE":"신한",
+            "PAY_CARD_MONTH":"00",
+        },
+          
+        ],
+        "ITEM_INFO" :
+        [
+          {
+            "ITEM_SEQ" : 1,
+            "ITEM_CD" : "900022",
+            "ITEM_NM" : "치즈 추가",
+            "ITEM_QTY" : 1,
+            "ITEM_AMT" : 1004,
+            "ITEM_VAT" : 0,
+            "ITEM_DC" : 0,
+            "ITEM_CANCEL_YN" : "N",
+            "ITEM_GB" : "N",
+            "ITEM_MSG" : "",
+            "SETITEM_CNT" : 0,
+            "SETITEM_INFO" : 
+            [
+            ] 
+          },
+        ]
+    }
+    */
  
     //let orderData = {"VERSION":"0010","WORK_CD":"8020","ORDER_NO":"2312271703684313782","TBL_NO":"001","PRINT_YN":"Y","USER_PRINT_YN":"Y","PRINT_ORDER_NO":"2312271703684313782","TOT_INWON":4,"ITEM_CNT":1,"ITEM_INFO":[{"ITEM_SEQ":1,"ITEM_CD":"900022","ITEM_NM":"치즈 추가","ITEM_QTY":1,"ITEM_AMT":1004,"ITEM_VAT":91,"ITEM_DC":0,"ITEM_CANCEL_YN":"N","ITEM_GB":"N","ITEM_MSG":"","SETITEM_CNT":0,"SETITEM_INFO":[]}],"TOTAL_AMT":"50004","TOTAL_VAT":"0","TOTAL_DC":"0","ORDER_STATUS":"3","CANCEL_YN":"N","PREPAYMENT_YN":"Y","CUST_CARD_NO":"94119400","CUST_NM":"","PAYMENT_CNT":1,"PAYMENT_INFO":{"PAY_SEQ":1,"PAY_KIND":"2","PAY_AMT":"50004","PAY_VAT":"0","PAY_APV_NO":"02761105","PAY_APV_DATE":"231227113649","PAY_CART_NO":"94119400","PAY_UPD_DT":"231227113649","PAY_CANCEL_YN":"N","PAY_CART_TYPE":"신한카드","PAY_CARD_MONTH":"00"}}
     //console.log(JSON.stringify(orderData));
-    console.log();
     const result = await postMetaPosOrder(dispatch, orderData).catch(err=>{posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"주문오류",MSG2:"주문을 진행할 수 없습니다."}); return; });
     dispatch(setCartView(false));
     dispatch(initOrderList());

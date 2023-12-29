@@ -13,7 +13,7 @@ const MonthSelectPopup = (props) =>{
     const {language} = useSelector(state=>state.languages);
     const {monthSelected} = useSelector(state=>state.monthSelect);
     const monthPicker = useRef();
-    const MONTHS = ["00","02","03","04","05","06","07","08","09","10","11","12"]
+    const MONTHS = ["00","03","04","05","06","07","08","09","10","11","12"]
 
     return(
         <>

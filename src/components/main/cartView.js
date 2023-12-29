@@ -88,6 +88,7 @@ const CartView = () =>{
             var kocessAppPay = new KocesAppPay();
             //kocessAppPay.storeDownload();
             //console.log({amt:payAmt, taxAmt:vatTotal, months:monthSelected});
+            //dispatch(postToMetaPos({payData:samplePayData}));
             
             kocessAppPay.makePayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected});
             //kocessAppPay.cancelPayment({amt:1004, taxAmt:0,auDate:"231227",auNo:"02173730",tradeNo:"000000800951"});
@@ -246,6 +247,5 @@ const CartView = () =>{
         </>
     )
 }
-
-
+const samplePayData = {"AnsCode": "0000", "AnswerTrdNo": null, "AuNo": "18691817", "AuthType": null, "BillNo": "", "CardKind": "1", "CardNo": "94119400", "ChargeAmt": null, "DDCYn": "1", "DisAmt": null, "EDCYn": "0", "GiftAmt": "", "InpCd": "1107", "InpNm": "신한카드", "Keydate": "", "MchData": "wooriorder", "MchNo": "22101257", "Message": "000002882653                            ", "Month": "03", "OrdCd": "1107", "OrdNm": "개인신용", "PcCard": null, "PcCoupon": null, "PcKind": null, "PcPoint": null, "QrKind": null, "RefundAmt": null, "SvcAmt": "0", "TaxAmt": "4546", "TaxFreeAmt": "0", "TermID": "0710000900", "TradeNo": "000002882653", "TrdAmt": "45458", "TrdDate": "231228150830", "TrdType": "A15"};
 export default CartView;
