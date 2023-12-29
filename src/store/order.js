@@ -227,6 +227,7 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
 // metacity 주문
 export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispatch, getState,extra}) =>{
     const {orderList} = getState().order;
+    const { tableStatus } = getState().tableInfo;
     const {payData} = _;
     const date = new Date();
     const tableNo = await getTableInfo().catch(err=>{posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"테이블 설정",MSG2:"테이블 번호를 설정 해 주세요."});});
@@ -346,8 +347,11 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
     const result = await postMetaPosOrder(dispatch, orderData).catch(err=>{posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"주문오류",MSG2:"주문을 진행할 수 없습니다."}); return; });
     dispatch(setCartView(false));
     dispatch(initOrderList());
-    openTransperentPopup(dispatch, {innerView:"OrderList", isPopupVisible:true, param:{timeOut:10000} });
-    
+    if( tableStatus?.now_later == "선불") {
+        openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"주문을 완료했습니다."}});
+    }else {
+        openTransperentPopup(dispatch, {innerView:"OrderList", isPopupVisible:true, param:{timeOut:10000} });
+    }
     return result;
     
 })
