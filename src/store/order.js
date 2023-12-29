@@ -11,6 +11,8 @@ import { POS_VERSION_CODE, POS_WORK_CD_POSTPAY_ORDER, POS_WORK_CD_PREPAY_ORDER_R
 import { getTableOrderList, postMetaPosOrder } from '../utils/api/metaApis';
 import { META_SET_MENU_SEPARATE_CODE_LIST } from '../resources/defaults';
 import moment from 'moment';
+import { postPayLog } from '../utils/api/adminApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const initOrderList = createAsyncThunk("order/initOrderList", async() =>{
     return  {
@@ -219,17 +221,35 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
         //newOrderList.reverse();
   
         return {orderList:newOrderList,vatTotal:totalResult?.vatTotal, grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
-    }
-
-    
-    
+    }  
 })
+// 주문로그 
+export const postLog =  createAsyncThunk("order/postLog", async(_,{dispatch, getState,extra}) =>{
+    const {orderList} = getState().order;
+    const {payData} = _;
+    const date = new Date();
+    const tableNo = await getTableInfo().catch(err=>{return {TABLE_INFO:""}});
+    // admin log
+    const storeID = await AsyncStorage.getItem("STORE_IDX").catch("");
+    let auData = [];
+    let logdata = {
+        time:`${date.getFullYear()}${numberPad(date.getMonth()+1,2)}${numberPad(date.getDate(),2)}`,
+        storeID: `${storeID}`,
+        tableNo:`${tableNo.TABLE_INFO}`,
+        auData:JSON.stringify([{date:`${date.getFullYear()}${numberPad(date.getMonth()+1,2)}${numberPad(date.getDate(),2)}`, AuNo:`${payData?.AuNo}`,TrdAmt:`${Number(payData?.TrdAmt)+Number(payData?.TaxAmt)}` }]),
+        orderList:JSON.stringify(orderList),
+        payResult:JSON.stringify(payData)
+    }
+    postPayLog(logdata)
+})
+
 // metacity 주문
 export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispatch, getState,extra}) =>{
     const {orderList} = getState().order;
     const { tableStatus } = getState().tableInfo;
     const {payData} = _;
     const date = new Date();
+
     const tableNo = await getTableInfo().catch(err=>{posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"테이블 설정",MSG2:"테이블 번호를 설정 해 주세요."});});
     if(isEmpty(tableNo)) {
         posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"테이블 설정",MSG2:"테이블 번호를 설정 해 주세요."});
@@ -240,6 +260,21 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
         posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"",MSG2:"메뉴를 선택 해 주세요."});
         return 
     }
+
+    // admin log
+    const storeID = await AsyncStorage.getItem("STORE_IDX").catch("");
+    let auData = [];
+    let logdata = {
+        time:`${date.getFullYear()}${numberPad(date.getMonth()+1,2)}${numberPad(date.getDate(),2)}`,
+        storeID: `${storeID}`,
+        tableNo:`${tableNo.TABLE_INFO}`,
+        auData:JSON.stringify([{date:`${date.getFullYear()}${numberPad(date.getMonth()+1,2)}${numberPad(date.getDate(),2)}`, AuNo:`${payData?.AuNo}`,TrdAmt:`${Number(payData?.TrdAmt)+Number(payData?.TaxAmt)}` }]),
+        orderList:JSON.stringify(orderList),
+        payResult:JSON.stringify(payData)
+    }
+    postPayLog(logdata)
+
+     
     const orderNo = `${date.getFullYear().toString().substring(2,4)}${numberPad(date.getMonth()+1,2)}${numberPad(date.getDate(),2)}${moment().format("HHMMSSs")}`;
     let orderData = {
         "VERSION" : POS_VERSION_CODE,
@@ -283,65 +318,6 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
         orderData = {...orderData,...addOrderData};
     }
 
-    /*
-    orderData = {
-        "VERSION" : "0010",
-        "WORK_CD" : "6010",
-        "ORDER_NO" : "2018082100005",
-        "TBL_NO" : "001",
-        "TOTAL_AMT" : 1004,
-        "TOTAL_VAT" : 0,
-        "TOTAL_DC" : 0,
-        "ORDER_STATUS" : "2",
-        "CANCEL_YN" : "N",
-        "PRINT_YN" : "Y",
-        "USER_PRINT_YN" : "Y",
-        "PRINT_ORDER_NO" : "101",
-        "TOT_INWON" : 4,
-        "PREPAYMENT_YN" : "Y",
-        "CUST_CARD_NO" : "123456",
-        "CUST_NM" : "테스트",
-        "PAYMENT_CNT" : 1,
-        "ITEM_CNT" : 1,
-        "PAYMENT_INFO" :
-        [
-          {
-            "PAY_SEQ" : 1,
-            "PAY_KIND" : "2",
-            "PAY_AMT" : 1004,
-            "PAY_VAT" : 0,
-            "PAY_APV_NO" : "180821145701",
-            "PAY_APV_DATE" : "20180821",
-            "PAY_CARD_NO" : "123400**********",
-            "PAY_UPD_DT" : "20180821145700",
-            "PAY_CANCEL_YN" : "N",
-            "PAY_CARD_TYPE":"신한",
-            "PAY_CARD_MONTH":"00",
-        },
-          
-        ],
-        "ITEM_INFO" :
-        [
-          {
-            "ITEM_SEQ" : 1,
-            "ITEM_CD" : "900022",
-            "ITEM_NM" : "치즈 추가",
-            "ITEM_QTY" : 1,
-            "ITEM_AMT" : 1004,
-            "ITEM_VAT" : 0,
-            "ITEM_DC" : 0,
-            "ITEM_CANCEL_YN" : "N",
-            "ITEM_GB" : "N",
-            "ITEM_MSG" : "",
-            "SETITEM_CNT" : 0,
-            "SETITEM_INFO" : 
-            [
-            ] 
-          },
-        ]
-    }
-    */
- 
     //let orderData = {"VERSION":"0010","WORK_CD":"8020","ORDER_NO":"2312271703684313782","TBL_NO":"001","PRINT_YN":"Y","USER_PRINT_YN":"Y","PRINT_ORDER_NO":"2312271703684313782","TOT_INWON":4,"ITEM_CNT":1,"ITEM_INFO":[{"ITEM_SEQ":1,"ITEM_CD":"900022","ITEM_NM":"치즈 추가","ITEM_QTY":1,"ITEM_AMT":1004,"ITEM_VAT":91,"ITEM_DC":0,"ITEM_CANCEL_YN":"N","ITEM_GB":"N","ITEM_MSG":"","SETITEM_CNT":0,"SETITEM_INFO":[]}],"TOTAL_AMT":"50004","TOTAL_VAT":"0","TOTAL_DC":"0","ORDER_STATUS":"3","CANCEL_YN":"N","PREPAYMENT_YN":"Y","CUST_CARD_NO":"94119400","CUST_NM":"","PAYMENT_CNT":1,"PAYMENT_INFO":{"PAY_SEQ":1,"PAY_KIND":"2","PAY_AMT":"50004","PAY_VAT":"0","PAY_APV_NO":"02761105","PAY_APV_DATE":"231227113649","PAY_CART_NO":"94119400","PAY_UPD_DT":"231227113649","PAY_CANCEL_YN":"N","PAY_CART_TYPE":"신한카드","PAY_CARD_MONTH":"00"}}
     //console.log(JSON.stringify(orderData));
     const result = await postMetaPosOrder(dispatch, orderData).catch(err=>{posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:"주문오류",MSG2:"주문을 진행할 수 없습니다."}); return; });

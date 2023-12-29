@@ -15,7 +15,7 @@ import { setCartView, setIconClick } from '../../store/cart';
 import { IconWrapper } from '../../styles/main/topMenuStyle';
 import TopButton from '../menuComponents/topButton';
 import {  openTransperentPopup } from '../../utils/common';
-import { initOrderList, postToMetaPos, postToPos } from '../../store/order';
+import { initOrderList, postLog, postToMetaPos, postToPos } from '../../store/order';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
 import LogWriter from '../../utils/logWriter';
@@ -89,19 +89,20 @@ const CartView = () =>{
             //kocessAppPay.storeDownload();
             //console.log({amt:payAmt, taxAmt:vatTotal, months:monthSelected});
             //dispatch(postToMetaPos({payData:samplePayData}));
-            
+             
             kocessAppPay.makePayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected});
             //kocessAppPay.cancelPayment({amt:1004, taxAmt:0,auDate:"231227",auNo:"02173730",tradeNo:"000000800951"});
             kocessAppPay.requestKoces()
             .then(result=>{
-                console.log("request result: ", result);
+                //console.log("request result: ", result);
                 dispatch(postToMetaPos({payData:result}));
             })
             .catch((err)=>{
+                //console.log("error: ",err)
+                dispatch(postLog({payData:err}))
                 displayErrorPopup(dispatch, "XXXX", err?.Message)
-                console.log("error: ",err)
             })
-            
+             
         }else {
             dispatch(postToMetaPos({payData:{}}));
         }

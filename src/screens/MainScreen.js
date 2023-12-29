@@ -43,7 +43,7 @@ const MainScreen = () =>{
      
     let timeoutSet = null
     function screenTimeOut(){
- /* 
+ 
         if(timeoutSet!=null){clearInterval(timeoutSet);timeoutSet=null;}
             timeoutSet = setInterval(()=>{
                 dispatch(setAdScreen({isShow:true,isMain:true}))
@@ -51,23 +51,23 @@ const MainScreen = () =>{
                 timeoutSet=null;
                 
         },SCREEN_TIMEOUT)
-  */
+  
     } 
 
     useEffect(()=>{
-         /* 
+          
         if(isShow) {
             clearInterval(timeoutSet);
             timeoutSet=null;
         }else {
             screenTimeOut();
-        } */
+        } 
           
     },[isShow, adList])
     return(
         <>
             <KeyboardAvoidingView behavior="padding" enabled style={{width:'100%', height:'100%'}} >
-                <WholeWrapper onTouchStart={()=>{    /* screenTimeOut(); */    }} >
+                <WholeWrapper onTouchStart={()=>{     screenTimeOut();     }} >
                     <SideMenu/>
                     <MainWrapper>
                         <TopMenu/>
