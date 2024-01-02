@@ -36,6 +36,7 @@ export const DetailItemInfoWrapper = styled.View`
     height:250px;
     paddingLeft:19px;
     paddingTop:0px;
+    flex:1;
 `
 export const DetailItemInfoImageWrapper = styled.ImageBackground`
     width:360px;
@@ -228,19 +229,19 @@ export const BottomButtonWrapper = styled.View`
     justifyContent:center;
 `
 export const BottomButton = styled.View`
-    width:174px;
-    height:49px;
+    width:194px;
+    height:79px;
     backgroundColor:${(props)=>props.backgroundColor};
     flexDirection:row;
     justifyContent:center;
-    paddingLeft:27px;
-    paddingRight:27px;
+    paddingLeft:18px;
+    paddingRight:18px;
     marginLeft:8px;
     marginRight:8px;
     borderRadius:${RADIUS};
 `
 export const BottomButtonText = styled.Text`
-    fontSize:18px;
+    fontSize:24px;
     color:${colorWhite};
     fontWeight:bold;
     marginTop:auto;
@@ -248,8 +249,8 @@ export const BottomButtonText = styled.Text`
     flex:1;
 `
 export const BottomButtonIcon = styled.Image`
-    width:18px;
-    height:18px;
+    width:24px;
+    height:24px;
     resizeMode:contain;
     marginTop:auto;
     marginBottom:auto;

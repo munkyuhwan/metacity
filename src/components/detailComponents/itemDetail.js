@@ -275,7 +275,6 @@ const ItemDetail = (props) => {
 
                                 <OptRecommendWrapper>
                                     <OptListWrapper>
-                                        {/* <OptTitleText>{LANGUAGE[language]?.detailView.selectOpt}</OptTitleText> */}
                                         {menuDetail?.PROD_GB != "00" &&
                                             (menuOptionList && menuOptionList?.length>0) &&
                                             menuOptionList.map((el,groupIdx)=>{

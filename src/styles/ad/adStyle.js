@@ -28,10 +28,12 @@ export const ADOrderBtnText = styled.Text`
     marginBottom:auto;
 `
 export const ADOrderBtnIcon = styled.Image`
-    width:30px;
+    width:24px;
+    height:24px;
     resizeMode:contain;
     marginTop:auto;
     marginBottom:auto;
+    marginLeft:10px;
 `
 export const SwiperImage = styled(FastImage)`
     width:100%;
