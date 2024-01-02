@@ -78,9 +78,24 @@ const CartView = () =>{
         }
 
     },[isMonthSelectShow,monthSelected])
+    const makePayment = async () =>{
+        
+        //console.log("storeInfo result: ", storeInfo);
 
-    const makePayment = () =>{
+        
         if( tableStatus?.now_later == "선불") {
+
+            const bsnNo = await AsyncStorage.getItem("BSN_NO");
+            const tidNo = await AsyncStorage.getItem("TID_NO");
+            const serialNo = await AsyncStorage.getItem("SERIAL_NO");
+            if( isEmpty(bsnNo) || isEmpty(tidNo) || isEmpty(serialNo) ) {
+                displayErrorPopup(dispatch, "XXXX", "결제정보 입력 후 이용 해 주세요.");
+                return;
+            }
+
+            var kocessAppPay = new KocesAppPay();
+            await kocessAppPay.storeDownload();
+            const storeInfo = await kocessAppPay.requestKoces();
             //dispatch(postToMetaPos({payData:SAMPLE_PAY_RESULT_DATA}));
             
             let payAmt = totalAmt - vatTotal;
@@ -90,7 +105,7 @@ const CartView = () =>{
             //console.log({amt:payAmt, taxAmt:vatTotal, months:monthSelected});
             //dispatch(postToMetaPos({payData:samplePayData}));
              
-            kocessAppPay.makePayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected});
+            await kocessAppPay.makePayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected, bsnNo:storeInfo?.BsnNo,termID:storeInfo?.TermID });
             //kocessAppPay.cancelPayment({amt:1004, taxAmt:0,auDate:"231227",auNo:"02173730",tradeNo:"000000800951"});
             kocessAppPay.requestKoces()
             .then(result=>{
@@ -106,7 +121,7 @@ const CartView = () =>{
         }else {
             dispatch(postToMetaPos({payData:{}}));
         }
-
+        
     }
 
     const doPayment = async () =>{

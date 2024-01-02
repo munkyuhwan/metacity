@@ -18,7 +18,7 @@ export const ADOrderBtnWrapper = styled.View`
     paddingRight:65px;
     position:absolute;
     borderRadius:${RADIUS};
-    bottom:60px;
+    bottom:18px;
 `
 export const ADOrderBtnText = styled.Text`
     color:${colorWhite};

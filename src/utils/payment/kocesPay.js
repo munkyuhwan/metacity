@@ -1,6 +1,7 @@
 import { NativeModules } from "react-native"
 import { BSN_ID, KOCES_CODE_STORE_DOWNLOAD, SN, TID } from "../../resources/apiResources";
 import moment from "moment";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function KocesAppPay () {
     this.data = {};
@@ -11,14 +12,19 @@ KocesAppPay.prototype.init = function () {
     this.data = {};
 } 
 // 가맹점 다운로드
-KocesAppPay.prototype.storeDownload = function () {
-    this.data = {TrdType:KOCES_CODE_STORE_DOWNLOAD,TermID:TID, BsnNo:BSN_ID, Serial:SN, MchData:""};
+KocesAppPay.prototype.storeDownload = async function () {
+    const bsnNo = await AsyncStorage.getItem("BSN_NO");
+    const tidNo = await AsyncStorage.getItem("TID_NO");
+    const serialNo = await AsyncStorage.getItem("SERIAL_NO");
+    this.data = {TrdType:KOCES_CODE_STORE_DOWNLOAD,TermID:tidNo, BsnNo:bsnNo, Serial:serialNo, MchData:""};
 } 
 // 결제 요청
-KocesAppPay.prototype.makePayment = function ({amt,taxAmt,months}) {
+KocesAppPay.prototype.makePayment = async function ({amt,taxAmt,months}) {
+    const tidNo = await AsyncStorage.getItem("TID_NO");
+
     this.data = {
         TrdType:'A10',
-        TermID: TID, 
+        TermID: tidNo, 
         Audate:`${moment().format("YYMMDD")}`,
         AuNo:'',
         KeyYn:'I',

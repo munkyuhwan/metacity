@@ -556,7 +556,7 @@ export const getAdminTableStatus = async(dispatch,data) => {
     return await new Promise(function(resolve, reject){
         axios.post(
             `${ADMIN_BASE_URL}${ADMIN_TABLE_STATUS}`,
-            {"STORE_ID":STORE_IDX, t_id:TABLE_INFO},
+            {"STORE_ID":STORE_IDX, "t_num":TABLE_INFO},
             adminOrderHeader,
         ) 
         .then((response => {
@@ -594,14 +594,14 @@ export const postAdminBulletin = async(dispatch) => {
 }
 // 관리자 배너 받아오기
 export const getAdminBanners = async(dispatch) => {
-    const {STORE_ID, SERVICE_ID} = await getStoreID()
+    const {STORE_IDX, SERVICE_ID} = await getStoreID()
     .catch(err=>{
         posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'STORE_ID, SERVICE_ID를 입력 해 주세요.',MSG2:""})
     });
     return await new Promise(function(resolve, reject){
         axios.post(
             `${ADMIN_BASE_URL}${ADMIN_BANNER}`,
-            {"STORE_ID":STORE_ID},
+            {"STORE_ID":STORE_IDX},
             adminOrderHeader,
         ) 
         .then((response => {

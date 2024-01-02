@@ -45,6 +45,11 @@ const SettingPopup = () =>{
     const [floor, setFloor] = useState(0);
     const [tableNo, setTableNo] = useState("");
     const [storeIdx, setStoreIdx] = useState("");
+    // pay data
+    const [bsnNo, setBsnNo] = useState("");
+    const [tidNo, setTidNo] = useState("");
+    const [serialNo, setSerialNo] = useState("");
+
 
     const getIndicateAvailableDeviceInfo = () =>{
         serviceIndicate()
@@ -380,6 +385,18 @@ const SettingPopup = () =>{
         .then(value=>{
             setStoreIdx(value);
         })
+        AsyncStorage.getItem("BSN_NO")
+        .then((value)=>{
+            setBsnNo(value)
+        })
+        AsyncStorage.getItem("TID_NO")
+        .then((value)=>{
+            setTidNo(value)
+        })
+        AsyncStorage.getItem("SERIAL_NO")
+        .then(value=>{
+            setSerialNo(value);
+        })
     },[])
     useEffect(()=>{
         dispatch(getTableList({floor:floor}));
@@ -390,6 +407,14 @@ const SettingPopup = () =>{
     const setStoreInfo = () =>{
         AsyncStorage.setItem("POS_IP", ipText);   
         displayOnAlert("설정되었습니다.",{});
+    }
+
+    const setPayData = () => {
+        AsyncStorage.setItem("BSN_NO", bsnNo);   
+        AsyncStorage.setItem("TID_NO", tidNo);   
+        AsyncStorage.setItem("SERIAL_NO", serialNo);   
+        displayOnAlert("설정되었습니다.",{});
+
     }
 
     const getStoreID = () => {
@@ -457,6 +482,34 @@ const SettingPopup = () =>{
                                     </TouchableWithoutFeedback>
                                 </SelectWrapper>
                             </SettingItemWrapper>
+
+                            <SettingItemWrapper>
+                                <TouchableWithoutFeedback onPress={()=>{ }} >
+                                    <SettingButtonText isMargin={false} > 결제 설정</SettingButtonText>
+                                </TouchableWithoutFeedback> 
+                                <SelectWrapper style={{marginRight:'auto', marginLeft:'auto', paddingBottom:20, flexDirection:'column'}} >
+                                    <View style={{flexDirection:'row', width:'100%'}}>
+                                        <StoreIDTextLabel>사업자 번호:</StoreIDTextLabel>
+                                        <StoreIDTextInput   defaultValue={bsnNo} onChangeText={(val)=>{ setBsnNo(val); }} />
+                                       
+                                    </View>
+                                    <View style={{flexDirection:'row', width:'100%'}}>
+                                        <StoreIDTextLabel>TID:</StoreIDTextLabel>
+                                        <StoreIDTextInput   defaultValue={tidNo} onChangeText={(val)=>{ setTidNo(val); }} />
+                                        
+                                    </View>
+                                    <View style={{flexDirection:'row', width:'100%'}}>
+                                        <StoreIDTextLabel>serialNo:</StoreIDTextLabel>
+                                        <StoreIDTextInput   defaultValue={serialNo} onChangeText={(val)=>{ setSerialNo(val); }} />
+                                        <TouchableWithoutFeedback onPress={()=>{ setPayData(); }}>
+                                            <SelectCancelWrapper>
+                                                <SelectCancelText>설정하기</SelectCancelText>
+                                            </SelectCancelWrapper>
+                                        </TouchableWithoutFeedback>
+                                    </View>
+                                </SelectWrapper>
+                            </SettingItemWrapper>
+
                             <SettingItemWrapper>
                                 <TouchableWithoutFeedback onPress={()=>{ }} >
                                     <SettingButtonText isMargin={false} >테이블 세팅</SettingButtonText>
@@ -531,7 +584,7 @@ const SettingPopup = () =>{
                                 <SettingButtonText isMargin={true} >화면 업데이트</SettingButtonText>
                             </TouchableWithoutFeedback>
                             <TouchableWithoutFeedback onPress={()=>{checkUpdate();}} >
-                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.38</SettingButtonText>
+                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.46</SettingButtonText>
                             </TouchableWithoutFeedback> 
                         </SettingButtonWrapper>
                     </SettingScrollView>
