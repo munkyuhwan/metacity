@@ -290,7 +290,6 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
     }    
     // 결제시 추가 결제 결과 데이터
     let addOrderData = {};
-    console.log("payData: ",payData);
     if(!isEmpty(payData)) {
         addOrderData = {
             TOTAL_AMT:Number(payData?.TrdAmt)+Number(payData?.TaxAmt),
