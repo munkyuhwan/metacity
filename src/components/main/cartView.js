@@ -109,7 +109,7 @@ const CartView = () =>{
             //kocessAppPay.cancelPayment({amt:1004, taxAmt:0,auDate:"231227",auNo:"02173730",tradeNo:"000000800951"});
             kocessAppPay.requestKoces()
             .then(result=>{
-                //console.log("request result: ", result);
+                console.log("request result: ", result);
                 dispatch(postToMetaPos({payData:result}));
             })
             .catch((err)=>{

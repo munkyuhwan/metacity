@@ -295,7 +295,7 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
             TOTAL_AMT:Number(payData?.TrdAmt)+Number(payData?.TaxAmt),
             TOTAL_VAT:Number(payData?.TaxAmt),
             TOTAL_DC:Number(payData?.SvcAmt),
-            ORDER_STATUS:"2",
+            ORDER_STATUS:"3",
             CANCEL_YN:"N",
             PREPAYMENT_YN:"Y",
             CUST_CARD_NO:`${payData?.CardNo}`,

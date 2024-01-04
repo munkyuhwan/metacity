@@ -1,11 +1,17 @@
 package com.metacity.modules.koces;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.BaseActivityEventListener;
@@ -38,58 +44,34 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
         @Override
         public void onActivityResult(Activity activity, int requestCode, int resultCode, @Nullable Intent data) {
             super.onActivityResult(activity, requestCode, resultCode, data);
-            System.out.println("================================on activity result================================");
-            System.out.println("intent====="+requestCode);
-            System.out.println(data);
+            //System.out.println("================================on activity result================================");
+            //System.out.println("intent====="+requestCode);
+            //System.out.println(data);
             JSONObject result = new JSONObject();
             if(data != null) {
-                System.out.println(data.getExtras().get("hashMap"));
                 Object hashData = data.getExtras().get("hashMap");
-                System.out.println("hashData: "+hashData);
                 if(hashData != null) {
                     JSONObject jObj = new JSONObject((Map) hashData);
-                    System.out.println("jObj: "+jObj);
-
-
-
                     try {
                         if(jObj.get("AnsCode") != null) {
-
                             if (jObj.get("AnsCode").toString().equals(KOCES_SUCCESS_CODE)) {
                                 // 정상 리스폰스
-
                                 if(successCallback != null) {
                                     successCallback.invoke(jObj.toString());
                                 }
-
                             }else {
                                 // 실패 리스폰스
                                 if(errorCallback != null) {
                                     errorCallback.invoke(jObj.toString());
                                 }
                             }
-
-
                         }
                     } catch (JSONException e) {
                         errorCallback.invoke(e);
                         throw new RuntimeException(e);
                     }
-
-
                 }
-                /*
-                for (String key : data.getExtras().keySet()) {
-                    try {
-                        result.put(key, (data.getExtras().get(key) != null ? data.getExtras().get(key) : "NULL") );
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                    System.out.println(key + " : " + (data.getExtras().get(key) != null ? data.getExtras().get(key) : "NULL"));
-                }
-                */
             }
-            //System.out.println("result: "+result);
 
 
         }
@@ -116,25 +98,28 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
         this.successCallback = successCallback;
 
         HashMap dataHash = data.toHashMap();
-        System.out.println(dataHash);
         HashMap<String, String> hashMap = new HashMap<>();
         Intent intent = new Intent();
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        intent.setClassName("com.koces.androidpos","com.koces.androidpos.AppToAppActivity");
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        }
+        ComponentName componentName = new ComponentName("com.koces.androidpos","com.koces.androidpos.AppToAppActivity");
+        intent.setComponent(componentName);
         intent.setPackage(getReactApplicationContext().getPackageName());
         intent.addFlags(Intent.FLAG_FROM_BACKGROUND);
-
         // 데이터 담기
         if(dataHash != null) {
             for (Object key : dataHash.keySet()) {
-                System.out.println(key + " : " + (dataHash.get(key) != null ? dataHash.get(key) : "NULL"));
                 hashMap.put(key.toString(),(dataHash.get(key) != null ? dataHash.get(key).toString() : "NULL") );
             }
         }
         System.out.println("hashMap: "+hashMap);
-
         intent.putExtra("hashMap",hashMap);
+        intent.setType("text/plane");
+
         getReactApplicationContext().startActivityForResult(intent, KOCES_REQUEST_CODE,null);
+
+
 
     }
 
