@@ -118,9 +118,9 @@ const MenuItem = ({item,index,setDetailShow}) => {
                         </MenuItemButtonWrapper>
                     </MenuItemImageWrapper>
                     {item?.SVC_GB=='1'&&
-                        <SoldOutLayer>
+                        <SoldOutLayer style={{ width:'100%',height:height*0.28, borderRadius:RADIUS_DOUBLE}}>
                             <SoldOutText>SOLD OUT</SoldOutText>    
-                            <SoldOutDimLayer/>
+                            <SoldOutDimLayer style={{ width:'100%',height:height*0.28, borderRadius:RADIUS_DOUBLE}}/>
                         </SoldOutLayer>
                     }
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
@@ -31,7 +32,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class KocesPayModule extends ReactContextBaseJavaModule {
-    private Context mContext = null;
+    private ReactApplicationContext mContext = null;
     private int KOCES_REQUEST_CODE = 1910;
 
     // Koces result code
@@ -72,8 +73,6 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
                     }
                 }
             }
-
-
         }
     };
 
@@ -81,7 +80,6 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
         super(context);
         getReactApplicationContext().addActivityEventListener(mActivityEventListener);
         mContext=context;
-
     }
 
     @NonNull
@@ -96,18 +94,39 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
 
         this.errorCallback = errorCallback;
         this.successCallback = successCallback;
+        /*
+        HashMap<String,String> hashMap = new HashMap<>();
+        Intent intent = new Intent();
+        if (Build.VERSION.SDK_INT < 33) {
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        }
+        ComponentName componentName =
+                new ComponentName("com.koces.androidpos","com.koces.androidpos.AppToAppActivity");
+        intent.setComponent(componentName);
+        intent.setPackage(mContext.getPackageName());
+        intent.addFlags(Intent.FLAG_FROM_BACKGROUND);
+        hashMap.put("TrdType","D10");
+        hashMap.put("TermID", "0710000900");
+        hashMap.put("BsnNo", "2148631917");
+        hashMap.put("Serial", "1000000007");
+        hashMap.put("MchData", "");
+        intent.putExtra("hashMap",hashMap);
+        intent.setType("text/plain");
+        mContext.startActivityForResult(intent, 600,null);
+        */
 
         HashMap dataHash = data.toHashMap();
         HashMap<String, String> hashMap = new HashMap<>();
         Intent intent = new Intent();
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT < 33) {
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
         }
         ComponentName componentName = new ComponentName("com.koces.androidpos","com.koces.androidpos.AppToAppActivity");
         intent.setComponent(componentName);
-        intent.setPackage(getReactApplicationContext().getPackageName());
+        intent.setPackage(mContext.getPackageName());
         intent.addFlags(Intent.FLAG_FROM_BACKGROUND);
         // 데이터 담기
+
         if(dataHash != null) {
             for (Object key : dataHash.keySet()) {
                 hashMap.put(key.toString(),(dataHash.get(key) != null ? dataHash.get(key).toString() : "NULL") );
@@ -115,9 +134,11 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
         }
         System.out.println("hashMap: "+hashMap);
         intent.putExtra("hashMap",hashMap);
-        intent.setType("text/plane");
+        intent.setType("text/plain");
+        mContext.startActivityForResult(intent, KOCES_REQUEST_CODE, null);
 
-        getReactApplicationContext().startActivityForResult(intent, KOCES_REQUEST_CODE,null);
+        //mContext.getApplicationContext().startActivityForResult(intent, KOCES_REQUEST_CODE,null);
+        //getReactApplicationContext().startActivityForResult(intent, KOCES_REQUEST_CODE,null);
 
 
 
