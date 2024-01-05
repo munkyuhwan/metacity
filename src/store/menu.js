@@ -54,6 +54,7 @@ export const getDisplayMenu = createAsyncThunk("menu/getDisplayMenu", async(_, {
     //console.log("getDisplayMenu==========================================");
     const {selectedMainCategory,selectedSubCategory, mainCategories} = getState().categories
     const {allItems} = getState().menu;
+    const {menuExtra} = getState().menuExtra;
 
     let mCat ="";
     let sCat = "";
@@ -76,7 +77,18 @@ export const getDisplayMenu = createAsyncThunk("menu/getDisplayMenu", async(_, {
     }
     selectedItems = selectedItems.filter(el=>el.PROD_NM != "공란");
     
-    return selectedItems;
+    // 어드민에서 데이터 확인 후 노출 여부 정함
+    let itemsToDisplay = [];
+    for(var i=0;i<selectedItems?.length;i++) {
+        const itemExtra = menuExtra?.filter(el=>el.pos_code == selectedItems[i]?.PROD_CD);
+        if(itemExtra?.length>0) {
+            if(itemExtra[0]?.is_use == "Y" && itemExtra[0]?.is_view == "Y" ) {
+                itemsToDisplay.push(selectedItems[i]);
+            }
+        }
+    }
+    
+    return itemsToDisplay;
 })
 
 export const updateMenu = createAsyncThunk("menu/updateMenu", async(_,{rejectWithValue}) =>{

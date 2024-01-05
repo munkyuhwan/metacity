@@ -33,6 +33,16 @@ const MenuItem = ({item,index,setDetailShow}) => {
     }
     // 이미지 찾기
     const itemExtra = menuExtra?.filter(el=>el.pos_code == item.PROD_CD);
+    // 어드민 데이터 확인 후  노출여부 정함
+    if(isEmpty(itemExtra)) {
+        return <></>
+    }
+    if(itemExtra[0]?.is_view=="N") {
+        return <></>
+    }
+    if(itemExtra[0]?.is_use=="N") {
+        return <></>
+    }
     const itemID = item.PROD_CD;
     //console.log("item extra: ",itemExtra[0]);
     const imgUrl = "https:"+itemExtra[0]?.gimg_chg;
