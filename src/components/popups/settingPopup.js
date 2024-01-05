@@ -442,6 +442,11 @@ const SettingPopup = () =>{
             displayOnAlert("스토어 아이디를 받아올 수 없습니다."+err,{});
         })
     }
+
+    const setStoreID = () => {
+        AsyncStorage.setItem("STORE_IDX",storeIdx);
+        displayOnAlert("스토어 아이디가 설정되었습니다.",{});            
+    }
     return (
         <>
             <KeyboardAvoidingView behavior="padding" enabled style={{width:'100%', height:'100%'}} >
@@ -458,12 +463,19 @@ const SettingPopup = () =>{
                                     <SettingButtonText isMargin={false} >스토어 ID</SettingButtonText>
                                 </TouchableWithoutFeedback> 
                                 <SelectWrapper style={{marginRight:'auto', marginLeft:'auto', paddingBottom:20}} >
-                                    <StoreIDTextLabel style={{fontSize:30, fontWeight:"bold"}} >{storeIdx}</StoreIDTextLabel>
+                                    {/* <StoreIDTextLabel style={{fontSize:30, fontWeight:"bold"}} >{storeIdx}</StoreIDTextLabel> */}
+                                    <StoreIDTextInput  defaultValue={storeIdx} onChangeText={(val)=>{ setStoreIdx(val); }} />
+
                                     <TouchableWithoutFeedback onPress={()=>{getStoreID();}}>
-                                    <SelectCancelWrapper>
-                                        <SelectCancelText>스토어 ID받기</SelectCancelText>
-                                    </SelectCancelWrapper>
-                                </TouchableWithoutFeedback>
+                                        <SelectCancelWrapper>
+                                            <SelectCancelText>스토어 ID받기</SelectCancelText>
+                                        </SelectCancelWrapper>
+                                    </TouchableWithoutFeedback>
+                                    <TouchableWithoutFeedback onPress={()=>{setStoreID();}}>
+                                        <SelectCancelWrapper>
+                                            <SelectCancelText>스토어 ID 직접입력</SelectCancelText>
+                                        </SelectCancelWrapper>
+                                    </TouchableWithoutFeedback>
                                 </SelectWrapper>
                                
                             </SettingItemWrapper>
@@ -584,7 +596,7 @@ const SettingPopup = () =>{
                                 <SettingButtonText isMargin={true} >화면 업데이트</SettingButtonText>
                             </TouchableWithoutFeedback>
                             <TouchableWithoutFeedback onPress={()=>{checkUpdate();}} >
-                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.51</SettingButtonText>
+                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.54</SettingButtonText>
                             </TouchableWithoutFeedback> 
                         </SettingButtonWrapper>
                     </SettingScrollView>
