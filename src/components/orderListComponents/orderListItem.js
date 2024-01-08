@@ -36,7 +36,6 @@ const OrderListItem = (props) => {
         }
         return setItemPrice+item?.ITEM_AMT;
     }
-
     return(
         <>
             <OrderListTableItemWrapper>
@@ -44,7 +43,7 @@ const OrderListItem = (props) => {
                     <OrderListTableItemImage source={{uri:imgUrl}} />
                     <OrderListTableItemName>{ItemTitle()||item.ITEM_NM}</OrderListTableItemName>
                 </OrderListTableItemImageNameWrapper>
-                <OrderListTableItemAmt flex={0.1}>{item?.ITEM_QTY}ea</OrderListTableItemAmt>
+                <OrderListTableItemAmt flex={0.1}>{item?.ITEM_QTY}</OrderListTableItemAmt>
                 <OrderListTableItemOperander flex={0.03} >X</OrderListTableItemOperander>
                 <OrderListTableItemPrice flex={0.25} >{numberWithCommas(individualItem()/item?.ITEM_QTY)}원</OrderListTableItemPrice>
                 <OrderListTableItemOperander flex={0.03} >=</OrderListTableItemOperander>

@@ -14,7 +14,7 @@ import { LANGUAGE } from '../../resources/strings';
 import { setCartView, setIconClick } from '../../store/cart';
 import { IconWrapper } from '../../styles/main/topMenuStyle';
 import TopButton from '../menuComponents/topButton';
-import {  openTransperentPopup } from '../../utils/common';
+import {  numberWithCommas, openTransperentPopup } from '../../utils/common';
 import { initOrderList, postLog, postToMetaPos, postToPos } from '../../store/order';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
@@ -190,7 +190,8 @@ const CartView = () =>{
             if(orderList?.length>0) {
                 orderList?.map((el)=>{
                     totalAmt += Number(el.ITEM_AMT);
-                    totalCnt++;
+                    //totalCnt++;
+                    totalCnt = totalCnt+el?.ITEM_QTY;
                     for(var i=0;i<el.SETITEM_INFO.length;i++) {
                         totalAmt += el.SETITEM_INFO[i].AMT
                     }
@@ -247,7 +248,7 @@ const CartView = () =>{
                     <PayWrapper>
                         <PayAmtWrapper >
                             <PayAmtTitle>{LANGUAGE[language]?.cartView.totalAmt}</PayAmtTitle>
-                            <PayAmtNumber>{totalAmt}</PayAmtNumber>
+                            <PayAmtNumber>{numberWithCommas(totalAmt)}</PayAmtNumber>
                             <PayAmtUnit> {LANGUAGE[language]?.cartView.totalAmtUnit}</PayAmtUnit>
                         </PayAmtWrapper>
                     </PayWrapper>

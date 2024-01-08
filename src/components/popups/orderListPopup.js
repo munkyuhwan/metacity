@@ -6,7 +6,7 @@ import { PopupBottomButtonBlack, PopupBottomButtonText, PopupBottomButtonWrapper
 import { LANGUAGE } from '../../resources/strings';
 import { BottomButton, BottomButtonIcon, BottomButtonText, BottomButtonWrapper } from '../../styles/main/detailStyle';
 import { colorBlack, colorRed } from '../../assets/colors/color';
-import { openTransperentPopup } from '../../utils/common';
+import { numberWithCommas, openTransperentPopup } from '../../utils/common';
 import OrderListItem from '../orderListComponents/orderListItem';
 import { clearOrderStatus, getOrderStatus } from '../../store/order';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -80,7 +80,7 @@ const OrderListPopup = () =>{
                     </OrderListTableWrapper>
                     <OrderListTalbleGrandTotalWrapper>
                         <OrderListTotalTitle>{LANGUAGE[language]?.orderListPopup.tableColGrandTotal}</OrderListTotalTitle>
-                        <OrderListTotalAmount>{orderTotalAmt}{LANGUAGE[language]?.orderListPopup.totalAmtUnit}</OrderListTotalAmount>
+                        <OrderListTotalAmount>{numberWithCommas(orderTotalAmt)}{LANGUAGE[language]?.orderListPopup.totalAmtUnit}</OrderListTotalAmount>
                     </OrderListTalbleGrandTotalWrapper>
                 </OrderListWrapper>
                 <BottomButtonWrapper>
