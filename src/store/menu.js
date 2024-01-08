@@ -123,7 +123,11 @@ export const getAllItems = createAsyncThunk("menu/getAllItems",async(_,{dispatch
     return {allItems:result,allSets:setGroupData};
 })
 // 메뉴 상태 받아오기
-export const getMenuState = createAsyncThunk("menu/menuState", async(_,{dispatch}) =>{
+export const getMenuState = createAsyncThunk("menu/menuState", async(_,{dispatch, getState}) =>{
+    const {isProcessPaying} = getState().menu;
+    if(isProcessPaying) {
+        return;
+    }
     const resultData = await getMenuUpdateState(dispatch).catch(err=>{return []});
     if(!resultData) {
         return
@@ -161,6 +165,13 @@ export const getMenuState = createAsyncThunk("menu/menuState", async(_,{dispatch
         }
     } 
 })
+
+// 메뉴 상태 받아오기
+export const setProcessPaying = createAsyncThunk("menu/setProcessPaying", async(isPaying,{dispatch}) =>{
+    return isPaying;
+})
+
+
 // Slice
 export const menuSlice = createSlice({
     name: 'menu',
@@ -169,6 +180,7 @@ export const menuSlice = createSlice({
         displayMenu:[],
         allItems:[],
         allSets:[],
+        isProcessPaying:false,
     },
     extraReducers:(builder)=>{
         // 메인 카테고리 받기
@@ -179,6 +191,9 @@ export const menuSlice = createSlice({
         })
         builder.addCase(initMenu.fulfilled,(state, action)=>{
             state.menu = action.payload;
+        })
+        builder.addCase(setProcessPaying.fulfilled,(state, action)=>{
+            state.isProcessPaying = action.payload;
         })
 
         builder.addCase(updateMenu.fulfilled,(state, action)=>{

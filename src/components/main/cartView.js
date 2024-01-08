@@ -19,7 +19,7 @@ import { initOrderList, postLog, postToMetaPos, postToPos } from '../../store/or
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
 import LogWriter from '../../utils/logWriter';
-import {  initMenu } from '../../store/menu';
+import {  initMenu, setProcessPaying } from '../../store/menu';
 import { getMenuUpdateState } from '../../utils/api/metaApis';
 import moment from 'moment';
 import { KocesAppPay } from '../../utils/payment/kocesPay';
@@ -84,11 +84,14 @@ const CartView = () =>{
 
         
         if( tableStatus?.now_later == "선불") {
-
+            // 결제중에 메뉴 업데이트 막기
+            dispatch(setProcessPaying(true));
             const bsnNo = await AsyncStorage.getItem("BSN_NO");
             const tidNo = await AsyncStorage.getItem("TID_NO");
             const serialNo = await AsyncStorage.getItem("SERIAL_NO");
             if( isEmpty(bsnNo) || isEmpty(tidNo) || isEmpty(serialNo) ) {
+                // 결제중에 메뉴 업데이트 막기
+                dispatch(setProcessPaying(false));
                 displayErrorPopup(dispatch, "XXXX", "결제정보 입력 후 이용 해 주세요.");
                 return;
             }
@@ -110,15 +113,21 @@ const CartView = () =>{
             kocessAppPay.requestKoces()
             .then(result=>{
                 //console.log("request result: ", result);
+                // 결제중에 메뉴 업데이트 막기
+                dispatch(setProcessPaying(false));
                 dispatch(postToMetaPos({payData:result}));
             })
             .catch((err)=>{
                 //console.log("error: ",err)
+                // 결제중에 메뉴 업데이트 막기
+                dispatch(setProcessPaying(false));
                 dispatch(postLog({payData:err}))
                 displayErrorPopup(dispatch, "XXXX", err?.Message)
             })
              
         }else {
+            // 결제중에 메뉴 업데이트 막기
+            dispatch(setProcessPaying(false));
             dispatch(postToMetaPos({payData:{}}));
         }
         
