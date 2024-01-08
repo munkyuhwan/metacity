@@ -45,7 +45,7 @@ export const LANGUAGE = {
         },
         orderListPopup:{
             orderListTitle:"주문내역",
-            orderListSubtitle:"주문하신 결제 내역입니다.",
+            orderListSubtitle:"주문하신 내역입니다.",
             tableColName:"메뉴명",
             tableColAmt:'수량',
             tableColPrice:"단가",
