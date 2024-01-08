@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { 
     Alert,
     Animated,
@@ -33,6 +33,7 @@ const CartView = () =>{
     const {language} = useSelector(state=>state.languages);
 
     const dispatch = useDispatch();
+    const orderListRef = useRef();
     const {isOn} = useSelector((state)=>state.cartView);
     const {orderList,vatTotal} = useSelector((state)=>state.order);
     const { tableInfo, tableStatus } = useSelector(state=>state.tableInfo);
@@ -204,6 +205,9 @@ const CartView = () =>{
             setTotalAmt(totalAmt);
             setTotalCnt(totalCnt);
         }
+        if(orderListRef) {
+            orderListRef?.current.scrollToOffset({ animated: true, offset: 0 });
+        }
     },[orderList])
   
     return(
@@ -228,6 +232,7 @@ const CartView = () =>{
                 </TouchableWithoutFeedback>
                 {orderList &&
                     <CartFlatList
+                        ref={orderListRef}
                         data={orderList}
                         renderItem={(item )=>{
                             return(

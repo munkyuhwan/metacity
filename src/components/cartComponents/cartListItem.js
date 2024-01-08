@@ -96,7 +96,7 @@ const CartListItem = (props) => {
                 additivePrice = additivePrice+(additiveItemList[i]?.AMT)
                 //additivePrice = additivePrice+additi
             }
-                        
+            
             return Number(order?.ITEM_AMT)+Number(additivePrice);
         }else {
             return order?.ITEM_AMT||0;
