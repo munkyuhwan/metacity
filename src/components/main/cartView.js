@@ -41,6 +41,8 @@ const CartView = () =>{
     //console.log("orderList: ",orderList);
     const [totalAmt, setTotalAmt] = useState();
     const [totalCnt, setTotalCnt] = useState();
+    const [prevOrderList, setPrevOrderList] = useState();
+
     const [slideAnimation, setSlideAnimation] = useState(new Animated.Value(0));
     const slideInterpolate = slideAnimation.interpolate({
         inputRange:[0,1],
@@ -205,9 +207,10 @@ const CartView = () =>{
             setTotalAmt(totalAmt);
             setTotalCnt(totalCnt);
         }
-        if(orderListRef) {
-            orderListRef?.current.scrollToOffset({ animated: true, offset: 0 });
+        if(orderList?.length > prevOrderList?.length) {
+            orderListRef?.current?.scrollToOffset({ animated: true, offset: 0 });
         }
+        setPrevOrderList(orderList);
     },[orderList])
   
     return(
