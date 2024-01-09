@@ -90,7 +90,7 @@ const OrderListPopup = () =>{
                             <BottomButtonIcon source={require("../../assets/icons/card.png")} />
                         </BottomButton>
                     */}
-                    <TouchableWithoutFeedback onPress={()=>{clearInterval(to);to=null; dispatch(clearOrderStatus()); openTransperentPopup(dispatch, {innerView:"", isPopupVisible:false}); }} >
+                    <TouchableWithoutFeedback onPress={()=>{clearInterval(to);to=null; /* dispatch(clearOrderStatus()); */ openTransperentPopup(dispatch, {innerView:"", isPopupVisible:false}); }} >
                         <BottomButton backgroundColor={colorBlack} >
                             <BottomButtonText>{LANGUAGE[language]?.orderListPopup.orderListOK}</BottomButtonText>
                             <BottomButtonIcon source={require("../../assets/icons/cancel.png")} />

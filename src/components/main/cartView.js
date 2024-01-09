@@ -15,7 +15,7 @@ import { setCartView, setIconClick } from '../../store/cart';
 import { IconWrapper } from '../../styles/main/topMenuStyle';
 import TopButton from '../menuComponents/topButton';
 import {  numberWithCommas, openTransperentPopup } from '../../utils/common';
-import { initOrderList, postLog, postToMetaPos, postToPos } from '../../store/order';
+import { getOrderStatus, initOrderList, postLog, postToMetaPos, postToPos } from '../../store/order';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
 import LogWriter from '../../utils/logWriter';
@@ -36,11 +36,13 @@ const CartView = () =>{
     const orderListRef = useRef();
     const {isOn} = useSelector((state)=>state.cartView);
     const {orderList,vatTotal} = useSelector((state)=>state.order);
+    const {orderStatus} = useSelector(state=>state.order);    
     const { tableInfo, tableStatus } = useSelector(state=>state.tableInfo);
     const {isMonthSelectShow, monthSelected} = useSelector(state=>state.monthSelect)
     //console.log("orderList: ",orderList);
     const [totalAmt, setTotalAmt] = useState();
-    const [totalCnt, setTotalCnt] = useState();
+    const [totalCnt, setTotalCnt] = useState(0);
+    const [cartCnt, setCartCnt] = useState(0);
     const [prevOrderList, setPrevOrderList] = useState();
 
     const [slideAnimation, setSlideAnimation] = useState(new Animated.Value(0));
@@ -123,7 +125,8 @@ const CartView = () =>{
         }else {
             dispatch(postToMetaPos({payData:{}}));
         }
-        
+        dispatch(getOrderStatus());
+
     }
 
     const doPayment = async () =>{
@@ -213,13 +216,23 @@ const CartView = () =>{
         setPrevOrderList(orderList);
     },[orderList])
   
+    useEffect(()=>{
+        if(orderStatus){
+            let tmpPrice = 0;
+            orderStatus.map(el=>{
+                tmpPrice = tmpPrice+Number(el?.ITEM_QTY);
+            })
+            setCartCnt(tmpPrice);
+        }
+    },[orderStatus])
+
     return(
         <>  
             <IconWrapper>
                 {tableStatus?.now_later != "선불" &&
-                    <TopButton onPress={()=>{ openTransperentPopup(dispatch, {innerView:"OrderList", isPopupVisible:true}); }} isSlideMenu={false} lr={"left"} onSource={require("../../assets/icons/orderlist_trans.png")} offSource={require("../../assets/icons/orderlist_grey.png")} />
+                    <TopButton cntNum={cartCnt} onPress={()=>{ openTransperentPopup(dispatch, {innerView:"OrderList", isPopupVisible:true}); }} isSlideMenu={false} lr={"left"} onSource={require("../../assets/icons/orderlist_trans.png")} offSource={require("../../assets/icons/orderlist_grey.png")} />
                 }
-                <TopButton onPress={()=>{  dispatch(setCartView(!isOn));  }} isSlideMenu={true} lr={"right"} onSource={require("../../assets/icons/cart_trans.png")} offSource={require("../../assets/icons/cart_grey.png")} />
+                <TopButton cntNum={totalCnt} onPress={()=>{  dispatch(setCartView(!isOn));  }} isSlideMenu={true} lr={"right"} onSource={require("../../assets/icons/cart_trans.png")} offSource={require("../../assets/icons/cart_grey.png")} />
             </IconWrapper>
             <CartViewWrapper style={[{...boxStyle}]} >
                 
