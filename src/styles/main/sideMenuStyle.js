@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled, {css} from 'styled-components/native';
-import { RADIUS } from '../values';
+import { RADIUS, RADIUS_CATEGORY } from '../values';
 import { colorRed, colorWhite, sideMenuColor } from '../../assets/colors/color';
 
 export const SideMenuWrapper = styled.View`
@@ -49,8 +49,8 @@ export const SideMenuItem = styled.View`
 export const SideMenuItemOn = styled.View`
     backgroundColor:#ed3810;
     width:100%;
-    borderTopRightRadius:${RADIUS};
-    borderBottomRightRadius:${RADIUS};
+    borderTopRightRadius:${RADIUS_CATEGORY};
+    borderBottomRightRadius:${RADIUS_CATEGORY};
     marginTop:5px;
 
 `
