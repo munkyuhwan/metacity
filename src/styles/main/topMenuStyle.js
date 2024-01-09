@@ -72,8 +72,8 @@ export const TableName = styled.View`
     backgroundColor: ${colorRed};
     width:163px;
     height:80px;
-    paddingTop:14px;
-    paddingBottom:15px;
+    paddingTop:4%;
+    paddingBottom:8px;
     borderBottomRightRadius:${RADIUS};
     borderBottomLeftRadius:${RADIUS};
     zIndex:99999;
@@ -89,7 +89,7 @@ export const TableNameSmall = styled.Text`
     justifyContent:center;
     display:flex;
     alignItems:center;
-    fontSize:15px;
+    fontSize:18px;
     fontWeight:bold;
     color: ${textColorWhite};
 `
@@ -99,7 +99,7 @@ export const TableNameBig = styled.Text`
     justifyContent:center;
     display:flex;
     alignItems:center;
-    fontSize:29px;
+    fontSize:31px;
     fontWeight:bold;
     color: ${textColorWhite};
 `

@@ -24,6 +24,7 @@ import { uploadFile } from '../../store/etcFunctions'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getMenuState } from '../../store/menu'
 import AutoScroll from "@homielab/react-native-auto-scroll";
+import { setTableInfo } from '../../store/tableInfo'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -34,6 +35,7 @@ const TopMenu = () =>{
     const scrollViewRef = useRef();
     const {selectedMainCategory,subCategories, allCategories} = useSelector(state => state.categories);
     const [tableNoText, setTableNoText] = useState("");
+    const [tableInfoText, setTableInfoText] = useState("");
     const {tableInfo} = useSelector(state => state.tableInfo);
     
     const {bulletin} = useSelector(state=>state.menuExtra);
@@ -63,6 +65,13 @@ const TopMenu = () =>{
     useEffect(()=>{
         if(tableInfo) {
             //setTableNoText(tableInfo.tableNo)
+            AsyncStorage.getItem("TABLE_INFO")
+            .then((TABLE_INFO)=>{
+                if(TABLE_INFO) {
+                    setTableInfoText(TABLE_INFO)
+                }
+            })
+
             AsyncStorage.getItem("TABLE_NM")
             .then((TABLE_NM)=>{
                 if(TABLE_NM) {
@@ -150,7 +159,7 @@ const TopMenu = () =>{
                 </TouchableWithoutFeedback>
                         */}
                 <TableName>
-                    <TableNameSmall>  </TableNameSmall>
+                    <TableNameSmall>{tableInfoText}</TableNameSmall>
                     <TableNameBig>{tableNoText}</TableNameBig>
                 </TableName>
               
