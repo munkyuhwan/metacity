@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+
 public class KocesPayModule extends ReactContextBaseJavaModule {
     private ReactApplicationContext mContext = null;
     private int KOCES_REQUEST_CODE = 1910;
@@ -38,8 +39,8 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
     // Koces result code
     private String KOCES_SUCCESS_CODE = "0000";
 
-    private Callback successCallback = null;
-    private Callback errorCallback = null;
+    private static Callback successCallback = null;
+    private static Callback errorCallback = null;
 
     private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener(){
         @Override
@@ -59,6 +60,8 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
                                 // 정상 리스폰스
                                 if(successCallback != null) {
                                     successCallback.invoke(jObj.toString());
+                                }else{
+                                    errorCallback.invoke("{\"error\":\"successCallbackNone\"}");
                                 }
                             }else {
                                 // 실패 리스폰스
@@ -72,13 +75,14 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
                         throw new RuntimeException(e);
                     }
                 }
+            }else {
+                errorCallback.invoke(data);
             }
         }
     };
 
     KocesPayModule(ReactApplicationContext context) {
         super(context);
-        getReactApplicationContext().addActivityEventListener(mActivityEventListener);
         mContext=context;
     }
 
@@ -91,6 +95,7 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void prepareKocesPay(ReadableMap data, Callback errorCallback, Callback successCallback) {
         System.out.println("==============================prepare koces pay==============================");
+        getReactApplicationContext().addActivityEventListener(mActivityEventListener);
 
         this.errorCallback = errorCallback;
         this.successCallback = successCallback;

@@ -86,8 +86,6 @@ const CartView = () =>{
     const makePayment = async () =>{
         
         //console.log("storeInfo result: ", storeInfo);
-
-        
         if( tableStatus?.now_later == "선불") {
             const bsnNo = await AsyncStorage.getItem("BSN_NO");
             const tidNo = await AsyncStorage.getItem("TID_NO");
