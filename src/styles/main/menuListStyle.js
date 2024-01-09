@@ -82,7 +82,7 @@ export const MenuItemBottomWRapper = styled.View`
     height:100px;
     flex:1;
     flexDirection:column;  
-    paddingTop:19px;
+    paddingTop:16px;
     alignItems:center;
 `
 export const MenuItemName = styled.Text`
