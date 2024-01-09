@@ -61,9 +61,9 @@ export const TopMenuText = styled.Text`
     justifyContent:center;
     display:flex;
     alignItems:center;
-    fontSize:20px;
+    fontSize:28px;
     fontWeight:bold;
-    paddingTop:17px;
+    paddingTop:14px;
     color: ${textColorWhite};
 `;
 
