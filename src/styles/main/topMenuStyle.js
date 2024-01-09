@@ -9,7 +9,6 @@ export const TopMenuWrapper = styled.View`
     height: 80px;
     display: flex;
     justifyContent: flex-start;
-    paddingLeft:30px;
     zIndex:99999;
 `
 // 공지사항 텍스트
@@ -26,11 +25,13 @@ export const BulletinText = styled.Text`
 export const CategoryWrapper = styled.View` 
     flexDirection:row;
     height: 80px;
+    marginRight:50px;
     display: flex;
     justifyContent: flex-start;
 `;
 export const CategoryScrollView = styled.ScrollView`
-    width:602px;
+    paddingLeft:30px;
+    marginRight:36%;
     flex:1;
     flowDirection:column;
 `
@@ -80,7 +81,7 @@ export const TableName = styled.View`
     flexDirection:column;
     marginLeft:4px;
     position:absolute;
-    right:20%;
+    left:64%;
 `
 // talbe name smallTitle
 export const TableNameSmall = styled.Text`
