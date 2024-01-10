@@ -51,9 +51,43 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
             //System.out.println(data);
             JSONObject result = new JSONObject();
             if(data != null) {
-                Object hashData = data.getExtras().get("hashMap");
+                //Object hashData = data.getExtras().get("hashMap");
+                HashMap<String, String> hashData = (HashMap<String, String>) data.getSerializableExtra("hashMap");
+                System.out.println("hashData====================================================");
+                System.out.println(hashData);
+
                 if(hashData != null) {
-                    JSONObject jObj = new JSONObject((Map) hashData);
+                    String Result ="{";
+                    String ansCode = null;
+                    for (String _key: hashData.keySet()) {
+                        String strValue = hashData.get(_key);
+                        if(_key.equals("AnsCode") ) {
+                            ansCode=strValue;
+                        }
+                        Result +="\""+_key + "\":\"" + strValue + "\",";
+                    }
+                    Result = Result.substring(0,Result.length()-1);
+                    Result += "}";
+                    System.out.println("result string====================================================");
+                    System.out.println(Result);
+                    //JSONObject jObj = new JSONObject((Map) hashData);
+                    if(ansCode != null) {
+                        if (ansCode.equals(KOCES_SUCCESS_CODE)) {
+                            // 정상 리스폰스
+                            if(successCallback != null) {
+                                successCallback.invoke(Result);
+                            }else{
+                                errorCallback.invoke("{\"error\":\"successCallbackNone\"}");
+                            }
+                        }else {
+                            // 실패 리스폰스
+                            if(errorCallback != null) {
+                                errorCallback.invoke(Result);
+                            }
+                        }
+                    }
+
+                    /*
                     try {
                         if(jObj.get("AnsCode") != null) {
                             if (jObj.get("AnsCode").toString().equals(KOCES_SUCCESS_CODE)) {
@@ -74,9 +108,11 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
                         errorCallback.invoke(e);
                         throw new RuntimeException(e);
                     }
+                     */
+
                 }
             }else {
-                errorCallback.invoke(data);
+                errorCallback.invoke(data.toString());
             }
         }
     };
@@ -95,30 +131,11 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void prepareKocesPay(ReadableMap data, Callback errorCallback, Callback successCallback) {
         System.out.println("==============================prepare koces pay==============================");
+        getReactApplicationContext().removeActivityEventListener(mActivityEventListener);
         getReactApplicationContext().addActivityEventListener(mActivityEventListener);
 
         this.errorCallback = errorCallback;
         this.successCallback = successCallback;
-        /*
-        HashMap<String,String> hashMap = new HashMap<>();
-        Intent intent = new Intent();
-        if (Build.VERSION.SDK_INT < 33) {
-            intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        }
-        ComponentName componentName =
-                new ComponentName("com.koces.androidpos","com.koces.androidpos.AppToAppActivity");
-        intent.setComponent(componentName);
-        intent.setPackage(mContext.getPackageName());
-        intent.addFlags(Intent.FLAG_FROM_BACKGROUND);
-        hashMap.put("TrdType","D10");
-        hashMap.put("TermID", "0710000900");
-        hashMap.put("BsnNo", "2148631917");
-        hashMap.put("Serial", "1000000007");
-        hashMap.put("MchData", "");
-        intent.putExtra("hashMap",hashMap);
-        intent.setType("text/plain");
-        mContext.startActivityForResult(intent, 600,null);
-        */
 
         HashMap dataHash = data.toHashMap();
         HashMap<String, String> hashMap = new HashMap<>();

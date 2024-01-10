@@ -201,7 +201,7 @@ export const postMetaPosOrder = async(dispatch, data) =>{
         ) 
         .then((response => {
             if(metaErrorHandler(dispatch, response?.data)) {
-                console.log("true");
+                //console.log("true");
                 //openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true});
                 //openPopup(dispatch,{innerView:"OrderComplete", isPopupVisible:true});
                 resolve()
@@ -211,6 +211,18 @@ export const postMetaPosOrder = async(dispatch, data) =>{
                     const ERROR_MSG = response?.data?.ERROR_MSG;
                     const postData = {"storeID":storID,"tableNo":tableNo?.TABLE_INFO,"ERROR_CD":ERROR_CD,"ERROR_MSG":ERROR_MSG, "orderData":JSON.stringify(data),"time":moment().format("YYYY-MM-DD HH:mm:ss")};
                     postOrderLog(postData);
+                    /* 
+                    const date = new Date();
+                    let logdata = {
+                        time:`${date.getFullYear()}${numberPad(date.getMonth()+1,2)}${numberPad(date.getDate(),2)}`,
+                        storeID: `${storID}`,
+                        tableNo:`${tableNo.TABLE_INFO}`,
+                        auData:JSON.stringify([{date:`${date.getFullYear()}${numberPad(date.getMonth()+1,2)}${numberPad(date.getDate(),2)}`, AuNo:``,TrdAmt:`` }]),
+                        orderList:JSON.stringify(data),
+                        payResult:JSON.stringify(postData)
+                    }
+                    postOrderLog(logdata);
+                     */
                 }
                 //reject({});
             }
