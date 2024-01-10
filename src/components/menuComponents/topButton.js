@@ -70,9 +70,9 @@ const TopButton = (props) => {
     return(
         <>
         <WrapperIcon>
-            <CntNumberWrapper>
+            {/* <CntNumberWrapper>
                 <CntNumberText>{cntNum}</CntNumberText>
-            </CntNumberWrapper>
+            </CntNumberWrapper> */}
             {!isOn &&
                 <>
                     <TouchableWithoutFeedback onPress={()=>{ props.onPress(); if(isSlideMenu){onIconClicked();}  }}>
