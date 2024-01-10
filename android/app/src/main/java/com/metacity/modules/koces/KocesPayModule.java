@@ -53,8 +53,8 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
             if(data != null) {
                 //Object hashData = data.getExtras().get("hashMap");
                 HashMap<String, String> hashData = (HashMap<String, String>) data.getSerializableExtra("hashMap");
-                System.out.println("hashData====================================================");
-                System.out.println(hashData);
+                //System.out.println("hashData====================================================");
+                //System.out.println(hashData);
 
                 if(hashData != null) {
                     String Result ="{";
@@ -68,8 +68,8 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
                     }
                     Result = Result.substring(0,Result.length()-1);
                     Result += "}";
-                    System.out.println("result string====================================================");
-                    System.out.println(Result);
+                    //System.out.println("result string====================================================");
+                    //System.out.println(Result);
                     //JSONObject jObj = new JSONObject((Map) hashData);
                     if(ansCode != null) {
                         if (ansCode.equals(KOCES_SUCCESS_CODE)) {

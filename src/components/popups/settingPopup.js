@@ -18,6 +18,7 @@ import { setCartView } from '../../store/cart';
 import { getStoreInfo } from '../../utils/api/metaApis';
 import { getMenuState, initMenu } from '../../store/menu';
 import { CODE_PUSH_PRODUCTION, CODE_PUSH_SECRET } from '../../resources/apiResources';
+import { KocesAppPay } from '../../utils/payment/kocesPay';
 
 const SettingPopup = () =>{
 
@@ -447,6 +448,13 @@ const SettingPopup = () =>{
         AsyncStorage.setItem("STORE_IDX",storeIdx);
         displayOnAlert("스토어 아이디가 설정되었습니다.",{});            
     }
+
+    const deviceConnection = async () =>{
+        var kocessAppPay = new KocesAppPay();
+        await kocessAppPay.storeDownload();
+        const storeInfo = await kocessAppPay.requestKoces();
+    }
+
     return (
         <>
             <KeyboardAvoidingView behavior="padding" enabled style={{width:'100%', height:'100%'}} >
@@ -494,7 +502,6 @@ const SettingPopup = () =>{
                                     </TouchableWithoutFeedback>
                                 </SelectWrapper>
                             </SettingItemWrapper>
-
                             <SettingItemWrapper>
                                 <TouchableWithoutFeedback onPress={()=>{ }} >
                                     <SettingButtonText isMargin={false} > 결제 설정</SettingButtonText>
@@ -508,7 +515,6 @@ const SettingPopup = () =>{
                                     <View style={{flexDirection:'row', width:'100%'}}>
                                         <StoreIDTextLabel>TID:</StoreIDTextLabel>
                                         <StoreIDTextInput   defaultValue={tidNo} onChangeText={(val)=>{ setTidNo(val); }} />
-                                        
                                     </View>
                                     <View style={{flexDirection:'row', width:'100%'}}>
                                         <StoreIDTextLabel>serialNo:</StoreIDTextLabel>
@@ -521,6 +527,9 @@ const SettingPopup = () =>{
                                     </View>
                                 </SelectWrapper>
                             </SettingItemWrapper>
+                            <TouchableWithoutFeedback onPress={()=>{deviceConnection();  }} >
+                                <SettingButtonText isMargin={true} >단말기 연결 체크</SettingButtonText>
+                            </TouchableWithoutFeedback>
 
                             <SettingItemWrapper>
                                 <TouchableWithoutFeedback onPress={()=>{ }} >
@@ -589,6 +598,7 @@ const SettingPopup = () =>{
                                 <SettingButtonText isMargin={true} >로그 올리기</SettingButtonText>
                             </TouchableWithoutFeedback>
                             */}
+                            
                             <TouchableWithoutFeedback onPress={()=>{dispatch(getMenuState());}} >
                                 <SettingButtonText isMargin={true} >메뉴 업데이트 여부 체크</SettingButtonText>
                             </TouchableWithoutFeedback>
@@ -596,7 +606,7 @@ const SettingPopup = () =>{
                                 <SettingButtonText isMargin={true} >화면 업데이트</SettingButtonText>
                             </TouchableWithoutFeedback>
                             <TouchableWithoutFeedback onPress={()=>{checkUpdate();}} >
-                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.58</SettingButtonText>
+                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.59</SettingButtonText>
                             </TouchableWithoutFeedback> 
                         </SettingButtonWrapper>
                     </SettingScrollView>

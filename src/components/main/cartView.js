@@ -102,12 +102,12 @@ const CartView = () =>{
             
             let payAmt = totalAmt - vatTotal;
             
-            var kocessAppPay = new KocesAppPay();
+            //var kocessAppPay = new KocesAppPay();
             //kocessAppPay.storeDownload();
             //console.log({amt:payAmt, taxAmt:vatTotal, months:monthSelected});
             //dispatch(postToMetaPos({payData:samplePayData}));
              
-            await kocessAppPay.makePayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected, bsnNo:storeInfo?.BsnNo,termID:storeInfo?.TermID });
+            await kocessAppPay.makePayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected, bsnNo:bsnNo,termID:tidNo });
             //kocessAppPay.cancelPayment({amt:1004, taxAmt:0,auDate:"231227",auNo:"02173730",tradeNo:"000000800951"});
             kocessAppPay.requestKoces()
             .then(result=>{
