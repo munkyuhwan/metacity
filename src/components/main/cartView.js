@@ -123,7 +123,7 @@ const CartView = () =>{
         }else {
             dispatch(postToMetaPos({payData:{}}));
         }
-        dispatch(getOrderStatus());
+        //dispatch(getOrderStatus());
 
     }
 
@@ -208,20 +208,22 @@ const CartView = () =>{
             setTotalAmt(totalAmt);
             setTotalCnt(totalCnt);
         }
+        
         if(orderList?.length > prevOrderList?.length) {
             orderListRef?.current?.scrollToOffset({ animated: true, offset: 0 });
         }
         setPrevOrderList(orderList);
+        
     },[orderList])
   
     useEffect(()=>{
-        if(orderStatus){
+        /* if(orderStatus){
             let tmpPrice = 0;
             orderStatus.map(el=>{
                 tmpPrice = tmpPrice+Number(el?.ITEM_QTY);
             })
             setCartCnt(tmpPrice);
-        }
+        } */
     },[orderStatus])
 
     return(

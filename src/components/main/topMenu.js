@@ -159,7 +159,7 @@ const TopMenu = () =>{
                 </TouchableWithoutFeedback>
                         */}
                 <TableName>
-                    <TableNameSmall>{tableInfoText}</TableNameSmall>
+                    <TableNameSmall>테이블</TableNameSmall>
                     <TableNameBig>{tableNoText}</TableNameBig>
                 </TableName>
               

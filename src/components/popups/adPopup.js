@@ -19,6 +19,7 @@ const ADScreenPopup = () =>{
     let swipeTimeOut;
 
     useEffect(()=>{
+        console.log("광고 받기");
         dispatch(getAD()); 
     },[])
     
@@ -53,32 +54,20 @@ const ADScreenPopup = () =>{
 
     if(adList?.length<=0) {
         return(
-            <>
-            <ADWrapper>
-                    <View style={{position:'absolute', right:158}}>
-                        <TableName>
-                            <TableNameBig>{tableInfo?.TBL_NAME}</TableNameBig>
-                        </TableName>
-                    </View>
-                    <StatusText style={{color:'#000000'}} >광고 준비중</StatusText>                    
-                    <TouchableWithoutFeedback onPress={()=>{ clearTimeout(swipeTimeOut); swipeTimeOut=null; dispatch(setAdScreen({isShow:false,isMain:false})) /* navigation.navigate("main") */}}>
-                        <ADOrderBtnWrapper>
-                            <ADOrderBtnText>주문하기</ADOrderBtnText>
-                            <ADOrderBtnIcon source={require("../../assets/icons/folk_nife.png")} />
-                        </ADOrderBtnWrapper>
-                    </TouchableWithoutFeedback>
-                </ADWrapper></>
+            <></>
         )
     }
 
     return(
         <>
+            <TouchableWithoutFeedback onPress={()=>{ clearTimeout(swipeTimeOut); dispatch(setAdScreen({isShow:false,isMain:false})) /* navigation.navigate("main") */}}>
                 <ADWrapper>
-                    <View style={{position:'absolute', right:158}}>
+                    {/* <View style={{position:'absolute', right:158}}>
                         <TableName>
                             <TableNameBig>{tableInfo?.TBL_NAME}</TableNameBig>
                         </TableName>
-                    </View>
+                    </View> */}
+                    
                     {displayUrl?.split(";")[0]?.split("/")[1]?.includes('mp4') &&
                         <SwiperVideo
                             key={"aa"}
@@ -96,14 +85,12 @@ const ADScreenPopup = () =>{
                         </>
                     }
                     
-                    
-                    <TouchableWithoutFeedback onPress={()=>{ clearTimeout(swipeTimeOut); dispatch(setAdScreen({isShow:false,isMain:false})) /* navigation.navigate("main") */}}>
                         <ADOrderBtnWrapper>
-                            <ADOrderBtnText>주문하기</ADOrderBtnText>
-                            <ADOrderBtnIcon source={require("../../assets/icons/folk_nife.png")} />
+                                <ADOrderBtnText>주문하기</ADOrderBtnText>
+                                <ADOrderBtnIcon source={require("../../assets/icons/folk_nife.png")} />
                         </ADOrderBtnWrapper>
-                    </TouchableWithoutFeedback>
-                </ADWrapper>
+                    </ADWrapper>
+                </TouchableWithoutFeedback>
         </>
     )
 }

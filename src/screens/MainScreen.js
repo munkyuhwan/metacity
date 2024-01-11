@@ -24,8 +24,9 @@ const MainScreen = () =>{
     const {language} = useSelector(state=>state.languages);
     const {menuDetailID} = useSelector((state)=>state.menuDetail);
     const {isShow, adList} = useSelector((state)=>state.ads);
+
     useEffect(()=>{
-      dispatch(setLanguage("korean"));  
+        dispatch(setLanguage("korean"));  
     },[])
 
    
@@ -43,15 +44,13 @@ const MainScreen = () =>{
      
     let timeoutSet = null
     function screenTimeOut(){
- 
         if(timeoutSet!=null){clearInterval(timeoutSet);timeoutSet=null;}
             timeoutSet = setInterval(()=>{
-                dispatch(setAdScreen({isShow:true,isMain:true}))
-                clearInterval(timeoutSet);
-                timeoutSet=null;
-                
+                    clearInterval(timeoutSet);
+                    timeoutSet=null;
+                    dispatch(setAdScreen({isShow:true,isMain:true}))
+
         },SCREEN_TIMEOUT)
-  
     } 
 
     useEffect(()=>{
@@ -63,7 +62,7 @@ const MainScreen = () =>{
             screenTimeOut();
         } 
           
-    },[isShow, adList])
+    },[isShow])
     return(
         <>
             <KeyboardAvoidingView behavior="padding" enabled style={{width:'100%', height:'100%'}} >
@@ -77,7 +76,7 @@ const MainScreen = () =>{
                 </WholeWrapper> 
             </KeyboardAvoidingView>
             {menuDetailID!=null &&
-                <ItemDetail isDetailShow={menuDetailID!=null} language={language}/>
+                <ItemDetail onDetailTouchStart={screenTimeOut} isDetailShow={menuDetailID!=null} language={language}/>
             }
         </>
     )

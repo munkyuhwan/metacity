@@ -223,7 +223,7 @@ const ItemDetail = (props) => {
     return(
         <>
             <Animated.View  style={[{...PopStyle.animatedPop, ...boxWidthStyle,...{zIndex:detailZIndex} } ]} >
-                    <DetailWrapper>
+                    <DetailWrapper onTouchStart={()=>{ props?.onDetailTouchStart(); }}>
                         <DetailWhiteWrapper>
                             {menuDetailID==null &&
                                 <WaitIndicator/>
@@ -309,7 +309,6 @@ const ItemDetail = (props) => {
                                                     <OptTitleText>{LANGUAGE[language]?.detailView.recommendMenu}</OptTitleText>
                                                     <OptList horizontal showsHorizontalScrollIndicator={false} >
                                                         {
-                                                            
                                                             itemExtra[0]?.related.map((el,index)=>{
                                                                 if(isEmpty(el)) {
                                                                     return (<></>)

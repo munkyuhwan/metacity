@@ -112,7 +112,7 @@ export default function Navigation() {
 
     useEffect(()=>{
         // 초기 세팅
-        //dispatch(getAD()); 
+        dispatch(getAD()); 
         handleEventListener();
         dispatch(initMenu());
 

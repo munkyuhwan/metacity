@@ -26,8 +26,11 @@ const RecommendItem = (props) => {
     // 메뉴 추가정보 찾기
     //console.log(menuExtra); 
     const itemExtra = menuExtra.filter(el=>el.pos_code == recommentItemID);
-    //console.log("itemExtra:",itemExtra);
     
+    if(itemExtra?.length<=0) {
+        return (<></>);
+    }
+
     useEffect(()=>{
         const filtered = allItems.filter(el=>el.PROD_CD == recommentItemID);
         setItemDetail(filtered[0]);
