@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {View, NativeModules, DeviceEventEmitter, KeyboardAvoidingView} from 'react-native'
 import SideMenu from '../components/main/sideMenu'
 import TopMenu from '../components/main/topMenu'
@@ -17,6 +17,7 @@ import { setLanguage } from '../store/languages'
 import { DEFAULT_TABLE_STATUS_UPDATE_TIME } from '../resources/defaults'
 import {isEmpty} from 'lodash';
 import { getAD, setAdScreen } from '../store/ad'
+let timeoutSet = null;
 
 const MainScreen = () =>{   
     const navigation = useNavigation();
@@ -42,15 +43,16 @@ const MainScreen = () =>{
    */
 
      
-    let timeoutSet = null
-    function screenTimeOut(){
-        if(timeoutSet!=null){clearInterval(timeoutSet);timeoutSet=null;}
-            timeoutSet = setInterval(()=>{
-                    clearInterval(timeoutSet);
-                    timeoutSet=null;
-                    dispatch(setAdScreen({isShow:true,isMain:true}))
 
+    function screenTimeOut(){
+        clearInterval(timeoutSet);
+        timeoutSet=null;
+        timeoutSet = setInterval(()=>{
+                //clearInterval(timeoutSet);
+                //timeoutSet=null;
+                dispatch(setAdScreen({isShow:true,isMain:true}))
         },SCREEN_TIMEOUT)
+        
     } 
 
     useEffect(()=>{
