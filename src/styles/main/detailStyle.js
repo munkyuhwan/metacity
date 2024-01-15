@@ -241,7 +241,7 @@ export const BottomButton = styled.View`
     borderRadius:${RADIUS};
 `
 export const BottomButtonText = styled.Text`
-    fontSize:30px;
+    fontSize:27px;
     color:${colorWhite};
     fontWeight:bold;
     marginTop:auto;
