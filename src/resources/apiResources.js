@@ -78,6 +78,7 @@ export const BSN_ID = "2148631917";
 export const SN = "1000000007";
 
 export const KOCES_CODE_STORE_DOWNLOAD = "D10";
+export const KOCES_CODE_KEY_RENEW = "D20";
 
 // ADMIN API URL
 export const ADMIN_BASE_URL = "https://wooriorder.co.kr/metacity";

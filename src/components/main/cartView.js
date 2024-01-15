@@ -95,23 +95,12 @@ const CartView = () =>{
                 return;
             }
 
-            var kocessAppPay = new KocesAppPay();
-            await kocessAppPay.storeDownload();
-            const storeInfo = await kocessAppPay.requestKoces();
-            //dispatch(postToMetaPos({payData:SAMPLE_PAY_RESULT_DATA}));
-            
             let payAmt = totalAmt - vatTotal;
             
-            //var kocessAppPay = new KocesAppPay();
-            //kocessAppPay.storeDownload();
-            //console.log({amt:payAmt, taxAmt:vatTotal, months:monthSelected});
-            //dispatch(postToMetaPos({payData:samplePayData}));
-             
-            await kocessAppPay.makePayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected, bsnNo:bsnNo,termID:tidNo });
-            //kocessAppPay.cancelPayment({amt:1004, taxAmt:0,auDate:"231227",auNo:"02173730",tradeNo:"000000800951"});
-            kocessAppPay.requestKoces()
+            var kocessAppPay = new KocesAppPay();
+            kocessAppPay.requestKocesPayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected, bsnNo:bsnNo,termID:tidNo })
             .then(result=>{
-                //console.log("request result: ", result);
+                //console.log("result: ",result);
                 dispatch(postToMetaPos({payData:result}));
             })
             .catch((err)=>{
@@ -119,7 +108,19 @@ const CartView = () =>{
                 dispatch(postLog({payData:err}))
                 displayErrorPopup(dispatch, "XXXX", err?.Message)
             })
-             
+
+            /* 
+            await kocessAppPay.makePayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected, bsnNo:bsnNo,termID:tidNo });
+            kocessAppPay.requestKoces()
+            .then(result=>{
+                dispatch(postToMetaPos({payData:result}));
+            })
+            .catch((err)=>{
+                //console.log("error: ",err)
+                dispatch(postLog({payData:err}))
+                displayErrorPopup(dispatch, "XXXX", err?.Message)
+            })
+             */ 
         }else {
             dispatch(postToMetaPos({payData:{}}));
         }

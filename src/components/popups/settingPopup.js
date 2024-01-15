@@ -410,12 +410,11 @@ const SettingPopup = () =>{
         displayOnAlert("설정되었습니다.",{});
     }
 
-    const setPayData = () => {
-        AsyncStorage.setItem("BSN_NO", bsnNo);   
-        AsyncStorage.setItem("TID_NO", tidNo);   
-        AsyncStorage.setItem("SERIAL_NO", serialNo);   
+    const setPayData = async () => {
+        await AsyncStorage.setItem("BSN_NO", bsnNo);   
+        await AsyncStorage.setItem("TID_NO", tidNo);   
+        await AsyncStorage.setItem("SERIAL_NO", serialNo);   
         displayOnAlert("설정되었습니다.",{});
-
     }
 
     const getStoreID = () => {
@@ -450,9 +449,20 @@ const SettingPopup = () =>{
     }
 
     const deviceConnection = async () =>{
-        var kocessAppPay = new KocesAppPay();
-        await kocessAppPay.storeDownload();
-        const storeInfo = await kocessAppPay.requestKoces();
+        var kocessStoreDownload = new KocesAppPay();
+        await kocessStoreDownload.storeDownload();
+        kocessStoreDownload.requestKoces()
+        .then(result=>{
+            var kocesRenewKey = new KocesAppPay();
+            kocesRenewKey.keyRenew()
+            .then((result)=>{
+                displayOnAlert("설정되었습니다.",{});
+            })
+            .catch((err)=>{
+                displayOnAlert("설정할 수 없습니다.",{});
+            })
+        })
+
     }
 
     return (
@@ -606,7 +616,7 @@ const SettingPopup = () =>{
                                 <SettingButtonText isMargin={true} >화면 업데이트</SettingButtonText>
                             </TouchableWithoutFeedback>
                             <TouchableWithoutFeedback onPress={()=>{checkUpdate();}} >
-                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.61</SettingButtonText>
+                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.62</SettingButtonText>
                             </TouchableWithoutFeedback> 
                         </SettingButtonWrapper>
                     </SettingScrollView>

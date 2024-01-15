@@ -1,5 +1,5 @@
 import { NativeModules } from "react-native"
-import { BSN_ID, KOCES_CODE_STORE_DOWNLOAD, SN, TID } from "../../resources/apiResources";
+import { BSN_ID, KOCES_CODE_KEY_RENEW, KOCES_CODE_STORE_DOWNLOAD, SN, TID } from "../../resources/apiResources";
 import moment from "moment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -17,6 +17,13 @@ KocesAppPay.prototype.storeDownload = async function () {
     const tidNo = await AsyncStorage.getItem("TID_NO");
     const serialNo = await AsyncStorage.getItem("SERIAL_NO");
     this.data = {TrdType:KOCES_CODE_STORE_DOWNLOAD,TermID:tidNo, BsnNo:bsnNo, Serial:serialNo, MchData:""};
+} 
+// 키 갱신
+KocesAppPay.prototype.keyRenew = async function () {
+    const bsnNo = await AsyncStorage.getItem("BSN_NO");
+    const tidNo = await AsyncStorage.getItem("TID_NO");
+    const serialNo = await AsyncStorage.getItem("SERIAL_NO");
+    this.data = {TrdType:KOCES_CODE_KEY_RENEW,TermID:tidNo, BsnNo:bsnNo, Serial:serialNo, MchData:""};
 } 
 // 결제 요청
 KocesAppPay.prototype.makePayment = async function ({amt,taxAmt,months}) {
@@ -72,9 +79,51 @@ KocesAppPay.prototype.cancelPayment = function ({amt,taxAmt,auDate,auNo,tradeNo}
         CashNum:"",
         BillNo:"",
     };
-
-
 } 
+
+// 결제요청 하기
+KocesAppPay.prototype.requestKocesPayment = async function ({amt,taxAmt,months}) {
+    const tidNo = await AsyncStorage.getItem("TID_NO");
+    const {KocesPay} = NativeModules;
+    const payData = {
+        TrdType:'A10',
+        TermID: tidNo, 
+        Audate:`${moment().format("YYMMDD")}`,
+        AuNo:'',
+        KeyYn:'I',
+        TrdAmt:`${amt}`,
+        TaxAmt:`${taxAmt}`,
+        SvcAmt:"0",
+        TaxFreeAmt:"0",
+        Month:`${months}`,
+        MchData:"wooriorder",
+        TrdCode:"",
+        TradeNo:"",
+        CompCode:"",
+        DscYn:"1",
+        DscData:"",
+        FBYn:"0",
+        InsYn:"1",
+        CancelReason:"",
+        CashNum:"",
+        BillNo:"",
+    };
+    return await new Promise((resolve, reject)=>{
+        KocesPay.prepareKocesPay(
+            payData,
+            (error)=>{
+                //console.log("error msg: ",error);
+                reject(JSON.parse(error));
+            },
+            (msg)=>{
+                //console.log("success msg: ",msg);
+                resolve(JSON.parse(msg));
+            }
+        );
+    });
+
+}
+
 
 // 결제 등등 요청
 KocesAppPay.prototype.requestKoces = async function () {

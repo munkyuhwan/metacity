@@ -73,7 +73,6 @@ android {
     ndkVersion rootProject.ext.ndkVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-
     namespace "com.metacity"
     defaultConfig {
         applicationId "com.metacity"
@@ -128,7 +127,6 @@ dependencies {
         implementation jscFlavor
     }
     implementation project(':react-native-code-push')
-
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
