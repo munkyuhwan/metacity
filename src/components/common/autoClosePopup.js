@@ -2,16 +2,17 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { openPopup } from "../../utils/common";
 import { ErrorTitle, ErrorWrapper } from "../../styles/common/errorStyle";
-
+let to=null;
 const AutoClosePopup = () => {
 
     const dispatch = useDispatch();
-    const {popupMsg, param} = useSelector(state=>state.popup);
+    const {popupMsg, param, isPopupVisible} = useSelector(state=>state.popup);
     useState(()=>{
-        const to = setInterval(() => {
+        to = setInterval(() => {
             clearInterval(to);
+            to=null;
             openPopup(dispatch,{innerView:"", isPopupVisible:false});
-        }, 7000);
+        }, 3000);
     },[])
 
     return(
