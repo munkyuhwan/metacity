@@ -31,6 +31,7 @@ import { getDisplay } from 'react-native-device-info'
 import { getAD } from '../store/ad'
 import ADScreenPopup from '../components/popups/adPopup'
 import MonthSelectPopup from '../components/popups/monthSelectPopup'
+import PopupIndicatorNonCancel from '../components/common/popupIndicatoreNonCancel'
 
 const Stack = createStackNavigator()
 
@@ -38,7 +39,8 @@ export default function Navigation() {
     var statusInterval;
     const dispatch = useDispatch();
     const [spinnerText, setSpinnerText] = React.useState("")
-    
+    const [spinnerTextNonCancel, setSpinnerTextNonCancel] = React.useState("")
+
     const {tableStatus} = useSelector(state=>state.tableInfo);
     const {allItems} = useSelector(state=>state.menu);
     const {isShow} = useSelector(state=>state.ads);
@@ -50,6 +52,7 @@ export default function Navigation() {
         DeviceEventEmitter.removeAllListeners("onPending");
         DeviceEventEmitter.removeAllListeners("onComplete");
         EventRegister.removeAllListeners("showSpinner");
+        EventRegister.removeAllListeners("showSpinnerNonCancel");
 
         // 결제진행중 팝업
         DeviceEventEmitter.addListener("onPending",(ev)=>{
@@ -64,6 +67,13 @@ export default function Navigation() {
                 setSpinnerText(data?.msg)
             }else {
                 setSpinnerText("");
+            }
+        })
+        EventRegister.addEventListener("showSpinnerNonCancel",(data)=>{            
+            if(data?.isSpinnerShowNonCancel) { 
+                setSpinnerTextNonCancel(data?.msg)
+            }else {
+                setSpinnerTextNonCancel("");
             }
         })
     }
@@ -193,6 +203,9 @@ export default function Navigation() {
             }
             {(spinnerText!="")&&
                 <PopupIndicator text={spinnerText} setText={setSpinnerText} />
+            }
+            {(spinnerTextNonCancel!="")&&
+                <PopupIndicatorNonCancel text={spinnerTextNonCancel} />
             }
             {isMonthSelectShow &&
                 <MonthSelectPopup/>

@@ -20,12 +20,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
 import LogWriter from '../../utils/logWriter';
 import {  initMenu, setProcessPaying } from '../../store/menu';
-import { getMenuUpdateState } from '../../utils/api/metaApis';
+import { getMenuUpdateState, getTableAvailability } from '../../utils/api/metaApis';
 import moment from 'moment';
 import { KocesAppPay } from '../../utils/payment/kocesPay';
 import { displayErrorPopup } from '../../utils/errorHandler/metaErrorHandler';
 import { PAY_SEPRATE_AMT_LIMIT } from '../../resources/defaults';
 import { setMonthPopup, setSelectedMonth } from '../../store/monthPopup';
+import { EventRegister } from 'react-native-event-listeners';
 
 const windowWidth = Dimensions.get('window').width;
 const CartView = () =>{
@@ -100,7 +101,7 @@ const CartView = () =>{
             var kocessAppPay = new KocesAppPay();
             kocessAppPay.requestKocesPayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected, bsnNo:bsnNo,termID:tidNo })
             .then(result=>{
-                //console.log("result: ",result);
+                console.log("result: ",result);
                 dispatch(postToMetaPos({payData:result}));
             })
             .catch((err)=>{
@@ -129,11 +130,19 @@ const CartView = () =>{
     }
 
     const doPayment = async () =>{
-
-        const resultData = await getMenuUpdateState(dispatch).catch(err=>{return []});
-        if(!resultData) {
-            
+        /* 
+        const tableAvail = await getTableAvailability(dispatch).catch(()=>{return [];});
+        if(!tableAvail) {
         }else {
+            console.log("tableAvail: ",tableAvail);
+        }
+        */
+        EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:true, msg:"주문 중 입니다."})
+        const resultData = await getMenuUpdateState(dispatch).catch(err=>{EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""}); return [];});
+        if(!resultData) {
+            EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
+        }else {
+            EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
             const isUpdated = resultData?.ERROR_CD == "E0000" ;
             const updateDateTime = resultData?.UPD_DT;
             const msg = resultData?.ERROR_MSG;

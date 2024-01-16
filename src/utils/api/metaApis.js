@@ -1,7 +1,7 @@
 import axios from "axios";
 import { posErrorHandler } from "../errorHandler/ErrorHandler";
 
-import { POS_BASE_URL, POS_VERSION_CODE, POS_WORK_CD_IS_MENU_CHANGE, POS_WORK_CD_MAIN_CAT, POS_WORK_CD_MENU_ITEMS, POS_WORK_CD_MID_CAT, POS_WORK_CD_REQ_STORE_INFO, POS_WORK_CD_SET_GROUP_INFO, POS_WORK_CD_SET_GROUP_ITEM_INFO, POS_WORK_CD_TABLE_INFO, POS_WORK_CD_TABLE_ORDER_LIST, POS_WORK_CD_VERSION } from "../../resources/apiResources";
+import { POS_BASE_URL, POS_VERSION_CODE, POS_WORK_CD_IS_MENU_CHANGE, POS_WORK_CD_MAIN_CAT, POS_WORK_CD_MENU_ITEMS, POS_WORK_CD_MID_CAT, POS_WORK_CD_REQ_STORE_INFO, POS_WORK_CD_SET_GROUP_INFO, POS_WORK_CD_SET_GROUP_ITEM_INFO, POS_WORK_CD_TABLE_CAN_LOCK, POS_WORK_CD_TABLE_INFO, POS_WORK_CD_TABLE_ORDER_LIST, POS_WORK_CD_VERSION } from "../../resources/apiResources";
 import { displayErrorPopup, metaErrorHandler } from "../errorHandler/metaErrorHandler";
 import { getIP, getStoreID, getTableInfo, openPopup } from "../common";
 import { EventRegister } from "react-native-event-listeners";
@@ -184,6 +184,7 @@ export const getPosSetGroupItem = async(dispatch, data) =>{
 }
 // 주문하기 
 export const postMetaPosOrder = async(dispatch, data) =>{
+    console.log("주문 보내기");
     const {POS_IP} = await getIP()
     if(isEmpty(POS_IP)) {
         EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""})
@@ -223,6 +224,8 @@ export const postMetaPosOrder = async(dispatch, data) =>{
                     }
                     postOrderLog(logdata);
                      */
+                }else {
+
                 }
                 //reject({});
             }
@@ -348,6 +351,7 @@ export const  getMenuUpdateState = async (dispatch) =>{
     const {POS_IP} = await getIP()
     if(isEmpty(POS_IP)) {
         EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""})
+        EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
         posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'포스 IP를 입력 해 주세요.',MSG2:""})
         return;
     }
@@ -375,6 +379,8 @@ export const  getMenuUpdateState = async (dispatch) =>{
             posOrderHeader,
         ) 
         .then((response => { 
+            EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""})
+            EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
             if(metaErrorHandler(dispatch, response.data)){
                 const data = response.data;
                 resolve(data); 
@@ -384,7 +390,55 @@ export const  getMenuUpdateState = async (dispatch) =>{
         }))
         .catch(error=>{
             console.log("error: ",error)    
+            EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""})
+            EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
+            displayErrorPopup(dispatch,"XXXX",`포스에 연동할 수 없습니다.`);
             reject(error.response.data)
         });
     })
 }
+
+// 주문 가능 여부 체크
+export const getTableAvailability = async(dispatch) =>{
+    const {POS_IP} = await getIP()
+    .catch((err)=>{
+        posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'포스 IP 가져오기 실패.',MSG2:""})
+    }
+    )
+    if(isEmpty(POS_IP)) {
+        posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'포스 IP를 입력 해 주세요.',MSG2:""})
+        return;
+    }
+    const {TABLE_INFO} = await getTableInfo()
+    if(isEmpty(TABLE_INFO)) {
+        EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""})
+        posErrorHandler(dispatch, {ERRCODE:"XXXX",MSG:'테이블 정보가 없습니다.',MSG2:""})
+        return;
+    }
+ 
+    return await new Promise(function(resolve, reject){
+        axios.post(
+            `${POS_BASE_URL(POS_IP)}`,
+            {
+                "VERSION" : POS_VERSION_CODE,
+                "WORK_CD" : POS_WORK_CD_TABLE_CAN_LOCK,
+                "TBL_NO" : TABLE_INFO
+
+            },
+            posOrderHeader,
+        ) 
+        .then((response => {
+            if(metaErrorHandler(dispatch, response?.data)) {
+                resolve(response?.data)
+            } else {
+
+            }
+        })) 
+        .catch(error=>{
+            displayErrorPopup(dispatch,"XXXX",`포스에 연동할 수 없습니다.`);
+            reject(error.response.data)
+        });
+    }) 
+     
+}
+
