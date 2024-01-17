@@ -20,7 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
 import LogWriter from '../../utils/logWriter';
 import {  initMenu, setProcessPaying } from '../../store/menu';
-import { getMenuUpdateState, getTableAvailability } from '../../utils/api/metaApis';
+import { getMenuUpdateState, getStoreInfo, getTableAvailability } from '../../utils/api/metaApis';
 import moment from 'moment';
 import { KocesAppPay } from '../../utils/payment/kocesPay';
 import { displayErrorPopup } from '../../utils/errorHandler/metaErrorHandler';
@@ -85,112 +85,117 @@ const CartView = () =>{
 
     },[isMonthSelectShow,monthSelected])
     const makePayment = async () =>{
-        
-        //console.log("storeInfo result: ", storeInfo);
-        if( tableStatus?.now_later == "선불") {
-            const bsnNo = await AsyncStorage.getItem("BSN_NO");
-            const tidNo = await AsyncStorage.getItem("TID_NO");
-            const serialNo = await AsyncStorage.getItem("SERIAL_NO");
-            if( isEmpty(bsnNo) || isEmpty(tidNo) || isEmpty(serialNo) ) {
-                displayErrorPopup(dispatch, "XXXX", "결제정보 입력 후 이용 해 주세요.");
-                return;
-            }
+        EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:true, msg:"주문 중 입니다."})
 
-            let payAmt = totalAmt - vatTotal;
-            
-            var kocessAppPay = new KocesAppPay();
-            kocessAppPay.requestKocesPayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected, bsnNo:bsnNo,termID:tidNo })
-            .then(result=>{
-                console.log("result: ",result);
-                dispatch(postToMetaPos({payData:result}));
-            })
-            .catch((err)=>{
-                //console.log("error: ",err)
-                dispatch(postLog({payData:err}))
-                displayErrorPopup(dispatch, "XXXX", err?.Message)
-            })
-
-            /* 
-            await kocessAppPay.makePayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected, bsnNo:bsnNo,termID:tidNo });
-            kocessAppPay.requestKoces()
-            .then(result=>{
-                dispatch(postToMetaPos({payData:result}));
-            })
-            .catch((err)=>{
-                //console.log("error: ",err)
-                dispatch(postLog({payData:err}))
-                displayErrorPopup(dispatch, "XXXX", err?.Message)
-            })
-             */ 
+        const tableAvail = await getTableAvailability(dispatch).catch(()=>{EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""}); return [];});
+        if(!tableAvail) {
+            EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
         }else {
-            dispatch(postToMetaPos({payData:{}}));
-        }
-        //dispatch(getOrderStatus());
+            //console.log("storeInfo result: ", storeInfo);
+            EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
+            if( tableStatus?.now_later == "선불") {
+                const bsnNo = await AsyncStorage.getItem("BSN_NO");
+                const tidNo = await AsyncStorage.getItem("TID_NO");
+                const serialNo = await AsyncStorage.getItem("SERIAL_NO");
+                if( isEmpty(bsnNo) || isEmpty(tidNo) || isEmpty(serialNo) ) {
+                    displayErrorPopup(dispatch, "XXXX", "결제정보 입력 후 이용 해 주세요.");
+                    return;
+                }
 
+                let payAmt = totalAmt - vatTotal;
+                
+                var kocessAppPay = new KocesAppPay();
+                kocessAppPay.requestKocesPayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected, bsnNo:bsnNo,termID:tidNo })
+                .then(result=>{
+                    //console.log("result: ",result);
+                    dispatch(postToMetaPos({payData:result}));
+                })
+                .catch((err)=>{
+                    //console.log("error: ",err)
+                    dispatch(postLog({payData:err}))
+                    displayErrorPopup(dispatch, "XXXX", err?.Message)
+                })
+
+            }else {
+                dispatch(postToMetaPos({payData:{}}));
+            }
+        }
     }
 
     const doPayment = async () =>{
-        /* 
-        const tableAvail = await getTableAvailability(dispatch).catch(()=>{return [];});
-        if(!tableAvail) {
-        }else {
-            console.log("tableAvail: ",tableAvail);
-        }
-        */
         EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:true, msg:"주문 중 입니다."})
-        const resultData = await getMenuUpdateState(dispatch).catch(err=>{EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""}); return [];});
-        if(!resultData) {
+        const storeInfo = await getStoreInfo()
+        .catch((err)=>{
+            EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""}); 
+            return [];
+        })
+        // 개점정보 확인
+        if(!storeInfo?.SAL_YMD) {
             EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
+            displayErrorPopup(dispatch, "XXXX", "개점이 되지않아 주문을 할 수 없습니다.");
         }else {
-            EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
-            const isUpdated = resultData?.ERROR_CD == "E0000" ;
-            const updateDateTime = resultData?.UPD_DT;
-            const msg = resultData?.ERROR_MSG;
-            if(isUpdated) {
-                
-                // 날짜 기준 메뉴 업트가 있으면 새로 받아 온다.
-                const lastUpdateDate = await AsyncStorage.getItem("lastUpdate");      
-                const currentDate = moment(lastUpdateDate).format("x");
-                const updateDate = moment(updateDateTime).format("x");
-                if(updateDate>currentDate) {
-                    Alert.alert(
-                        "업데이트",
-                        "메뉴 업데이트가 되었습니다. 업데이트 후 주문하실 수 있습니다.",
-                        [{
-                            text:'확인',
-                        }]
-                    );
-                    dispatch(initMenu());
-                    const saveDate = moment().format("YYYY-MM-DD HH:mm:ss");
-                    AsyncStorage.setItem("lastUpdate",saveDate);
-                    dispatch(setCartView(false));
-                    dispatch(initOrderList());
+            //테이블 주문 가능한지 체크
+            const tableAvail = await getTableAvailability(dispatch).catch(()=>{EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""}); return [];});
+            if(!tableAvail) {
+                EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
+            }else {
+                EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:true, msg:"주문 중 입니다."})
+    
+                const resultData = await getMenuUpdateState(dispatch).catch(err=>{EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""}); return [];});
+                if(!resultData) {
+                    EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
                 }else {
-                    if( tableStatus?.now_later == "선불") {
-                        if(totalAmt >= PAY_SEPRATE_AMT_LIMIT) {
-                            dispatch(setMonthPopup({isMonthSelectShow:true}))
+                    EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
+                    const isUpdated = resultData?.ERROR_CD == "E0000" ;
+                    const updateDateTime = resultData?.UPD_DT;
+                    const msg = resultData?.ERROR_MSG;
+                    if(isUpdated) {
+                        
+                        // 날짜 기준 메뉴 업트가 있으면 새로 받아 온다.
+                        const lastUpdateDate = await AsyncStorage.getItem("lastUpdate");      
+                        const currentDate = moment(lastUpdateDate).format("x");
+                        const updateDate = moment(updateDateTime).format("x");
+                        if(updateDate>currentDate) {
+                            Alert.alert(
+                                "업데이트",
+                                "메뉴 업데이트가 되었습니다. 업데이트 후 주문하실 수 있습니다.",
+                                [{
+                                    text:'확인',
+                                }]
+                            );
+                            dispatch(initMenu());
+                            const saveDate = moment().format("YYYY-MM-DD HH:mm:ss");
+                            AsyncStorage.setItem("lastUpdate",saveDate);
+                            dispatch(setCartView(false));
+                            dispatch(initOrderList());
+                        }else {
+                            if( tableStatus?.now_later == "선불") {
+                                if(totalAmt >= PAY_SEPRATE_AMT_LIMIT) {
+                                    dispatch(setMonthPopup({isMonthSelectShow:true}))
+                                }else {
+                                    makePayment();
+                                }
+                            }else {
+                                makePayment();
+                            }
+                            //dispatch(postToMetaPos());
+                        }
+            
+                    }else {
+                        if( tableStatus?.now_later == "선불") {
+                            if(totalAmt >= PAY_SEPRATE_AMT_LIMIT) {
+                                dispatch(setMonthPopup({isMonthSelectShow:true}))
+                            }else {
+                                makePayment();
+                            }
                         }else {
                             makePayment();
                         }
-                    }else {
-                        makePayment();
+                        //dispatch(postToMetaPos());
                     }
-                    //dispatch(postToMetaPos());
-                }
-    
-            }else {
-                if( tableStatus?.now_later == "선불") {
-                    if(totalAmt >= PAY_SEPRATE_AMT_LIMIT) {
-                        dispatch(setMonthPopup({isMonthSelectShow:true}))
-                    }else {
-                        makePayment();
-                    }
-                }else {
-                    makePayment();
-                }
-                //dispatch(postToMetaPos());
+                } 
             }
-        } 
+        }
         
     }
     useEffect(()=>{

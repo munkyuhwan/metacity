@@ -66,9 +66,6 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
             //System.out.println(data);
 
 
-            JSONObject result = new JSONObject();
-
-
             if(data != null) {
                 //Object hashData = data.getExtras().get("hashMap");
                 HashMap<String, String> hashData = (HashMap<String, String>) data.getSerializableExtra("hashMap");
@@ -88,6 +85,16 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
                     }
                     Result = Result.substring(0,Result.length()-1);
                     Result += "}";
+                    /*
+                    JSONObject result = new JSONObject();
+                    Date date = new Date(System.currentTimeMillis());
+                    SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
+                    String time = format.format(date);
+                    SimpleDateFormat formatFileName = new SimpleDateFormat("yyyyMMdd");
+                    String timeFileName = formatFileName.format(date);
+                    String logString = "["+time+"] "+"REQUEST PAY RESULT DATA\n"+ Result + "\n======================================================================================================================================\n\n";
+                    dataSaveLog(logString, timeFileName+"_log");
+                    */
                     //System.out.println("result string====================================================");
                     //System.out.println(Result);
                     //JSONObject jObj = new JSONObject((Map) hashData);
@@ -161,15 +168,14 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
         System.out.println("hashMap: "+hashMap);
         intent.putExtra("hashMap",hashMap);
         intent.setType("text/plain");
-
         /*
-        Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
-        String time = format.format(date);
-        SimpleDateFormat formatFileName = new SimpleDateFormat("yyyyMMdd");
-        String timeFileName = formatFileName.format(date);
-        String logString = "["+time+"] "+"REQUEST PAY DATA: "+ hashMap + "\n";
-        dataSaveLog(logString, timeFileName+"_log");
+            Date date = new Date(System.currentTimeMillis());
+            SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
+            String time = format.format(date);
+            SimpleDateFormat formatFileName = new SimpleDateFormat("yyyyMMdd");
+            String timeFileName = formatFileName.format(date);
+            String logString = "[" + time + "] " + "REQUEST PAY DATA\n" + hashMap + "\n";
+            dataSaveLog(logString, timeFileName + "_log");
         */
 
         mContext.startActivityForResult(intent, KOCES_REQUEST_CODE, null);
@@ -186,6 +192,9 @@ public class KocesPayModule extends ReactContextBaseJavaModule {
         // 일치하는 폴더가 없으면 생성
         if (!fileDir.exists()) {
             fileDir.mkdirs();
+        }
+        if(file.exists()) {
+
         }
 
         try {

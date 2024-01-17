@@ -7,6 +7,7 @@ import { LANGUAGE } from '../../resources/strings';
 import { PopupBottomButtonBlack, PopupBottomButtonRed, PopupBottomButtonText, PopupBottomButtonWrapper } from '../../styles/common/coreStyle';
 import { TouchableWithoutFeedback, View } from 'react-native';
 import { setMonthPopup, setSelectedMonth } from '../../store/monthPopup';
+import { colorRed } from '../../assets/colors/color';
 
 const MonthSelectPopup = (props) =>{
     const dispatch = useDispatch();
@@ -29,22 +30,26 @@ const MonthSelectPopup = (props) =>{
                             dispatch(setSelectedMonth(itemValue))
                         }}
                         selectedValue={monthSelected}
+                        dropdownIconColor={colorRed}
                         style = {{
+                            borderStyle:"solid",
+                            borderWidth:1,
+                            backgroundColor:"#efefef",
                             margin:"auto",
-                            width: 270,
+                            width: 230,
                             height: 50,
                             flex:1,
                         }}>
-                            <MonthSelectPickerItem style={{fontSize:120,fontWeight:'bold',justifyContent:'center'}}  key={"_"+"none"}  label = {"선택"} value ={""} />
+                            <MonthSelectPickerItem style={{fontSize:90,fontWeight:'bold',justifyContent:'center'}}  key={"_"+"none"}  label = {"선택"} value ={""} />
                         {
                                 MONTHS.map((el,index)=>{
                                 return(
-                                    <MonthSelectPickerItem style={{fontSize:120,fontWeight:'bold',justifyContent:'center'}}  key={index+"_"+el}  label = {el} value ={el} />
+                                    <MonthSelectPickerItem style={{fontSize:110,fontWeight:'bold',justifyContent:'center'}}  key={index+"_"+el}  label = {el} value ={el} />
                                 )
                             })
                         }
                     </Picker>
-                    <View style={{flexDirection:'row', width:'100%', justifyContent:'center'}}>
+                    <View style={{flexDirection:'row', width:'100%', justifyContent:'center', paddingTop:7 }}>
 
                             <TouchableWithoutFeedback  onPress={()=>{ dispatch(setMonthPopup({isMonthSelectShow:false}));  }}>
                                 <PopupBottomButtonBlack style={{marginRight:10}}>
