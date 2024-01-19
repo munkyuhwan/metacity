@@ -86,12 +86,12 @@ export const MenuItemBottomWRapper = styled.View`
     alignItems:center;
 `
 export const MenuItemName = styled.Text`
-    fontSize:21px;
+    fontSize:28px;
     color:${colorWhite};
     fontWeight:bold;
 `
 export const MenuItemPrice = styled.Text`
-    fontSize:17px;
+    fontSize:26px;
     color:${colorWhite};
  
 `

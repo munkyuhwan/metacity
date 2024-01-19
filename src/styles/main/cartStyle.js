@@ -221,7 +221,7 @@ export const CartItemCancelBtn = styled.Image`
 `
 // 주문하기
 export const OrderWrapper = styled.View`
-    backgroundColor:${colorRed};
+    backgroundColor:#D9D9D9;
     width:100%;
     height:30%;
     paddingRight:23px;
@@ -241,7 +241,7 @@ export const PayAmtWrapper = styled.View`
         if(props.isBordered) {
             return (
                 "borderBottomWidth:1px;"+
-                `borderColor:${colorGrey}`
+                `borderColor:${colorBlack}`
             )
         }
     }}
@@ -249,21 +249,21 @@ export const PayAmtWrapper = styled.View`
 export const PayAmtTitle = styled.Text`
     flex:1;
     fontSize:20px;
-    color:${colorWhite}
+    color:${colorBlack}
 `
 export const PayAmtNumber = styled.Text`
     fontSize:20px;
-    color:${colorWhite};
+    color:${colorBlack};
     fontWeight:bold;
 `
 export const PayAmtUnit = styled.Text`
     fontSize:20px;
-    color:${colorWhite};
+    color:${colorBlack};
 `
 export const PayBtn = styled.View`
     width:100%;
     height:40%;
-    backgroundColor:${mainTheme};
+    backgroundColor:${colorRed};
     flexDirection:row;
     textAlign:center;
     justifyContent:center;
