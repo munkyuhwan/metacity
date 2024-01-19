@@ -130,15 +130,23 @@ const MenuListView = () => {
                         
                         if(touchSize < 0) {
                             // swipe down
-                            if( (touchSize*-1) > 25 ) {
+                            if( (touchSize*-1) > 150 ) {
                                 // action
-                                toPrevCaterogy();
+                                if(scrollDownCnt>=1) {
+                                    toPrevCaterogy();
+                                }else {
+                                    scrollDownCnt = scrollDownCnt+1;
+                                }
                             }
                         }else {
                             // swipe up
-                            if(touchSize>25) {
+                            if(touchSize>150) {
                                 //action
-                                toNextCaterogy();
+                                if(scrollUpCnt>=1) {
+                                    toNextCaterogy();
+                                }else {
+                                    scrollUpCnt = scrollUpCnt+1;
+                                }
                             } 
                         }
                         
