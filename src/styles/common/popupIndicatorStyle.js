@@ -15,6 +15,17 @@ export const PopupIndicatorWrapper = styled.View`
     alignItems:center;
     flex:1;
 `
+export const PopupIndicatorTransparentWrapper = styled.View`
+    backgroundColor:#00000000;
+    top:0;
+    position:absolute;
+    width:100%; 
+    height:100%;
+    zIndex:9999999;
+    justifyContents:center;
+    alignItems:center;
+    flex:1;
+`
 export const IndicatorWrapper = styled.View`
     width:400px;
     backgroundColor:${colorWhite};

@@ -576,8 +576,7 @@ const SettingPopup = () =>{
                             </TouchableWithoutFeedback> 
                             <TouchableWithoutFeedback onPress={()=>{cancelOrder(dispatch,{tableInfo})}} >
                                 <SettingButtonText isMargin={true} >주문취소</SettingButtonText>
-                            </TouchableWithoutFeedback>  */}
-                            {/* 
+                            </TouchableWithoutFeedback>  
                             <TouchableWithoutFeedback onPress={()=>{getIndicateAvailableDeviceInfo();}} >
                                 <SettingButtonText isMargin={true} >단말기 서비스 확인</SettingButtonText>
                             </TouchableWithoutFeedback>
@@ -602,8 +601,7 @@ const SettingPopup = () =>{
                             <TouchableWithoutFeedback onPress={()=>{initTable(); }} >
                                 <SettingButtonText isMargin={true} >테이블 주문 초기화</SettingButtonText>
                             </TouchableWithoutFeedback>
-                            */}
-                            {/* 
+                           
                             <TouchableWithoutFeedback onPress={()=>{uploadLog(); }} >
                                 <SettingButtonText isMargin={true} >로그 올리기</SettingButtonText>
                             </TouchableWithoutFeedback>
@@ -616,7 +614,7 @@ const SettingPopup = () =>{
                                 <SettingButtonText isMargin={true} >화면 업데이트</SettingButtonText>
                             </TouchableWithoutFeedback>
                             <TouchableWithoutFeedback onPress={()=>{checkUpdate();}} >
-                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.66</SettingButtonText>
+                                <SettingButtonText isMargin={true} >앱 업데이트 ver 1.0.67</SettingButtonText>
                             </TouchableWithoutFeedback> 
                         </SettingButtonWrapper>
                     </SettingScrollView>
