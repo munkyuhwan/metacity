@@ -7,6 +7,7 @@ import RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
 import { addImageStorage } from '../store/imageStorage';
 import { setAdImgs } from '../store/ad';
+import { fetch } from "@react-native-community/netinfo";
 
 export function openPopup (dispatch, {innerView, isPopupVisible, param}) {
     if(isPopupVisible) {
@@ -243,4 +244,22 @@ export async function adFileDownloader(dispatch, name,url) {
             reject()
         })
     })
+}
+
+// 인터넷 연결 체크
+export const isNetworkAvailable = async () => {
+    return new Promise((resolve, reject) =>{
+        fetch().then(state => {
+            if(state.isConnected == true) {
+                resolve(true);
+            }else {
+                resolve(false);
+            }
+        })
+        .catch(err=>{
+            reject();
+        })
+        ;
+    } )
+
 }

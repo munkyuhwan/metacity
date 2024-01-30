@@ -14,7 +14,7 @@ import { LANGUAGE } from '../../resources/strings';
 import { setCartView, setIconClick } from '../../store/cart';
 import { IconWrapper } from '../../styles/main/topMenuStyle';
 import TopButton from '../menuComponents/topButton';
-import {  numberWithCommas, openTransperentPopup } from '../../utils/common';
+import {  isNetworkAvailable, numberWithCommas, openTransperentPopup } from '../../utils/common';
 import { getOrderStatus, initOrderList, postLog, postToMetaPos, postToPos } from '../../store/order';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isEmpty} from 'lodash';
@@ -86,7 +86,6 @@ const CartView = () =>{
     },[isMonthSelectShow,monthSelected])
     const makePayment = async () =>{
         EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:true, msg:"주문 중 입니다."})
-
         const tableAvail = await getTableAvailability(dispatch).catch(()=>{EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""}); return [];});
         if(!tableAvail) {
             EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
@@ -124,6 +123,14 @@ const CartView = () =>{
 
     const doPayment = async () =>{
         EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:true, msg:"주문 중 입니다."})
+
+        const isPostable = await isNetworkAvailable().catch(()=>{EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""}); return false;});
+        if(!isPostable) {
+            displayErrorPopup(dispatch, "XXXX", "인터넷에 연결할 수 없습니다.");
+            EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
+            return;
+        }
+
         const storeInfo = await getStoreInfo()
         .catch((err)=>{
             EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""}); 
