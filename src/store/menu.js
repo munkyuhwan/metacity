@@ -13,8 +13,8 @@ import { DEFAULT_CATEGORY_ALL_CODE } from '../resources/defaults';
 import { getMenuUpdateState, getPosItemsAll, getPosItemsWithCategory, getPosMainCategory, getPosMidCategory, getPosSetGroup, getPosSetGroupItem } from '../utils/api/metaApis';
 import { scanFile } from 'react-native-fs';
 import { setMenuOptionGroupCode } from './menuDetail';
-import { displayErrorPopup } from '../utils/errorHandler/metaErrorHandler';
-import { openPopup } from '../utils/common';
+import { displayErrorNonClosePopup, displayErrorPopup } from '../utils/errorHandler/metaErrorHandler';
+import { isNetworkAvailable, openPopup } from '../utils/common';
 import { Alert } from 'react-native';
 import moment from 'moment';
 import 'moment/locale/ko';
@@ -24,6 +24,18 @@ export const clearAllItems = createAsyncThunk("menu/clearAllItems", async(_,{dis
     return [];
 })
 export const initMenu = createAsyncThunk("menu/initMenu", async(_,{dispatch,getState}) =>{
+    EventRegister.emit("showSpinner",{isSpinnerShow:true, msg:"메뉴 업데이트 중입니다. "})
+    const isPostable = await isNetworkAvailable().catch(()=>{
+        EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""});
+        EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""}); 
+        return false;
+    });
+    if(!isPostable) {
+        EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""});
+        displayErrorNonClosePopup(dispatch, "XXXX", "인터넷에 연결할 수 없습니다.");
+        EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
+        return [];
+    }
     // 포스 메인 카테고리
     EventRegister.emit("showSpinner",{isSpinnerShow:true, msg:"메뉴 업데이트 중입니다. "})
     const mainCategories = await getPosMainCategory(dispatch).catch(err=>{EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""}); return [];});

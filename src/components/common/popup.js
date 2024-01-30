@@ -16,6 +16,7 @@ import OptionSelectPopup from '../popups/optionSelectPopup';
 import OrderCompletePopup from './orderCompletePopup';
 import TimeOutPopup from './orderCompletePopup';
 import AutoClosePopup from './autoClosePopup';
+import NonAutoClosePopup from './nonAutoClosePopup';
 
 const PopUp = (props) =>{
     
@@ -80,7 +81,7 @@ const PopUp = (props) =>{
 
     return(
         <>
-            <Animated.View  style={[{...PopStyle.animatedPop,...boxWidthStyle,...{zIndex:popupZIndex, width:size, height:size}} ]} >   
+            <Animated.View  style={[{...PopStyle.animatedPop,...boxWidthStyle,...{zIndex:popupZIndex, width:size, height:size},...{ width:'100%',height:'100%'}} ]} >   
                 <TouchableWithoutFeedback onPress={()=>{ openPopup(dispatch,{innerView:"", isPopupVisible:false});  /* dispatch(setPopupVisibility(false)); */ }}>
                     <PopupWrapper/>
                 </TouchableWithoutFeedback>
@@ -127,6 +128,9 @@ const PopUp = (props) =>{
                     */}
                     {innerView=="AutoClose"&&
                         <AutoClosePopup/>
+                    }
+                    {innerView=="NonAutoClose"&&
+                        <NonAutoClosePopup/>
                     }
                 </PopupContentWrapper>
             </Animated.View>

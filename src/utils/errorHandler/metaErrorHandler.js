@@ -17,3 +17,7 @@ export const displayErrorPopup = (dispatch, errCode, msg) => {
     //dispatch(setErrorData({errorCode:errCode,errorMsg:msg})); 
     openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:msg}});   
 }
+export const displayErrorNonClosePopup = (dispatch, errCode, msg) => {
+    //dispatch(setErrorData({errorCode:errCode,errorMsg:msg})); 
+    openPopup(dispatch,{innerView:"NonAutoClose", isPopupVisible:true,param:{msg:msg}});   
+}

@@ -23,7 +23,7 @@ import {  initMenu, setProcessPaying } from '../../store/menu';
 import { getMenuUpdateState, getStoreInfo, getTableAvailability } from '../../utils/api/metaApis';
 import moment from 'moment';
 import { KocesAppPay } from '../../utils/payment/kocesPay';
-import { displayErrorPopup } from '../../utils/errorHandler/metaErrorHandler';
+import { displayErrorNonClosePopup, displayErrorPopup } from '../../utils/errorHandler/metaErrorHandler';
 import { PAY_SEPRATE_AMT_LIMIT } from '../../resources/defaults';
 import { setMonthPopup, setSelectedMonth } from '../../store/monthPopup';
 import { EventRegister } from 'react-native-event-listeners';
@@ -126,7 +126,7 @@ const CartView = () =>{
 
         const isPostable = await isNetworkAvailable().catch(()=>{EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""}); return false;});
         if(!isPostable) {
-            displayErrorPopup(dispatch, "XXXX", "인터넷에 연결할 수 없습니다.");
+            displayErrorNonClosePopup(dispatch, "XXXX", "인터넷에 연결할 수 없습니다.");
             EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
             return;
         }
