@@ -81,7 +81,7 @@ const PopUp = (props) =>{
 
     return(
         <>
-            <Animated.View  style={[{...PopStyle.animatedPop,...boxWidthStyle,...{zIndex:popupZIndex, width:size, height:size},...{ width:'100%',height:'100%'}} ]} >   
+            <Animated.View  style={[{...PopStyle.animatedPop,...boxWidthStyle,...{zIndex:popupZIndex, width:size, height:size}} ]} >   
                 <TouchableWithoutFeedback onPress={()=>{ openPopup(dispatch,{innerView:"", isPopupVisible:false});  /* dispatch(setPopupVisibility(false)); */ }}>
                     <PopupWrapper/>
                 </TouchableWithoutFeedback>
