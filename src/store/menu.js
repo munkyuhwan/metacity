@@ -37,7 +37,6 @@ export const initMenu = createAsyncThunk("menu/initMenu", async(_,{dispatch,getS
         return [];
     }
     // 포스 메인 카테고리
-    EventRegister.emit("showSpinner",{isSpinnerShow:true, msg:"메뉴 업데이트 중입니다. "})
     const mainCategories = await getPosMainCategory(dispatch).catch(err=>{EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""}); return [];});
     let allCategories = Object.assign([],mainCategories);
     if(allCategories?.length > 0 ) {

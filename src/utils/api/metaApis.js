@@ -32,9 +32,12 @@ export const  getPosMainCategory = async(dispatch) =>{
                 const data = response?.data;
                 const catMainList = data.PROD_L1_LIST;
                 resolve(catMainList);
+            }else {
+                EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""})
             }     
         })) 
         .catch(error=>{
+            EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""})
             displayErrorPopup(dispatch,"XXXX",`포스에 연동할 수 없습니다.`);
             reject(error.response.data)
         });
