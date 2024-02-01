@@ -46,6 +46,7 @@ export const LANGUAGE = {
         orderListPopup:{
             orderListTitle:"주문내역",
             orderListSubtitle:"주문하신 내역입니다.",
+            orderFailListSubtitle:"결제는 되었으나 주문에 실패 했습니다. 직원을 호출 해 주세요.",
             tableColName:"메뉴명",
             tableColAmt:'수량',
             tableColPrice:"단가",
@@ -106,6 +107,7 @@ export const LANGUAGE = {
        orderListPopup:{
             orderListTitle:"注文履歴",
             orderListSubtitle:"注文したお支払い履歴です。",
+            orderFailListSubtitle:"お支払いは行われましたが、注文に失敗しました。 スタッフを呼び出してください。.",
             tableColName:"メニュー名",
             tableColAmt:'数量',
             tableColPrice:"単価",
@@ -166,6 +168,7 @@ export const LANGUAGE = {
         orderListPopup:{
             orderListTitle:"订单详情",
             orderListSubtitle:"这是您订单的付款详细信息。",
+            orderFailListSubtitle:"已付款，但订单失败。 请致电工作人员。",
             tableColName:"菜单名称",
             tableColAmt:'数量',
             tableColPrice:"单价",
@@ -225,6 +228,7 @@ export const LANGUAGE = {
        orderListPopup:{
             orderListTitle:"Order Details",
             orderListSubtitle:"This is the payment details for your order.",
+            orderFailListSubtitle:"Payment was made, but the order failed. Please call a staff member.",
             tableColName:"Menu Name",
             tableColAmt:'quantity',
             tableColPrice:"unit price",

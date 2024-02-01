@@ -17,6 +17,7 @@ import OrderCompletePopup from './orderCompletePopup';
 import TimeOutPopup from './orderCompletePopup';
 import AutoClosePopup from './autoClosePopup';
 import NonAutoClosePopup from './nonAutoClosePopup';
+import OrderFailListPopup from '../popups/orderFailList';
 
 const PopUp = (props) =>{
     
@@ -100,6 +101,10 @@ const PopUp = (props) =>{
                    
                     {(innerView=="OrderList") &&
                         <OrderListPopup/>
+                    }
+
+                    {(innerView=="OrderFailList") &&
+                        <OrderFailListPopup param={param} />
                     }
                     {( innerView=="OrderList") &&
                         <PopupBottomButtonWrapper>

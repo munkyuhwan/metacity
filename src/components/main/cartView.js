@@ -106,7 +106,7 @@ const CartView = () =>{
                 var kocessAppPay = new KocesAppPay();
                 kocessAppPay.requestKocesPayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected, bsnNo:bsnNo,termID:tidNo })
                 .then(result=>{
-                    //console.log("result: ",result);
+                    console.log("result: ",result);
                     dispatch(postToMetaPos({payData:result}));
                 })
                 .catch((err)=>{

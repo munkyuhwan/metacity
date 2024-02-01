@@ -9,6 +9,7 @@ import {isEmpty} from 'lodash';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
 import { postOrderLog } from "./adminApi";
+import { ERROR_CODE, ERROR_STRING, SUCCESS_CODE, SUCCESS_STRING } from "../../resources/defaults";
 
 const posOrderHeader = {Accept: 'application/json','Content-Type': 'application/json'}
 const adminOrderHeader = {'Content-Type' : "text/plain"};
@@ -187,7 +188,6 @@ export const getPosSetGroupItem = async(dispatch, data) =>{
 }
 // 주문하기 
 export const postMetaPosOrder = async(dispatch, data) =>{
-    
     EventRegister.emit("showSpinner",{isSpinnerShow:true, msg:"주문 중 입니다."})
     const {POS_IP} = await getIP()
     if(isEmpty(POS_IP)) {
@@ -210,13 +210,14 @@ export const postMetaPosOrder = async(dispatch, data) =>{
                 //console.log("true");
                 //openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true});
                 //openPopup(dispatch,{innerView:"OrderComplete", isPopupVisible:true});
-                resolve()
+                resolve({result:SUCCESS_STRING,code:SUCCESS_CODE})
             } else {
                 if(response?.data){
                     const ERROR_CD = response?.data?.ERROR_CD;
                     const ERROR_MSG = response?.data?.ERROR_MSG;
                     const postData = {"storeID":storID,"tableNo":tableNo?.TABLE_INFO,"ERROR_CD":ERROR_CD,"ERROR_MSG":ERROR_MSG, "orderData":JSON.stringify(data),"time":moment().format("YYYY-MM-DD HH:mm:ss")};
                     postOrderLog(postData);
+
                     /* 
                     const date = new Date();
                     let logdata = {
@@ -232,6 +233,8 @@ export const postMetaPosOrder = async(dispatch, data) =>{
                 }else {
 
                 }
+                resolve({result:ERROR_STRING,code:ERROR_CODE})
+
                 //reject({});
             }
         })) 
@@ -242,6 +245,44 @@ export const postMetaPosOrder = async(dispatch, data) =>{
         });
     }) 
 }
+
+// 포스 주문전송 실패시 재전송
+export const repostMetaPosOrder = async(dispatch, data) =>{
+    EventRegister.emit("showSpinner",{isSpinnerShow:true, msg:"주문 재요청 중 입니다."})
+    return await new Promise(function(resolve, reject){
+        axios.post(
+            `${POS_BASE_URL(POS_IP)}`,
+            data,
+            posOrderHeader,
+        ) 
+        .then((response => {
+            EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""})
+            if(metaErrorHandler(dispatch, response?.data)) {
+                //console.log("true");
+                //openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true});
+                //openPopup(dispatch,{innerView:"OrderComplete", isPopupVisible:true});
+                resolve({result:SUCCESS_STRING,code:SUCCESS_CODE})
+            } else {
+                EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""})
+                resolve({result:ERROR_STRING,code:ERROR_CODE})
+                if(response?.data){
+                    const ERROR_CD = response?.data?.ERROR_CD;
+                    const ERROR_MSG = response?.data?.ERROR_MSG;
+                    const postData = {"storeID":storID,"tableNo":tableNo?.TABLE_INFO,"ERROR_CD":ERROR_CD,"ERROR_MSG":ERROR_MSG, "orderData":JSON.stringify(data),"time":moment().format("YYYY-MM-DD HH:mm:ss")};
+                    postOrderLog(postData);
+                    
+                }
+            }
+        })) 
+        .catch(error=>{
+            EventRegister.emit("showSpinner",{isSpinnerShow:false, msg:""})
+            displayErrorPopup(dispatch,"XXXX",`포스에 연동할 수 없습니다.`);
+            reject(error.response.data)
+        });
+    }) 
+}
+
+
 // 테이블 주문 목록 받기
 export const getTableOrderList = async(dispatch, data) =>{
     const {POS_IP} = await getIP()

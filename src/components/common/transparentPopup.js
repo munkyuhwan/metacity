@@ -13,6 +13,7 @@ import CallServerPopup from '../popups/callServerPopup';
 import OrderListPopup from '../popups/orderListPopup';
 import ErrorPopup from './errorPopup';
 import OrderCompletePopup from './orderCompletePopup';
+import OrderFailListPopup from '../popups/orderFailList';
 
 const TransparentPopUp = (props) =>{
     
@@ -86,6 +87,9 @@ const TransparentPopUp = (props) =>{
                     }
                      {(innerTransView=="OrderList") &&
                         <OrderListPopup/>
+                    }
+                     {(innerTransView=="OrderFailList") &&
+                        <OrderFailListPopup param={param} />
                     }
                     {innerTransView=="Error"&&
                         <ErrorPopup/>
