@@ -60,10 +60,10 @@ const OrderFailListPopup = (props) =>{
                     </OrderListTalbleGrandTotalWrapper>
                 </OrderListWrapper>
                 <BottomButtonWrapper>
-                    <OrderListTopSubtitle style={{color:colorRed, fontWeight:'bold', fontSize:40, paddingBottom:20}} >{LANGUAGE[language]?.orderListPopup.orderFailListSubtitle}</OrderListTopSubtitle>
-{/*                     <TouchableWithoutFeedback onPress={()=>{clearInterval(to);to=null; openTransperentPopup(dispatch, {innerView:"", isPopupVisible:false}); }} >
+                    {/* <OrderListTopSubtitle style={{color:colorRed, fontWeight:'bold', fontSize:40, paddingBottom:20}} >{LANGUAGE[language]?.orderListPopup.orderFailListSubtitle}</OrderListTopSubtitle> */}
+                     <TouchableWithoutFeedback onPress={()=>{clearInterval(to);to=null; openTransperentPopup(dispatch, {innerView:"", isPopupVisible:false}); }} >
                         <OrderListTopSubtitle style={{color:colorRed, fontWeight:'bold', fontSize:40, paddingBottom:20}} >{LANGUAGE[language]?.orderListPopup.orderFailListSubtitle}</OrderListTopSubtitle>
-                    </TouchableWithoutFeedback> */}
+                    </TouchableWithoutFeedback> 
                 </BottomButtonWrapper>
             </OrderListPopupWrapper>
                     
