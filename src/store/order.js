@@ -335,6 +335,7 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
                 if(result?.result == ERROR_STRING) {
                     // 재요청 실패시 팝업을 띄운다
                     console.log("Fail to second order");
+                    openTransperentPopup(dispatch, {innerView:"OrderFailList", isPopupVisible:true, param:orderData});
 
 
                 }else {
@@ -365,7 +366,10 @@ export const postToMetaPos =  createAsyncThunk("order/postToPos", async(_,{dispa
         if( tableStatus?.now_later == "선불") {
             openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"주문을 완료했습니다."}});
         }else {
-            openTransperentPopup(dispatch, {innerView:"OrderList", isPopupVisible:true, param:{timeOut:10000} });
+            openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"주문을 완료했습니다."}});
+            setTimeout(() => {
+                openTransperentPopup(dispatch, {innerView:"OrderList", isPopupVisible:true, param:{timeOut:10000} });
+            }, 3000);
         }
         return result;
     }

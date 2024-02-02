@@ -4,8 +4,8 @@ import { openPopup, openTransperentPopup } from "../../utils/common";
 import { ErrorTitle, ErrorWrapper } from "../../styles/common/errorStyle";
 import { OrderCompleteIcon, OrderCompleteItemWrapper, OrderCompleteText, OrderCompleteWrapper } from "../../styles/common/popup";
 
+let to = null;
 const OrderCompletePopup = () => {
-    let to = null;
     const dispatch = useDispatch();
     const {popupMsg, param,innerTransView} = useSelector(state=>state.popup);
     useState(()=>{
