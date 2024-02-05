@@ -4,10 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RecommendItemDim, RecommendItemImage, RecommendItemImageWrapper, RecommendItemInfoChecked, RecommendItemInfoPrice, RecommendItemInfoTitle, RecommendItemInfoWrapper, RecommendItemWrapper } from '../../styles/main/detailStyle';
 import { MENU_DATA } from '../../resources/menuData';
 import {isEmpty} from "lodash";
-import { getSingleMenu, getSingleMenuFromAllItems, setMenuDetail } from '../../store/menuDetail';
+import { getSingleMenu, getSingleMenuFromAllItems, initMenuDetail, setMenuDetail } from '../../store/menuDetail';
 import { addToOrderList } from '../../store/order';
 import { getPosItemsWithCategory } from '../../utils/api/metaApis';
 import FastImage from 'react-native-fast-image';
+import { posErrorHandler } from '../../utils/errorHandler/ErrorHandler';
+import { openTransperentPopup } from '../../utils/common';
 
 const RecommendItem = (props) => {
     const recommentItemID = props?.recommendData
@@ -61,10 +63,17 @@ const RecommendItem = (props) => {
         }
         return selTitleLanguage;
     }
-
     return(
         <>
-            <TouchableWithoutFeedback onPress={()=>{dispatch(addToOrderList({item:itemDetail,menuOptionSelected:[]})); /* dispatch(setMenuDetail(recommentItemID)); */ }}>
+            <TouchableWithoutFeedback onPress={()=>{
+                    if(itemDetail?.PROD_GB!="00"){
+                        dispatch(initMenuDetail());
+                        dispatch(setMenuDetail({itemID:recommentItemID}));
+                    }else{  
+                        dispatch(addToOrderList({item:itemDetail,menuOptionSelected:[]}));
+                        openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});  //    } 
+                    }
+                }}>
                 <RecommendItemWrapper>
                     <RecommendItemImageWrapper>
                         <RecommendItemImage  source={{uri:(`${images.filter(el=>el.name==recommentItemID)[0]?.imgData}`),priority: FastImage.priority.high }} />

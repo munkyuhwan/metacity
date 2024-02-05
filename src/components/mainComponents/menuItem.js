@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Animated,Dimensions,FlatList,Image,Text,TouchableWithoutFeedback } from 'react-native'
-import { MenuImageDefault, MenuImageDefaultWrapper, MenuItemBottomWRapper, MenuItemButton, MenuItemButtonInnerWrapper, MenuItemButtonInnerWrapperLeft, MenuItemButtonInnerWrapperRight, MenuItemButtonWrapper, MenuItemHotness, MenuItemHotnessWrapper, MenuItemImage, MenuItemImageWrapper, MenuItemInfoWRapper, MenuItemName, MenuItemPrice, MenuItemTopWrapper, MenuItemWrapper, SoldOutDimLayer, SoldOutDimLayerAbs, SoldOutLayer, SoldOutText } from '../../styles/main/menuListStyle';
+import { MenuImageDefault, MenuImageDefaultWrapper, MenuItemBottomWRapper, MenuItemButton, MenuItemButtonInnerWrapper, MenuItemButtonInnerWrapperLeft, MenuItemButtonInnerWrapperRight, MenuItemButtonWrapper, MenuItemHotness, MenuItemHotnessWrapper, MenuItemImage, MenuItemImageWrapper, MenuItemInfoWRapper, MenuItemName, MenuItemPrice, MenuItemSpiciness, MenuItemTopWrapper, MenuItemWrapper, SoldOutDimLayer, SoldOutDimLayerAbs, SoldOutLayer, SoldOutText } from '../../styles/main/menuListStyle';
 import FastImage from 'react-native-fast-image';
 import { RADIUS, RADIUS_DOUBLE } from '../../styles/values';
 import { setMenuDetail } from '../../store/menuDetail';
@@ -105,11 +105,43 @@ const MenuItem = ({item,index,setDetailShow}) => {
                         }
                         </MenuItemHotnessWrapper>
                         <MenuItemButtonWrapper>
+                            {
+                                itemExtra[0].spicy == "1" &&
+                                <MenuItemButtonInnerWrapperRight>
+                                    <MenuItemSpiciness source={require('../../assets/icons/spicy_1.png')}/>
+                                </MenuItemButtonInnerWrapperRight>
+                            }
+                            {
+                                itemExtra[0].spicy == "1.5" &&
+                                <MenuItemButtonInnerWrapperRight>
+                                    <MenuItemSpiciness source={require('../../assets/icons/spicy_2.png')}/>
+                                </MenuItemButtonInnerWrapperRight>
+                            }
+                            {
+                                itemExtra[0].spicy == "2" &&
+                                <MenuItemButtonInnerWrapperRight>
+                                    <MenuItemSpiciness source={require('../../assets/icons/spicy_3.png')}/>
+                                </MenuItemButtonInnerWrapperRight>
+                            }
+                            {
+                                itemExtra[0].spicy == "2.5" &&
+                                <MenuItemButtonInnerWrapperRight>
+                                    <MenuItemSpiciness source={require('../../assets/icons/spicy_4.png')}/>
+                                </MenuItemButtonInnerWrapperRight>
+                            }
+                            {
+                                itemExtra[0].spicy == "3" &&
+                                <MenuItemButtonInnerWrapperRight>
+                                    <MenuItemSpiciness source={require('../../assets/icons/spicy_5.png')}/>
+                                </MenuItemButtonInnerWrapperRight>
+                            }
+                            {/* 
                             <TouchableWithoutFeedback onPress={()=>{setDetailShow(true);  dispatch(setMenuDetail({itemID,item})); }} >
                                 <MenuItemButtonInnerWrapperRight>
                                     <MenuItemButton source={require('../../assets/icons/more.png')}/>
                                 </MenuItemButtonInnerWrapperRight>
                             </TouchableWithoutFeedback>
+                             */}
                             <TouchableWithoutFeedback onPress={()=>{ if(item?.PROD_GB!="00"){setDetailShow(true);  dispatch(setMenuDetail({itemID,item}));} else { dispatch(addToOrderList({item:item,menuOptionSelected:[]}));} }} >
                                 <MenuItemButtonInnerWrapperLeft>
                                     <MenuItemButton source={require('../../assets/icons/add.png')}/>

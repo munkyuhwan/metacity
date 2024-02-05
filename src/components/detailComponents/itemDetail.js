@@ -12,7 +12,7 @@ import { setMenuDetail, initMenuDetail, getSingleMenuFromAllItems, getItemSetGro
 import { numberWithCommas, openPopup } from '../../utils/common';
 import { MENU_DATA } from '../../resources/menuData';
 import { addToOrderList } from '../../store/order';
-import { MenuImageDefault } from '../../styles/main/menuListStyle';
+import { MenuImageDefault, MenuItemButtonInnerWrapperRight, MenuItemDetailSpicenessWrapper, MenuItemSpiciness } from '../../styles/main/menuListStyle';
 import { useFocusEffect } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import { RADIUS, RADIUS_DOUBLE } from '../../styles/values';
@@ -233,7 +233,6 @@ const ItemDetail = (props) => {
                             {menuDetailID!=null &&
                                 <DetailInfoWrapper>
                                     <DetailItemInfoImageWrapper>
-                                        
                                         {itemExtra&& 
                                         itemExtra[0]?.gimg_chg &&
                                             <DetailItemInfoFastImage source={ {uri:(`${images.filter(el=>el.name==menuDetailID)[0]?.imgData}`),priority: FastImage.priority.high } } />
@@ -258,7 +257,36 @@ const ItemDetail = (props) => {
                                         itemExtra[0]?.is_on=='Y'&&
                                                 <DetailItemInfoTitleEtc source={require("../../assets/icons/hot_menu.png")}/>
                                             }
-                                            
+                                            {
+                                                itemExtra[0].spicy == "1" &&
+                                                <MenuItemButtonInnerWrapperRight>
+                                                    <MenuItemSpiciness source={require('../../assets/icons/spicy_1.png')}/>
+                                                </MenuItemButtonInnerWrapperRight>
+                                            }
+                                            {
+                                                itemExtra[0].spicy == "1.5" &&
+                                                <MenuItemDetailSpicenessWrapper>
+                                                    <MenuItemSpiciness source={require('../../assets/icons/spicy_2.png')}/>
+                                                </MenuItemDetailSpicenessWrapper>
+                                            }
+                                            {
+                                                itemExtra[0].spicy == "2" &&
+                                                <MenuItemDetailSpicenessWrapper>
+                                                    <MenuItemSpiciness source={require('../../assets/icons/spicy_3.png')}/>
+                                                </MenuItemDetailSpicenessWrapper>
+                                            }
+                                            {
+                                                itemExtra[0].spicy == "2.5" &&
+                                                <MenuItemDetailSpicenessWrapper>
+                                                    <MenuItemSpiciness source={require('../../assets/icons/spicy_4.png')}/>
+                                                </MenuItemDetailSpicenessWrapper>
+                                            }
+                                            {
+                                                itemExtra[0].spicy == "3" &&
+                                                <MenuItemDetailSpicenessWrapper>
+                                                    <MenuItemSpiciness source={require('../../assets/icons/spicy_5.png')}/>
+                                                </MenuItemDetailSpicenessWrapper>
+                                            }
                                         </DetailItemInfoTitleWrapper>
                                         <DetailItemInfoSource>{ItemWonsanji()}</DetailItemInfoSource>
                                         <DetailPriceMoreWrapper>
@@ -310,13 +338,13 @@ const ItemDetail = (props) => {
                                                     <OptList horizontal showsHorizontalScrollIndicator={false} >
                                                         {
                                                             itemExtra[0]?.related.map((el,index)=>{
-                                                                if(isEmpty(el)) {
+                                                               /*  if(isEmpty(el)) {
                                                                     return (<></>)
-                                                                }else {
+                                                                }else { */
                                                                     return(
                                                                         <RecommendItem key={"recoItem_"+index}   recommendData={el} menuData={menuDetail}  />    
                                                                     );
-                                                                }
+                                                                //}
                                                             })
                                                         }
                                                     </OptList>

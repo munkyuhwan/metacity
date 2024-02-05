@@ -55,6 +55,13 @@ export const MenuItemButtonInnerWrapperRight = styled.View`
     flex:1;
     flexDirection: row;
     justifyContent: flex-start;
+    paddingTop:5px;
+ `
+export const MenuItemDetailSpicenessWrapper = styled.View`
+    width:100%;
+    flex:1;
+    flexDirection: row;
+    justifyContent: flex-start;
 `
 export const MenuItemButtonInnerWrapperLeft = styled.View`
     width:100%;
@@ -65,6 +72,11 @@ export const MenuItemButtonInnerWrapperLeft = styled.View`
 export const MenuItemButton = styled.Image`
     width:56px;
     height:56px;
+    resizeMode:contain;
+`
+export const MenuItemSpiciness = styled.Image`
+    width:46px;
+    height:46px;
     resizeMode:contain;
 `
 export const MenuItemHotnessWrapper = styled.View`
