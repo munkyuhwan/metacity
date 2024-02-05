@@ -12,9 +12,8 @@ import { clearOrderStatus, getOrderStatus } from '../../store/order';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { checkTableOrder } from '../../utils/apis';
 import {isEmpty} from 'lodash';
-
+let to = null;
 const OrderListPopup = () =>{
-    let to = null;
     const dispatch = useDispatch();
     const {language} = useSelector(state=>state.languages);
     const {orderStatus} = useSelector(state=>state.order);    
