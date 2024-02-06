@@ -115,7 +115,7 @@ const MenuListView = () => {
                     ref={listRef}
                     columnWrapperStyle={{gap:11}}
                     style={{height:'100%', zIndex: 99 }}
-                    data={displayMenu}
+                    data={[...displayMenu,...displayMenu,...displayMenu,...displayMenu]}
                     renderItem={({item, index})=>{return(<MenuItem isDetailShow={isDetailShow} setDetailShow={setDetailShow} item={item} index={index} /> );}}
                     numColumns={numColumns}
                     key={numColumns}
@@ -176,7 +176,7 @@ const MenuListView = () => {
                     onScrollEndDrag={(ev)=>{
                        
                         if(scrollDownReached ) {
-                            if(scrollDownCnt>=1) {
+                            if(scrollDownCnt>1) {
                                 toNextCaterogy();
                             }else {
                                 scrollDownCnt = scrollDownCnt+1;
@@ -184,7 +184,7 @@ const MenuListView = () => {
 
                         }
                         if(scrollUpReached) {
-                            if(scrollUpCnt>=1) {
+                            if(scrollUpCnt>1) {
                                 toPrevCaterogy();
                             }else {
                                 scrollUpCnt = scrollUpCnt+1;
