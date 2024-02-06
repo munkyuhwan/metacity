@@ -115,7 +115,7 @@ const MenuListView = () => {
                     ref={listRef}
                     columnWrapperStyle={{gap:11}}
                     style={{height:'100%', zIndex: 99 }}
-                    data={[...displayMenu,...displayMenu,...displayMenu,...displayMenu]}
+                    data={displayMenu}
                     renderItem={({item, index})=>{return(<MenuItem isDetailShow={isDetailShow} setDetailShow={setDetailShow} item={item} index={index} /> );}}
                     numColumns={numColumns}
                     key={numColumns}
