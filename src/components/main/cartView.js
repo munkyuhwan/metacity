@@ -92,6 +92,7 @@ const CartView = () =>{
         }else {
             //console.log("storeInfo result: ", storeInfo);
             EventRegister.emit("showSpinnerNonCancel",{isSpinnerShowNonCancel:false, msg:""});
+            
             if( tableStatus?.now_later == "선불") {
                 const bsnNo = await AsyncStorage.getItem("BSN_NO");
                 const tidNo = await AsyncStorage.getItem("TID_NO");
@@ -106,7 +107,7 @@ const CartView = () =>{
                 var kocessAppPay = new KocesAppPay();
                 kocessAppPay.requestKocesPayment({amt:payAmt, taxAmt:vatTotal, months:monthSelected, bsnNo:bsnNo,termID:tidNo })
                 .then(result=>{
-                    //console.log("result: ",result);
+                    console.log("result: ",result);
                     dispatch(postToMetaPos({payData:result}));
                 })
                 .catch((err)=>{
@@ -118,6 +119,7 @@ const CartView = () =>{
             }else {
                 dispatch(postToMetaPos({payData:{}}));
             }
+            
         }
     }
 

@@ -103,7 +103,7 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
             newSubSetItems.push(calculatedData);
         }
         
-        tmpOrderList[index] = Object.assign({},selectedMenu,{ITEM_AMT:singleItemAmt*itemCnt, ITEM_QTY:itemCnt,SETITEM_INFO:newSubSetItems});
+        tmpOrderList[index] = Object.assign({},selectedMenu,{ITEM_AMT:singleItemAmt*itemCnt, ITEM_QTY:itemCnt,SETITEM_INFO:newSubSetItems, ITEM_VAT: menuPosDetail[0]?.SAL_VAT*itemCnt});
         const totalResult = grandTotalCalculate(tmpOrderList)
         //tmpOrderList.reverse();
 
@@ -113,6 +113,7 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
 
         let itemCnt = selectedMenu?.ITEM_QTY;
         let singleItemAmt = selectedMenu?.ITEM_AMT/itemCnt;
+
         if(operand=="plus") {
             itemCnt +=1;
         }else if(operand=="minus")  {
@@ -132,10 +133,10 @@ export const resetAmtOrderList = createAsyncThunk("order/resetAmtOrderList", asy
             return {orderList:tmpOrderList,grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
             //return {orderList:tmpOrderList}
         }
-        tmpOrderList[index] = Object.assign({},selectedMenu,{ITEM_AMT:singleItemAmt*itemCnt, ITEM_QTY:itemCnt});
+
+        tmpOrderList[index] = Object.assign({},selectedMenu,{ITEM_AMT:singleItemAmt*itemCnt, ITEM_QTY:itemCnt, ITEM_VAT: menuPosDetail[0]?.SAL_VAT*itemCnt});
         const totalResult = grandTotalCalculate(tmpOrderList)
         //tmpOrderList.reverse();
-   
         return {orderList:tmpOrderList, vatTotal:totalResult?.vatTotal, grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
          
     }
@@ -220,7 +221,6 @@ export const addToOrderList =  createAsyncThunk("order/addToOrderList", async(_,
         //openPopup(dispatch,{innerView:"AutoClose", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
         //openTransperentPopup(dispatch, {innerView:"OrderComplete", isPopupVisible:true,param:{msg:"장바구니에 추가했습니다."}});
         //newOrderList.reverse();
-  
         return {orderList:newOrderList,vatTotal:totalResult?.vatTotal, grandTotal:totalResult.grandTotal,totalItemCnt:totalResult.itemCnt, orderPayData:[] };
     }  
 })
@@ -589,6 +589,7 @@ export const orderSlice = createSlice({
                 state.grandTotal = action.payload.grandTotal;
                 state.totalItemCnt = action.payload.totalItemCnt;
                 state.orderPayData = action.payload.orderPayData;
+                state.vatTotal = action.payload.vatTotal;
             }
         })
          // 주문 삭제
