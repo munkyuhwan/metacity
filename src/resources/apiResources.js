@@ -81,7 +81,8 @@ export const KOCES_CODE_STORE_DOWNLOAD = "D10";
 export const KOCES_CODE_KEY_RENEW = "D20";
 
 // ADMIN API URL
-export const ADMIN_BASE_URL = "https://wooriorder.co.kr/metacity";
+//export const ADMIN_BASE_URL = "https://wooriorder.co.kr/metacity";
+export const ADMIN_BASE_URL = "http://175.126.82.169/metacity";
 
 export const ADMIN_GOODS = "/goods2.php";
 export const ADMIN_OPTION = "/option.php";

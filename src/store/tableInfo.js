@@ -29,14 +29,20 @@ export const getTableList = createAsyncThunk("tableInfo/getTableList", async(dat
     const result = await getTableListInfo(dispatch,{floor:data?.floor}).catch(err=>[]);
     return result
 })
-// 관리자 테이블 상테 받아오기
+// 관리자 테이블 상태 받아오기
 export const getTableStatus = createAsyncThunk("tableInfo/getTableStatus", async(data,{dispatch, getState}) =>{
-        const tableStatus = await getAdminTableStatus(dispatch, {});
-        
-        const tableData = tableStatus?.data[0].table;
-        const tStatus = tableData[0];
-        return tStatus;
-    
+    const tableStatus = await getAdminTableStatus(dispatch, {}).catch(err=>{return false});
+    if(tableStatus == false) {
+        return;
+    }else {
+        if(tableStatus?.data == null) {
+            return;
+        }else {
+            const tableData = tableStatus?.data[0].table;
+            const tStatus = tableData[0];
+            return tStatus;
+        }
+    }
 })
 
 // Slice
@@ -67,7 +73,9 @@ export const tableInfoSlice = createSlice({
             state.tableInfo = action.payload;
         })
         builder.addCase(getTableStatus.fulfilled, (state,action)=>{
-            state.tableStatus = action.payload
+            if(action.payload) {
+                state.tableStatus = action.payload
+            }
         })
         
     }
