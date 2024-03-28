@@ -47,7 +47,7 @@ const LeftMenuList = (props) => {
      return(
         <>
             {data?.map((item, index)=>{    
-                if(item?.PROD_L1_NM=="주문X" || item?.PROD_L1_NM=="스넥" || item?.PROD_L1_NM == "포인트"  || item?.PROD_L1_NM == "선물(굿즈)"  || item?.PROD_L1_NM == "리뷰이벤트" || item?.PROD_L1_NM == "서비스" || item?.PROD_L1_NM == "배달"  || item?.PROD_L1_NM == "배 달" ) {
+                if(item?.PROD_L1_NM=="주문X" || item?.PROD_L1_NM=="스넥" || item?.PROD_L1_NM == "포인트"  || item?.PROD_L1_NM == "선물(굿즈)"  || item?.PROD_L1_NM == "리뷰이벤트" || item?.PROD_L1_NM == "서비스" || item?.PROD_L1_NM == "배달"  || item?.PROD_L1_NM == "배 달"  || item?.PROD_L1_NM == "함박추가" || item?.PROD_L1_NM == "음료선택" ) {
                     return(<></>)
                 }else {
                     if(item?.USE_YN == 'Y') { 
